@@ -1,0 +1,11 @@
+{
+    "systematicName": "温州市经开区产业云图",
+         "websocketApi": "http://117.175.169.58:28021/webSocket",
+         "sendCode": "/app/forwarding",
+         "soundCode": "/topic/",
+         "indexPath": "/",
+         "code": 1,
+         "isBASE": false,
+         "checked": false,
+         "passState": false
+   }

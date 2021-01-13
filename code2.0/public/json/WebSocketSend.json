@@ -1,0 +1,94 @@
+{
+	"config": { "blank": true },
+	"configdata": [
+		{
+			"systematicName": "温州市经开区产业云图",
+			"websocketApi": "http://117.175.169.58:28021/webSocket",
+			"sendCode": "/app/forwarding",
+			"soundCode": "/topic/",
+			"indexPath": "/",
+			"code": 1,
+			"isBASE": false,
+			"checked": false,
+			"passState": false,
+			"menuData": [
+				{
+					"name": "总体概览",
+					"path": "/Overview",
+					"isBASE": false,
+					"checked": false,
+					"instructionSets": [ { "code": "add", "data": { "id": "31231231" } } ]
+				},
+				{
+					"name": "产业规划",
+					"path": "/industryPlan",
+					"isBASE": false,
+					"checked": false,
+					"instructionSets": [ { "code": "add", "data": { "id": "31231231" } } ]
+				},
+				{
+					"name": "资源配套",
+					"path": "/Resource",
+					"isBASE": false,
+					"checked": false,
+					"instructionSets": [ { "code": "add", "data": { "id": "31231231" } } ]
+				},
+				{
+					"name": "产业链",
+					"path": "/IndustrialChain",
+					"isBASE": false,
+					"checked": false,
+					"instructionSets": [ { "code": "add", "data": { "id": "31231231" } } ]
+				},
+				{
+					"name": "环保监测",
+					"path": "/Environmental",
+					"isBASE": false,
+					"checked": false,
+					"instructionSets": [ { "code": "add", "data": { "id": "31231231" } } ]
+				}
+			]
+		},
+		{
+			"systematicName": "海洋科技创新园",
+			"websocketApi": "http://117.175.169.58:28021/webSocket",
+			"indexPath": "/HCBase",
+			"sendCode": "/app/forwarding",
+			"soundCode": "/topic/",
+			"code": 1,
+			"isBASE": true,
+			"checked": false,
+			"passState": false,
+			"menuData": [
+				{
+					"name": "概况",
+					"path": "/HC/HCoverview",
+					"isBASE": true,
+					"checked": false,
+					"instructionSets": [ { "code": "add", "checked": false, "data": { "id": "31231231" } } ]
+				},
+				{
+					"name": "企业",
+					"path": "/HC/HCenterprise",
+					"checked": false,
+					"isBASE": true,
+					"instructionSets": [ { "code": "add", "data": { "id": "31231231" } } ]
+				},
+				{
+					"name": "人才",
+					"path": "/HC/HCpersonnel",
+					"isBASE": true,
+					"checked": false,
+					"instructionSets": [ { "code": "add", "data": { "id": "31231231" } } ]
+				},
+				{
+					"name": "党建",
+					"path": "/HC/HCpartybuilding",
+					"isBASE": true,
+					"checked": false,
+					"instructionSets": [ { "code": "add", "data": { "id": "31231231" } } ]
+				}
+			]
+		}
+	]
+}
