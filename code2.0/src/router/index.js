@@ -8,30 +8,52 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    redirect:"/wordOut",
+    children:[
+      {
+        path: '/wordOut',
+        name: 'wordOut',
+        component: () => import(/* webpackChunkName: "wordOut" */ '../views/wordOut/index.vue'),
+        meta:{
+          name:'word导出',
+        }
+      },
+      {
+        path: '/arcgisImg',
+        name: 'arcgisImg',
+        component: () => import(/* webpackChunkName: "arcgisImg" */ '../views/arcgisImg/arcgisImg.vue'),
+        meta:{
+          name:'arcgis图片',
+        }
+      },
+      {
+        path: '/button',
+        name: 'button',
+        component: () => import(/* webpackChunkName: "button" */ '../views/button/button.vue'),
+        meta:{
+          name:'按钮',
+        }
+      },
+      {
+        path: '/menu',
+        name: 'menu',
+        component: () => import(/* webpackChunkName: "menu" */ '../views/menu/menu.vue'),
+        meta:{
+          name:'菜单',
+        }
+      },
+      {
+        path: '/imgTochBox',
+        name: 'imgTochBox',
+        component: () => import(/* webpackChunkName: "imgTochBox" */ '../views/imgTouchBox/imgTochBox.vue'),
+        meta:{
+          name:'图片框',
+        }
+      },
+    ]
   },
-  {
-    path: '/wordOut',
-    name: 'wordOut',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/wordOut/index.vue'),
-    meta:{
-      name:'word导出',
-    }
-  },
-  {
-    path: '/arcgisImg',
-    name: 'arcgisImg',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/arcgisImg/arcgisImg.vue'),
-    meta:{
-      name:'arcgis',
-    }
-  },
+ 
 ]
 
 const router = new VueRouter({

@@ -13,7 +13,6 @@ export default {
   //DOM挂载完毕
   mounted() {
     this.createCanvasIcon();
-   
   },
   methods: {
     createCanvasIcon(num=0,color="#f00"){

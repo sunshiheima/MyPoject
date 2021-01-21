@@ -1,0 +1,110 @@
+html,body,#app,.home{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+  }
+  p,i,ul,ol,table,h1,h2,h3,h4,h5,h6,button{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-style: none;
+  }
+  .fx{
+      display: flex;
+      justify-content: flex-start;
+  }
+  .fx_col{
+      display: flex;
+     flex-direction: column;
+  }
+ .fx_1{
+     flex: 1;
+ }
+
+  .fx_row_center{
+    justify-content: center;
+  }
+  .fx_row_start{
+    justify-content: flex-start;
+  }
+  .fx_row_end{
+    justify-content: flex-end;
+  }
+
+  .fx_col_center{
+    align-items: center;
+  }
+  .fx_col_start{
+    align-items: flex-start;
+  }
+  .fx_col_end{
+    align-items: flex-end;
+  }
+
+  .al_start{
+    align-content: flex-start;
+  }
+  .al_center{
+    align-content: center;
+  }
+  .al_end{
+    align-content: flex-end;
+  }
+
+
+  .text_center{
+      text-align: center;
+      vertical-align: center;
+  }
+
+
+/*
+    margin padding fontSize width 通用样式表
+    免去你每次重写样式的烦恼
+    marked by Jacky
+*/
+.loopStyle(@counter) when (@counter <200) {
+  .p_@{counter} {
+    padding: (1vw * @counter);
+  }
+  .pt_@{counter} {
+    padding-top: (1vw * @counter);
+  }
+  .pr_@{counter} {
+    padding-right: (1vw * @counter);
+  }
+  .pb_@{counter} {
+    padding-bottom: (1vw * @counter);
+  }
+  .pl_@{counter} {
+    padding-left: (1vw * @counter);
+  }
+  .m_@{counter} {
+    margin: (1vw * @counter);
+  }
+  .mt_@{counter} {
+    margin-top: (1vw * @counter);
+  }
+  .mr_@{counter} {
+    margin-right: (1vw * @counter);
+  }
+  .mb_@{counter} {
+    margin-bottom: (1vw * @counter);
+  }
+  .ml_@{counter} {
+    margin-left: (1vw * @counter);
+  }
+  .fz_@{counter} {
+    content:@counter;
+    font-size: (1vw * @counter);
+  }
+  .width@{counter}{
+    width: 1% * @counter;
+  }
+  .loopStyle((@counter + 1));    // 递归调用自身
+}
+ 
+.loopStyle(0);
