@@ -9,7 +9,7 @@ const http = axios.create({
   timeout: 5000,
 })
 http.interceptors.request.use(req => { //此处拦截请求，把请求数据处理得更清爽，更简洁，交给后端
-  Message.closeAll();
+  
   if (req.data && req.data.showLoadding) {
     if (loadings){
       loadings.close();
@@ -30,6 +30,7 @@ http.interceptors.request.use(req => { //此处拦截请求，把请求数据处
   return req//发送给后端经过处理的值
 }, error => {
   if (loadings) loadings.close();
+  Message.closeAll();
   if (error.message.includes('timeout')) {   // 判断请求异常信息中是否含有超时timeout字符串
      Message({ type: 'error', message: '请求超时，请稍后再试' })
     }else{
@@ -44,6 +45,7 @@ http.interceptors.response.use(res => {//响应拦截器哦
     msg=resCode(res.data.status)
   }
   if(msg){
+    Message.closeAll();
      Message({ type: 'error', message: msg })
   }
   return Promise.reject(res.data);//将数据返回
@@ -59,6 +61,7 @@ http.interceptors.response.use(res => {//响应拦截器哦
       msg = "服务器连接失败";
     }
     if(msg){
+      Message.closeAll();
        Message({ type: 'error', message: msg })
     }
   }

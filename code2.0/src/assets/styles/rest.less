@@ -1,64 +1,99 @@
-html,body,#app,.home{
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    background-color: transparent;
-  }
-  p,i,ul,ol,table,h1,h2,h3,h4,h5,h6,button{
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-style: none;
-  }
-  .fx{
-      display: flex;
-      justify-content: flex-start;
-  }
-  .fx_col{
-      display: flex;
-     flex-direction: column;
-  }
- .fx_1{
-     flex: 1;
- }
+html,
+body,
+#app,
+.home {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+}
 
-  .fx_row_center{
-    justify-content: center;
-  }
-  .fx_row_start{
-    justify-content: flex-start;
-  }
-  .fx_row_end{
-    justify-content: flex-end;
-  }
+p,
+i,
+ul,
+ol,
+table,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-style: none;
+}
 
-  .fx_col_center{
-    align-items: center;
-  }
-  .fx_col_start{
-    align-items: flex-start;
-  }
-  .fx_col_end{
-    align-items: flex-end;
-  }
+@baseBack: #fff;
 
-  .al_start{
-    align-content: flex-start;
-  }
-  .al_center{
-    align-content: center;
-  }
-  .al_end{
-    align-content: flex-end;
-  }
+//flex布局
+.fx {
+  display: flex;
+  justify-content: flex-start;
+}
 
+.fx_col {
+  display: flex;
+  flex-direction: column;
+}
 
-  .text_center{
-      text-align: center;
-      vertical-align: center;
-  }
+.fx_1 {
+  flex: 1;
+}
+
+.fcc {
+  justify-content: center;
+  align-items: center;
+}
+
+.jcc {
+  justify-content: center;
+}
+
+.jcs {
+  justify-content: flex-start;
+}
+
+.jce {
+  justify-content: flex-end;
+}
+
+.aic {
+  align-items: center;
+}
+
+.ais {
+  align-items: flex-start;
+}
+
+.aie {
+  align-items: flex-end;
+}
+
+.aca {
+  align-content: flex-start;
+}
+
+.acc {
+  align-content: center;
+}
+
+.ace {
+  align-content: flex-end;
+}
+
+//文字样式
+.tc {
+  text-align: center;
+  vertical-align: center;
+}
+.tb {
+ font-weight: bold;
+}
 
 
 /*
@@ -68,43 +103,76 @@ html,body,#app,.home{
 */
 .loopStyle(@counter) when (@counter <200) {
   .p_@{counter} {
-    padding: (1vw * @counter);
+    padding: (1px * @counter);
   }
+
   .pt_@{counter} {
-    padding-top: (1vw * @counter);
+    padding-top: (1px * @counter);
   }
+
   .pr_@{counter} {
-    padding-right: (1vw * @counter);
+    padding-right: (1px * @counter);
   }
+
   .pb_@{counter} {
-    padding-bottom: (1vw * @counter);
+    padding-bottom: (1px * @counter);
   }
+
   .pl_@{counter} {
-    padding-left: (1vw * @counter);
+    padding-left: (1px * @counter);
   }
+
   .m_@{counter} {
-    margin: (1vw * @counter);
+    margin: (1px * @counter);
   }
+
   .mt_@{counter} {
-    margin-top: (1vw * @counter);
+    margin-top: (1px * @counter);
   }
+
   .mr_@{counter} {
-    margin-right: (1vw * @counter);
+    margin-right: (1px * @counter);
   }
+
   .mb_@{counter} {
-    margin-bottom: (1vw * @counter);
+    margin-bottom: (1px * @counter);
   }
+
   .ml_@{counter} {
-    margin-left: (1vw * @counter);
+    margin-left: (1px * @counter);
   }
-  .fz_@{counter} {
-    content:@counter;
-    font-size: (1vw * @counter);
+
+  .fb_@{counter} {
+    flex: 0 0 (100px * @counter);
   }
-  .width@{counter}{
+
+  .tz_@{counter} {//字体大小
+    font-size: (1px * @counter);
+  }
+  .tl_@{counter} {//行高
+    line-height: (1px * @counter);
+  }
+
+  .width_@{counter} {
     width: 1% * @counter;
   }
-  .loopStyle((@counter + 1));    // 递归调用自身
+
+  .loopStyle((@counter + 1)); // 递归调用自身
 }
- 
-.loopStyle(0);
+
+.loopStyle(0);//循环调用
+
+//overflow封装
+.flow_h {
+  overflow: hidden;
+}
+
+.flow_x {
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+.flow_y {
+  overflow-y: auto;
+  overflow-x: hidden;
+}

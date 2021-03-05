@@ -1,34 +1,39 @@
 <template>
   <div
     class="imgTouchBox"
-    @mousewheel="imgTouchBoxMousewheel"
+   @mousedown.capture="imgTouchBoxMousedown" 
+     @mousewheel.capture="imgTouchBoxMousewheel"
     ref="imgTouchBox"
-    @mousedown.stop="imgTouchBoxMousedown"
   >
-   <el-image 
-    class="imgIcon"
+  <SunElImage 
+  
+   class="imgIcon"
       v-for="(item, index) in iconsList"
       :key="index + 'imgIcon'"
     :src="item" 
-    :preview-src-list="iconsList">
-  </el-image>
+    :previewSrcList="previewList"/>
   </div>
 </template>
          
 <script>
+import SunElImage from './el_image'
 export default {
+  components:{
+    SunElImage
+  },
   props: {
     scrollSpeed: {
       //滚动速度
       type: Number,
       default: 15,
+      MousemoveActive:false,
     },
   },
   data() {
     return {
       iconsList: [
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-        "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+        "https://cdn.renren.io/3e1da201805201536206386.jpg",
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
         "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
@@ -57,20 +62,15 @@ export default {
     };
   },
   //生命周期 - 创建完成
-  created() {},
+  created() {
+    this.previewList=this.iconsList;
+  },
   //DOM挂载完毕
   mounted() {
-    //  let imgIconsDOM=document.getElementsByTagName('img') ;
-    //      debugger
-    //  imgIconsDOM.forEach(item=>{
-    //      item.oncontextmenu=()=>{return false};
-    //  })
-     
   },
   methods: {
     //鼠标滚动控制
     imgTouchBoxMousewheel(e) {
-       
       let ScrollDom = this.$refs["imgTouchBox"];
       if (e.deltaX === 0 && e.deltaY !== 0) {
         if (ScrollDom.offsetWidth > ScrollDom.offsetHeight) {
@@ -91,6 +91,9 @@ export default {
     },
     //鼠标拖动
     imgTouchBoxMousedown(e) {
+      let _this=this;
+      _this.MousemoveActive=false;
+      _this.previewList=[]
         //  debugger
         //  e.preventDefault(); // 移动时禁用默认事件
         // e.stopPropagation(); // 移动时禁用默认事件
@@ -108,26 +111,40 @@ export default {
       console.log(oldX, oldY);
       //开始拖拽
       ScrollDom.onmousemove = (event) => {
-        // e.preventDefault(); // 移动时禁用默认事件
-        e.stopPropagation(); // 移动时禁用默认事件
+        e.preventDefault(); // 移动时禁用默认事件
+        e.stopPropagation(); // 移动时禁用冒泡事件
         let newX = event.clientX - oldX;
         let newY = event.clientY - oldY;
         console.log(newX, newY);
-        //滚动偏移
+        if(Math.abs(newX)>3 || Math.abs(newY)>3){
+             _this.MousemoveActive=true;
+             //滚动偏移
         if (ScrollDom.offsetWidth > ScrollDom.offsetHeight) {
             ScrollDom.scrollLeft =  oldLeft-newX;
         } else {
             ScrollDom.scrollTop =oldTop- newY;
         }
+        }else{
+           _this.MousemoveActive=false;
+        }
         console.log('鼠标移动', ScrollDom.scrollLeft)
       };
       //拖拽结束
       ScrollDom.onmouseup = (event) => {
-        //    event.preventDefault();
-           event.stopPropagation();
         ScrollDom.onmousemove = null;
         ScrollDom.onmouseup = null;
-        ScrollDom.style. cursor="inherit";
+        ScrollDom.style.cursor="inherit";
+        //click与onmouseup 冲突解决
+        if(_this.MousemoveActive){
+          //小于200 点击事件
+          console.log('拖拽事件')
+              _this.previewList=[]
+        }else{
+          //否则拖拽事件
+            console.log('点击事件')
+            _this.previewList=_this.iconsList;
+        }
+        console.log(_this.previewList)
       };
     },
   },

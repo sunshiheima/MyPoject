@@ -1,9 +1,10 @@
 const path = require('path')
-// const  UglifyJsPlugin= require('uglifyjs-webpack-plugin');
+const  UglifyJsPlugin= require('terser-webpack-plugin');
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const { HashedModuleIdsPlugin } = require('webpack')
 module.exports = {
     // // 基本路径
-    // publicPath: process.env.NODE_ENV === 'production' ? './' : './',
-    publicPath:'./' ,
+    publicPath: process.env.NODE_ENV === 'production' ? './' : './',
     // 输出文件目录
     outputDir: 'dist', // 默认dist
     // 用于嵌套生成的静态资产（js,css,img,fonts）目录
@@ -16,14 +17,14 @@ module.exports = {
     pages: {
         index: {
             // index page 的入口
-            entry: 'src/main.js',//例如：public/index/index.html
+            entry: 'src/main.js',//例如：public/index/main.js
             // 模板来源
-            template: 'src/pages/index/index.html',
+            template: 'public/index.html',
             // 在 dist/index.html 的输出名称
             filename: 'index.html',
             // 当使用 title 选项时，
             // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-            title: 'porject',//标题名称在此修改
+            title: '多页面一',//标题名称在此修改
             // 在这个页面中包含的块，默认情况下会包含
             // 提取出来的通用 chunk 和 vendor chunk。
             chunks: ['chunk-vendors', 'chunk-common', 'index']
@@ -49,39 +50,70 @@ module.exports = {
             // 为生产环境修改配置...
             config.mode = 'production'
             // 将每个依赖包打包成单独的js文件
-            let optimization = {
-                runtimeChunk: 'single',
-                splitChunks: {
-                    chunks: 'all',
-                    maxInitialRequests: Infinity,
-                    minSize: 20000,
-                    cacheGroups: {
-                        vendor: {
-                            test: /[\\/]node_modules[\\/]/,
-                            name(module) {
-                                // get the name. E.g. node_modules/packageName/not/this/part.js
-                                // or node_modules/packageName
-                                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
-                                // npm package names are URL-safe, but some servers don't like @ symbols
-                                return `npm.${packageName.replace('@', '')}`
+            const plugins = []
+                // 取消注释和打印
+                plugins.push(
+                    new UglifyJsPlugin({
+                        terserOptions: {
+                            output: {
+                                comments: true // 去掉注释
+                            },
+                            warnings: true,
+                            compress: {
+                                drop_console: true,
+                                drop_debugger: false,
+                                pure_funcs: ['console.log'] // 移除console
                             }
                         }
+                    })
+                )
+                // 服务器也要相应开启gzip
+                plugins.push(
+                    new CompressionWebpackPlugin({
+                        algorithm: 'gzip',
+                        test: /\.(js|css)$/, // 匹配文件名
+                        threshold: 10 * 1024, // 对超过10k的数据压缩
+                        deleteOriginalAssets: false, // 不删除源文件
+                        minRatio: 0.8 // 压缩比
+                    })
+                )
+                // 用于根据模块的相对路径生成 hash 作为模块 id, 一般用于生产环境
+                plugins.push(
+                    new HashedModuleIdsPlugin()
+                )
+                // 开启分离js
+                config.optimization = {
+                    runtimeChunk: 'single',
+                    splitChunks: {
+                        chunks: 'all',
+                        maxInitialRequests: Infinity,
+                        minSize: 1000 * 60,
+                        cacheGroups: {
+                            vendor: {
+                                test: /[\\/]node_modules[\\/]/,
+                                name(module) {
+                                    // 排除node_modules 然后吧 @ 替换为空 ,考虑到服务器的兼容
+                                    const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+                                    return `npm.${packageName.replace('@', '')}`
+                                }
+                            }
+                        }
+                    },
+                }
+                // 取消webpack警告的性能提示
+                config.performance = {
+                    hints: 'warning',
+                    // 入口起点的最大体积
+                    maxEntrypointSize: 1000 * 500,
+                    // 生成文件的最大体积
+                    maxAssetSize: 1000 * 1000,
+                    // 只给出 js 文件的性能提示
+                    assetFilter: function (assetFilename) {
+                        return assetFilename.endsWith('.js')
                     }
-                },
-                // minimizer: [new UglifyJsPlugin({ 
-                //     uglifyOptions: {
-                //         compress: {
-                //             warnings: false,
-                //             drop_console: true, // console
-                //             drop_debugger: false,
-                //             pure_funcs: ['console.log'] // 移除console
-                //         }
-                //     }
-                // })]
-            }
-            Object.assign(config, {
-                optimization
-            })
+                }
+                // config.externals =  //cdn预加载
+            return { plugins }
         } else {
             // 为开发环境修改配置...
         }
@@ -110,14 +142,18 @@ module.exports = {
     // css相关配置
     css: {
         // 启用 CSS modules
-        modules: false,
+        // requireModuleExtension: false,
         // 是否使用css分离插件  设置为true 热刷新样式失效
         extract: process.env.NODE_ENV === 'production' ? true : false,
         // 开启 CSS source maps?
         sourceMap: false,
         // css预设器配置项
         loaderOptions: {
-            css: {},
+            css: {
+                // modules: {
+                //     localIdentName: '[name]-[hash]'
+                //   },
+            },
             postcss: {
                 plugins: [
                     //remUnit这个配置项的数值是多少呢？？？ 通常我们是根据设计图来定这个值，原因很简单，便于开发。
@@ -132,7 +168,7 @@ module.exports = {
     // webpack-dev-server 相关配置
     devServer: {
         // host: 'localhost',设置本地IP地址
-        contentBase:path.resolve(__dirname,'build'),
+        contentBase: path.resolve(__dirname, 'dist'),
         port: 2333,
         https: false,
         open: true,
