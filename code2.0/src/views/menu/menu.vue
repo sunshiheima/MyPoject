@@ -1,11 +1,11 @@
 <template>
-  <div class=''>
+  <div >
       <MenuSun :menuList="$router.options.routes[0].children"/>
   </div>
 </template>
          
 <script>
-import MenuSun from '../../components/menu/MenuSUN'
+import MenuSun from '@/components/menu/MenuSUN'
 export default {
     components:{
         MenuSun,

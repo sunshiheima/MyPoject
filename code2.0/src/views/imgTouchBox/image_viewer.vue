@@ -1,6 +1,6 @@
-<template>
-  <transition name="viewer-fade">
-    <div tabindex="-1" ref="el-image-viewer__wrapper" class="el-image-viewer__wrapper" :style="{ 'z-index': zIndex }">
+<template >
+  <transition name="viewer-fade" >
+    <div tabindex="-1" ref="el-image-viewer__wrapper" class="el-image-viewer__wrapper"  :style="{ 'z-index': zIndex }">
       <div class="el-image-viewer__mask"></div>
       <!-- CLOSE -->
       <span class="el-image-viewer__btn el-image-viewer__close" @click.stop="hide">
@@ -22,7 +22,7 @@
         </span>
       </template>
       <!-- ACTIONS -->
-      <div class="el-image-viewer__btn el-image-viewer__actions">
+      <div class="el-image-viewer__btn el-image-viewer__actions" >
         <div class="el-image-viewer__actions__inner">
           <i class="el-icon-zoom-out" @click.self="handleActions('zoomOut')"></i>
           <i class="el-icon-zoom-in" @click.self="handleActions('zoomIn')"></i>
@@ -45,7 +45,7 @@
           :style="imgStyle"
           @load.self="handleImgLoad"
           @error.self="handleImgError"
-          @mousedown.self="handleMouseDown">
+          @mousedown.stop="handleMouseDown">
       </div>
     </div>
   </transition>
@@ -110,6 +110,7 @@ export default {
       }
     };
   },
+ 
   computed: {
     isSingle() {
       return this.urlList.length <= 1;
@@ -228,9 +229,9 @@ export default {
         this.transform.offsetX = offsetX + ev.pageX - startX;
         this.transform.offsetY = offsetY + ev.pageY - startY;
       });
-      on(document, 'mousemove', this._dragHandler);
-      on(document, 'mouseup', ev => {
-        off(document, 'mousemove', this._dragHandler);
+      on(document.getElementsByClassName('el-image-viewer__wrapper')[0], 'mousemove', this._dragHandler);
+      on(document.getElementsByClassName('el-image-viewer__wrapper')[0], 'mouseup', ev => {
+        off(document.getElementsByClassName('el-image-viewer__wrapper')[0], 'mousemove', this._dragHandler);
       });
 
       e.preventDefault();
@@ -297,6 +298,12 @@ export default {
     // add tabindex then wrapper can be focusable via Javascript
     // focus wrapper so arrow key can't cause inner scroll behavior underneath
     this.$refs['el-image-viewer__wrapper'].focus();
+       let bodyDom=document.querySelector("body")
+    let wrapper=document.querySelector(".el-image-viewer__wrapper");
+    bodyDom.appendChild(wrapper);
   }
 };
 </script>
+<style scoped lang="less">
+ 
+</style>

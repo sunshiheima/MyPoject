@@ -1,19 +1,19 @@
 <template>
   <div class="home fx_col">
     <div id="nav" class="fx">
-      <router-link class="fx fx_row_center fx_col_center" to="/wordOut"
+      <router-link class="fx jcc aic" to="/wordOut"
         ><span>导出html</span></router-link
       >
-      <router-link class="fx fx_row_center fx_col_center" to="/arcgisImg"
+      <router-link class="fx jcc aic" to="/arcgisImg"
         ><span>arcgisImg</span></router-link
       >
-      <router-link class="fx fx_row_center fx_col_center" to="/button"
+      <router-link class="fx jcc aic" to="/button"
         ><span>按钮</span></router-link
       >
-      <router-link class="fx fx_row_center fx_col_center" to="/menu"
+      <router-link class="fx jcc aic" to="/menu"
         ><span>菜单</span></router-link
       >
-      <router-link class="fx fx_row_center fx_col_center" to="/imgTochBox"
+      <router-link class="fx jcc aic" to="/imgTochBox"
         ><span>图片框</span></router-link
       >
     </div>

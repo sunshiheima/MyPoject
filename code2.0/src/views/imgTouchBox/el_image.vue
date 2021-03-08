@@ -11,8 +11,8 @@
     <img
       v-else
       class="el-image__inner"
-      
-      @click.stop="clickHandler"
+      @click.self="clickHandler"
+      @mousedown.self="imgTouchBoxMousedown"
       :src="src"
       :style="imageStyle"
       :class="{
@@ -84,6 +84,7 @@ export default {
 
   data() {
     return {
+      MousemoveActive:true,
       loading: true,
       error: false,
       show: !this.lazy,
@@ -147,6 +148,43 @@ export default {
   },
 
   methods: {
+    //鼠标拖动
+    imgTouchBoxMousedown(e) {
+      let _this = this;
+      _this.MousemoveActive = false;
+      _this.previewList = [];
+      //  debugger
+      //  e.preventDefault(); // 移动时禁用默认事件
+      // e.stopPropagation(); // 移动时禁用默认事件
+      //禁止图片拖动
+      e.target.draggable = false;
+
+      let ScrollDom = document.querySelector("el-image__inner");
+      // 鼠标按下，计算当前元素距离可视区的距离
+      const oldX = e.clientX;
+      const oldY = e.clientY;
+      console.log(oldX, oldY);
+      //开始拖拽
+      ScrollDom.onmousemove = (event) => {
+        e.preventDefault(); // 移动时禁用默认事件
+        e.stopPropagation(); // 移动时禁用冒泡事件
+        let newX = event.clientX - oldX;
+        let newY = event.clientY - oldY;
+        console.log(newX, newY);
+        if (Math.abs(newX) > 3 || Math.abs(newY) > 3) {
+          _this.MousemoveActive = true;
+          //滚动偏移
+        } else {
+          _this.MousemoveActive = false;
+        }
+        console.log("鼠标移动", ScrollDom.scrollLeft);
+      };
+      //拖拽结束
+      ScrollDom.onmouseup = (event) => {
+        ScrollDom.onmousemove = null;
+        ScrollDom.onmouseup = null;
+      };
+    },
     loadImage() {
       if (this.$isServer) return;
 
@@ -248,7 +286,7 @@ export default {
     clickHandler() {
       this.previewSrcList;
       // don't show viewer when preview is false
-      if (!this.preview) {
+      if (!this.preview || MousemoveActive) {
         return;
       }
       // prevent body scroll
