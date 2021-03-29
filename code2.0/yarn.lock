@@ -8337,6 +8337,11 @@ vue-router@^3.2.0:
   resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-3.4.9.tgz?cache=0&sync_timestamp=1610356219080&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-router%2Fdownload%2Fvue-router-3.4.9.tgz#c016f42030ae2932f14e4748b39a1d9a0e250e66"
   integrity sha1-wBb0IDCuKTLxTkdIs5odmg4lDmY=
 
+vue-slicksort@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/vue-slicksort/-/vue-slicksort-1.2.0.tgz#2bc1da2facc4350279ebc3866acea6ee5fe681ef"
+  integrity sha512-k1324l+AnYy6MrpySN7PYL165z2EkvZmMe+BS7H/EugzS8IrZYRtoqa3QxSSWB34C7cplV1hj3c+7peKpxpYxg==
+
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
   resolved "https://registry.npm.taobao.org/vue-style-loader/download/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"

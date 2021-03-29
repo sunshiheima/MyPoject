@@ -1,0 +1,85 @@
+.targetDom{
+    /* background-color: #f00 !important; */
+    border: 1px solid #f00;
+}
+.Box{
+    margin: 200px auto;
+    width: 200px;
+}
+.Box>span{
+    display: inline-flex;
+    background: #fff;
+    box-shadow: 0 0 10px 0 #ccc;
+    height: 50px;
+    padding: 3px 10px;
+    line-height: 50px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.ToolBox{
+   height: 80px;
+   width: 100vw;
+   background-color: rgba(0,0,0,0);
+   position: fixed;
+   bottom: 50px;
+   left: 0px;
+   z-index: 9999;
+   pointer-events: none;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.ToolBody{
+    width :50vw;
+    height :100%;
+    background-color :#fff;
+    border-radius :5px;
+    pointer-events :auto;
+    box-shadow :0 0 10px 0 #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.toolItem{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0 5px;
+}
+.toolItem>input{
+    width: 120px;
+}
+.toolItem>input[type="number"]{
+    width: 55px;
+}
+.toolItem>input[type="datetime-local"]{
+    width: 170px;
+}
+.toolItem>.btns{
+    display: flex;
+}
+.toolItem>.btns>button{
+    margin: 0 2px;
+}
+.toolItem button{
+    cursor: pointer;
+}
+.goodName{
+    flex: 1;
+    max-width: 120px;
+}
+.toolTitle{
+font-weight: bold;
+font-size: 14px;
+}
+.toolContent{
+    display: flex;
+    max-width: 120px;
+}
+.toolContent>.text{
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 12px;
+}

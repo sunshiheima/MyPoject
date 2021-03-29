@@ -51,6 +51,14 @@ const routes = [
           name:'图片框',
         }
       },
+      {
+        path: '/slicksort',
+        name: 'slicksort',
+        component: () => import(/* webpackChunkName: "imgTochBox" */ '../views/slicksort/slicksort.vue'),
+        meta:{
+          name:'拖拽',
+        }
+      },
     ]
   },
  
