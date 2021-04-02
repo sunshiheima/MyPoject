@@ -57,119 +57,150 @@
             </div>
         </div>
     `);
-    let styleDom = document.createElement("style")
+    let styleDom = document.createElement("style");
     styleDom.innerHTML = `
-    `
-    document.getElementsByTagName("head")[0].appendChild(styleDom)
+    `;
+    document.getElementsByTagName("head")[0].appendChild(styleDom);
     let body = document.getElementsByTagName("body")[0];
-    
+
     /* 选取元素 */
     let goodSelectBtnDom = document.querySelector(".goodSelectBtn");
     let goodConfirmDom = document.querySelector(".goodConfirm");
-    let globalObj={
-        id:"",
-        name:"",//商品名称
-        url:"",//商品链接
-        domName:"",//按钮名称
-        time:"",//秒杀时间
-        frequency:"",//秒杀频率
-        times:"",//秒杀次数
-        open:false,//链接打开
-        past:false,//是否过期
-        step:0,//步骤 0抢购界面 1去购物车结算 2购物车结算 3提交订单 4支付界面
-        shopCartDomName:"立即抢购",//按钮文字
-        herf:"",//当前界面地址
-        terrace:"",//平台
-        checked:false,
-    }
+    let globalObj = {
+        id: "",
+        name: "",//商品名称
+        url: "",//商品链接
+        domName: "",//按钮名称
+        time: "",//秒杀时间
+        frequency: "",//秒杀频率
+        times: "",//秒杀次数
+        open: false,//链接打开
+        past: false,//是否过期
+        step: 0,//步骤 0抢购界面 1去购物车结算 2购物车结算 3提交订单 4支付界面
+        shopCartDomName: "立即抢购",//按钮文字
+        herf: "",//当前界面地址
+        terrace: "",//平台
+        checked: false,
+    };
+    let setTimeRuning = null;
     /* 初始化tool */
     function restTool() {
         getNewTime();
         getgoodUrl();
         getStep();
         // testRequire()//测试跨域访问
+        runTool();
     };
     restTool();
     /* 点击获取元素 */
     goodSelectBtnDom.addEventListener("click", function () {
-        bodyCursor()//改变手型
-        submitSelectDom()//选取dom
-    })
+        bodyCursor();//改变手型
+        submitSelectDom();//选取dom
+    });
     /* 确认点击 */
     goodConfirmDom.addEventListener("click", function () {
         /* tool填写数据获取 */
-        let goodName = (document.querySelector(".goodName")&&document.querySelector(".goodName").innerHTML) || "";
-        let goodUrlInput = (document.querySelector(".goodUrlInput")&&document.querySelector(".goodUrlInput").value) || "";
-        let goodDomName = (document.querySelector(".goodDomName")&&document.querySelector(".goodDomName").innerHTML) || "";
-        let goodTimeInput = (document.querySelector(".goodTimeInput")&&document.querySelector(".goodTimeInput").value) || "";
-        let goodFrequencyInput = (document.querySelector(".goodFrequencyInput")&&document.querySelector(".goodFrequencyInput").value) || "";
-        let goodTimesInput = (document.querySelector(".goodTimesInput")&&document.querySelector(".goodTimesInput").value) || "";
-        if(goodName&&goodUrlInput&&goodDomName&&goodTimeInput&&goodFrequencyInput&&goodTimesInput){
+        let goodName = (document.querySelector(".goodName") && document.querySelector(".goodName").innerHTML) || "";
+        let goodUrlInput = (document.querySelector(".goodUrlInput") && document.querySelector(".goodUrlInput").value) || "";
+        let goodDomName = (document.querySelector(".goodDomName") && document.querySelector(".goodDomName").innerHTML) || "";
+        let goodTimeInput = (document.querySelector(".goodTimeInput") && document.querySelector(".goodTimeInput").value) || "";
+        let goodFrequencyInput = (document.querySelector(".goodFrequencyInput") && document.querySelector(".goodFrequencyInput").value) || "";
+        let goodTimesInput = (document.querySelector(".goodTimesInput") && document.querySelector(".goodTimesInput").value) || "";
+        if (goodName && goodUrlInput && goodDomName && goodTimeInput && goodFrequencyInput && goodTimesInput) {
             alert("保存成功");
-            globalObj.checked=true;
-            let goodToolList=localStorage.getItem("goodToolList");
-            if(goodToolList){
-                goodToolList=JSON.parse(goodToolList);
-                let bg=goodToolList.some(item=>{
-                    return item.id==globalObj.id;
-                })
-                if(bg){
-                    for(let i=0;i<goodToolList.length;i++){
-                        if(goodToolList[i].id==globalObj.id){
-                            goodToolList.splice(i,1)
-                        }
-                    }
+            globalObj.checked = true;
+            let goodToolList = localStorage.getItem("goodToolList");
+            if (goodToolList) {
+                goodToolList = JSON.parse(goodToolList);
+                let bg = goodToolList.some(item => {
+                    return item.id == globalObj.id;
+                });
+                if (bg) {
+                    for (let i = 0; i < goodToolList.length; i++) {
+                        if (goodToolList[i].id == globalObj.id) {
+                            goodToolList.splice(i, 1);
+                        };
+                    };
                     goodToolList.push(globalObj);
-                }else{
+                } else {
                     goodToolList.push(globalObj);
-                }
-                localStorage.setItem("goodToolList",JSON.stringify(goodToolList))
-            }else{
+                };
+                localStorage.setItem("goodToolList", JSON.stringify(goodToolList));
+            } else {
+                ;
 
-                localStorage.setItem("goodToolList",JSON.stringify([globalObj]))
-            }
-        }
-    })
-    function runTool(){
+                localStorage.setItem("goodToolList", JSON.stringify([globalObj]));
+            };
+        };
+    });
+    function runTool() {
+        let goodToolList = localStorage.getItem("goodToolList");
         let targetDom = null;
-        if(globalObj.terrace=="京东"){
-            console.log("欢迎使用京东秒杀平台");
-            switch (globalObj.step){
-                case 0:
-                let goodDomName = localStorage.getItem("goodDomName");
-                if (goodDomName) {
-                    targetDom = document.querySelector(goodDomName);
-                }
-                if (targetDom) {
-                    targetDom.click();
-                }
-                break;
-                case 1:
-                targetDom = document.querySelector('#GotoShoppingCart');
-                if(targetDom){
-                    targetDom.click();
-                }
-                break;
-                case 2:
-                targetDom = document.querySelector('.common-submit-btn');
-                if(targetDom){
-                    targetDom.click();
-                }
-                break;
-                case 3:
-                targetDom = document.querySelector('#order-submit');
-                if(targetDom){
-                    targetDom.click();
-                }
-                break;
-                case 4:
-                console.log("抢购成功,请前往我的订单进行支付");
-                break;
-            }
-        }else{
+        if (goodToolList) {
+            goodToolList = JSON.parse(goodToolList);
+            for (let i = 0; i < goodToolList.length; i++) {
+                if (goodToolList[i].terrace == globalObj.terrace) {
+                    globalObj = goodToolList[i];
+                    break;
+                };
+            };
+            let nowTime = new Date();
+            if (globalObj.time && globalObj.frequency && globalObj.times) {
+                if (nowTime >= globalObj.time) {
+                    let times = 0;
+                    setTimeRuning = setInterval(() => {
+                        running();
+                        times += 1;
+                        if (times > globalObj.times) {
+                            console.log("已经达到秒杀上限");
+                            clearInterval(setTimeRuning);
+                        };
+                    }, globalObj.frequency);
+                };
+            };
+        };
 
-        }
-    }
+    };
+    function running() {
+        if (globalObj.terrace == "京东") {
+            console.log("欢迎使用京东秒杀平台");
+            switch (globalObj.step) {
+                case 0:
+                    let goodDomName = localStorage.getItem("goodDomName");
+                    if (goodDomName) {
+                        targetDom = document.querySelector(goodDomName);
+                    };
+                    if (targetDom) {
+                        targetDom.click();
+                    };
+                    break;
+                case 1:
+                    targetDom = document.querySelector('#GotoShoppingCart');
+                    if (targetDom) {
+                        targetDom.click();
+                    };
+                    break;
+                case 2:
+                    targetDom = document.querySelector('.common-submit-btn');
+                    if (targetDom) {
+                        targetDom.click();
+                    };
+                    break;
+                case 3:
+                    targetDom = document.querySelector('#order-submit');
+                    if (targetDom) {
+                        targetDom.click();
+                    }
+                    break;
+                case 4:
+                    clearInterval(setTimeRuning);
+                    console.log("抢购成功,请前往我的订单进行支付");
+                    break;
+            }
+        } else {
+
+        };
+    };
     /* 测试跨域访问（失败）*/
     // function testRequire(){
     //     let HTTP;
@@ -193,46 +224,47 @@
                 targetDom.classList.add("targetDom");
                 targetDom.onmouseout = (event) => {
                     targetDom.classList.remove("targetDom");
-                    restTargetDom()
-                }
+                    restTargetDom();
+                };
                 /* 目标dom选择过程 */
                 targetDom.onmousedown = (event) => {
                     if (event.button == 1) {//中间
                         console.log("鼠标中键!");
-                        restTargetDom()
+                        restTargetDom();
                         body.onmousemove = null;
-                        bodyCursor(false)
-                        activeDom(targetDom)
+                        bodyCursor(false);
+                        activeDom(targetDom);
                     } else if (event.button == 0) {//左键
                         oldTime = new Date();
                         mousemove = false;
                         targetDom.onmousemove = (event) => {
                             mousemove = true;
-                        }
+                        };
                         targetDom.onmouseup = (event) => {
                             newTime = new Date();
                             restTargetDom();
                             let timeChange = newTime - oldTime;
                             if (timeChange > 500 && (!mousemove)) {
                                 body.onmousemove = null;
-                                bodyCursor(false)
-                                console.log("我是长按事件")
-                                activeDom(targetDom)
+                                bodyCursor(false);
+                                console.log("我是长按事件");
+                                activeDom(targetDom);
+                                e.defaultPrevented();
                             } else {
-                                console.log("我是点击事件")
-                            }
-                        }
+                                console.log("我是点击事件");
+                            };
+                        };
 
-                    }
-                }
+                    };
+                };
                 /* 重置目标dom 事件 */
                 function restTargetDom() {
-                    if (targetDom.nodeName == "BODY") return
+                    if (targetDom.nodeName == "BODY") return;
                     targetDom.onmouseup = null;
                     targetDom.onmousemove = null;
                     targetDom.onmousedown = null;
                     targetDom.onmouseup = null;
-                }
+                };
                 /* 设置获取的目标dom 并缓存 */
                 function activeDom() {
                     let goodNameDom = document.getElementsByClassName("goodDomName")[0];
@@ -249,65 +281,65 @@
                                         for (let i = 0; i < dom.parentElement.children.length; i++) {
                                             if (dom.parentElement.children[i].innerHTML == globalObj.shopCartDomName) {
                                                 return (QueryDom = dom.parentElement.children[i]);
-                                            }
-                                        }
-                                        return getSubTargetDomTop(dom.parentElement, oldDom, topBot)
+                                            };
+                                        };
+                                        return getSubTargetDomTop(dom.parentElement, oldDom, topBot);
                                     } else {
                                         if (oldDom.children && oldDom.children.length > 0) {
-                                            return getSubTargetDomTop(oldDom, oldDom, false)
+                                            return getSubTargetDomTop(oldDom, oldDom, false);
                                         } else {
-                                            console.log("暂未获取到按钮节点信息！")
-                                            return (QueryDom.dom = null)
-                                        }
-                                    }
-                                }
+                                            console.log("暂未获取到按钮节点信息！");
+                                            return (QueryDom.dom = null);
+                                        };
+                                    };
+                                };
                             } else {
                                 /* 向下查找 */
                                 for (let v = 0; v < dom.children; v++) {
                                     if (dom.children[v].innerHTML == globalObj.shopCartDomName) {
-                                        return (QueryDom = dom.children[v])
+                                        return (QueryDom = dom.children[v]);
                                     } else {
                                         if (dom.children[v].children && dom.children[v].children.length > 0) {
                                             return getSubTargetDomTop(dom.children[v], oldDom, topBot);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        getSubTargetDomTop(targetDom, targetDom)//向上查找节点
+                                        };
+                                    };
+                                };
+                            };
+                        };
+                        getSubTargetDomTop(targetDom, targetDom);//向上查找节点
                         if (!QueryDom) {
-                            console.log("暂未获取到按钮节点信息！")
+                            console.log("暂未获取到按钮节点信息！");
                         } else {
                             if (!(QueryDom.classList && QueryDom.classList.length === 1 && QueryDom.className !== "targetDom") || QueryDom.id) {
-                                let text=null;
-                                if(QueryDom.id){
-                                    text= "#"+QueryDom.id;
-                                    goodNameDom.innerHTML=text;
-                                    localStorage.setItem("goodDomName",text);
-                                }else{
-                                    if(QueryDom.classList.value.includes("targetDom")){
-                                        text ='.'+QueryDom.classList[QueryDom.classList.length - 2]
-                                    }else{
-                                        text ='.'+QueryDom.classList[QueryDom.classList.length - 1]
-                                    }
-                                    goodNameDom.innerHTML =text ;
-                                    localStorage.setItem("goodDomName",text);
-                                }
-                                console.log("获取到按钮节点信息:", text)
-                                
+                                let text = null;
+                                if (QueryDom.id) {
+                                    text = "#" + QueryDom.id;
+                                    goodNameDom.innerHTML = text;
+                                    localStorage.setItem("goodDomName", text);
+                                } else {
+                                    if (QueryDom.classList.value.includes("targetDom")) {
+                                        text = '.' + QueryDom.classList[QueryDom.classList.length - 2];
+                                    } else {
+                                        text = '.' + QueryDom.classList[QueryDom.classList.length - 1];
+                                    };
+                                    goodNameDom.innerHTML = text;
+                                    localStorage.setItem("goodDomName", text);
+                                };
+                                console.log("获取到按钮节点信息:", text);
+
                             } else {
-                                console.log("获取不到目标dom的class或id:", QueryDom.nodeName)
-                            }
-                        }
-                    }
+                                console.log("获取不到目标dom的class或id:", QueryDom.nodeName);
+                            };
+                        };
+                    };
 
 
-                }
+                };
             } else {
-                console.log("选取不了元素")
-            }
-        }
-    }
+                console.log("选取不了元素");
+            };
+        };
+    };
     /* 获取时间 */
     function getNewTime() {
         let timeDom = document.querySelector(".goodTimeInput");
@@ -320,10 +352,10 @@
         let ss = date.getSeconds();
         function timeFilter(time) {
             if (Number(time) > 9) {
-                return time
-            }
-            return '0' + time
-        }
+                return time;
+            };
+            return '0' + time;
+        };
         let time = year + "-" + timeFilter(month) + "-" + timeFilter(day) + "T" + timeFilter(hh) + ":" + timeFilter(mm);
         timeDom.value = time;
         localStorage.setItem("Time", time);
@@ -333,39 +365,39 @@
         let goodUrlInput = document.getElementsByClassName("goodUrlInput")[0];
         if (goodUrlInput) {
             goodUrlInput.value = window.location.href;
-        }
-    }
+        };
+    };
     /* 获取商品链接 */
     function getStep() {
-        globalObj.herf= window.location.href;
-        if( globalObj.herf.includes("jd.com")){
-            terrace="京东";
-            if(globalObj.herf.includes("https://item.jd.com")){
-                globalObj.step=0;
+        globalObj.herf = window.location.href;
+        if (globalObj.herf.includes("jd.com")) {
+            globalObj.terrace = "京东";
+            if (globalObj.herf.includes("https://item.jd.com")) {
+                globalObj.step = 0;
                 let goodUrlInput = document.getElementsByClassName("goodUrlInput")[0];
                 if (goodUrlInput) {
                     goodUrlInput.value = window.location.href;
-                }
-            }else if(globalObj.herf.includes("https://cart.jd.com/addToCart.html")){
-                globalObj.step=1;
-            }else if(globalObj.herf.includes("https://cart.jd.com")){
-                globalObj.step=2;
-            }else if(globalObj.herf.includes("https://trade.jd.com")){
-                globalObj.step=3;
-            }else if(globalObj.herf.includes("https://pay.jd.com")){
-                globalObj.step=4;
-            }
-        }
-       
-    }
+                };
+            } else if (globalObj.herf.includes("https://cart.jd.com/addToCart.html")) {
+                globalObj.step = 1;
+            } else if (globalObj.herf.includes("https://cart.jd.com")) {
+                globalObj.step = 2;
+            } else if (globalObj.herf.includes("https://trade.jd.com")) {
+                globalObj.step = 3;
+            } else if (globalObj.herf.includes("https://pay.jd.com")) {
+                globalObj.step = 4;
+            };
+        };
+
+    };
     /* body 手型 */
     function bodyCursor(def = true) {
         if (def) {
-            body.style.cursor = "help"
+            body.style.cursor = "help";
         } else {
-            body.style.cursor = "auto"
-        }
-    }
+            body.style.cursor = "auto";
+        };
+    };
 
 
 

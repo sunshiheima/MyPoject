@@ -1,6 +1,7 @@
 .targetDom{
     /* background-color: #f00 !important; */
     border: 1px solid #f00;
+    box-shadow: 0 0 10px 0 #f00;
 }
 .Box{
     margin: 200px auto;
@@ -30,7 +31,7 @@
    align-items: center;
 }
 .ToolBody{
-    width :50vw;
+    width :60vw;
     height :100%;
     background-color :#fff;
     border-radius :5px;
@@ -51,6 +52,9 @@
 }
 .toolItem>input[type="number"]{
     width: 55px;
+}
+.goodSubmiName>.goodSubmiNameInput{
+    width:90px;
 }
 .toolItem>input[type="datetime-local"]{
     width: 170px;
