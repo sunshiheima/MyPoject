@@ -1,0 +1,12 @@
+1. vue react jq框架的区别，以及自己的优势？
+   vue(mvvm)兼容>=IE9 react(mvc)兼容>=IE8 都是mv*的数据驱动架构
+   jq（它可以实现复杂动画，兼容IE 6 7 8） 1.12.X（JQ最后一个支持678的版本）
+	
+	MVC: 把一个web应用拆分为三个部分 Model（数据） View（视图） Controller(控制器)
+	MVVM： 是MVC的升级版，和MVC的唯一区别，就是多了数据双向绑定（VM） Object.defineProperty函数进行转化
+
+	vue中是完全可以引入jq！！！！！ react中也可以引入jq！！！！！
+	vue+jquery（>=IE9）   jquery项目！！！后来老板或者主程会说技术升级 高1 低0 重写!!!
+        因为项目周期不够，所以就产生了时代产物（时间不够重构） vue+jquery   vj用vue写框架把jq包进去
+
+ 10点准时开始
