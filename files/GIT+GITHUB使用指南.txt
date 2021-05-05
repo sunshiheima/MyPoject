@@ -1,0 +1,41 @@
+GIT：版本控制工具   提交更新合并代码等...
+
+
+GITHUB： 一个免费的云仓库，可以帮我们托管项目代码 （私人仓库GITHUB要收费）
+
+1. 设置自己的名字和邮箱
+	git config --global user.name xxxxxx
+	git config --global user.email xxxx@qq.com
+
+
+2. 在github上创建一个项目容器Create a new repository
+	登录以后，点击new新建一个项目库
+	输入项目名 选择public即可
+
+
+3. 生成本地SSHkey，等会和github绑定到一起
+	ssh-keygen -t rsa -C 邮箱地址
+
+
+4. 根据生存路径，打开.ssh文件夹
+	打开 id_rsa.pub文件  全选复制其中所有内容
+
+
+5. 点击GITHUB用户头像，点击下方Setting设置
+
+
+6. 点击SSH and GPG keys选项，把刚才复制的id_rsa.pub文件内的所有内容，粘贴到SSHkey中
+	新建一个SSH key，Title随意， key就是刚才复制的值
+	为了安全性， 绑定了SSH key以后， 当前拥有key的电脑，才可以提交和修改github上的内容
+
+
+7. 提交项目到github仓库, 选中项目后， 右键git gui
+	先commit提交到本地服务器  再push推到github 
+	复制github仓库的https地址， 在push时，把地址粘贴过去
+
+	弹框输入github用户名和密码， 就可以开始推送
+
+
+	commit: 把代码提交到本地服务器
+	push: 把本地服务器的代码推送到远程的任何一个地址
+	
