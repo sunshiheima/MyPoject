@@ -1,0 +1,10 @@
+--------------------------------info[09:29:06]--------------------------------
+System.Exception: v2rayN start up v2rayN - V4.14 - 2021/04/26
+
+ 
+--------------------------------操作超时[09:39:24]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
