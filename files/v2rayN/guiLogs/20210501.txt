@@ -1,0 +1,426 @@
+--------------------------------info[21:36:38]--------------------------------
+System.Exception: v2rayN start up v2rayN - V4.14 - 2021/04/26
+
+ 
+--------------------------------info[21:37:51]--------------------------------
+System.Exception: v2rayN start up v2rayN - V4.14 - 2021/04/26
+
+ 
+--------------------------------info[21:38:42]--------------------------------
+System.Exception: v2rayN start up v2rayN - V4.14 - 2021/04/26
+
+ 
+--------------------------------基础连接已经关闭: 发送时发生错误。[21:39:36]--------------------------------
+System.Net.WebException: 基础连接已经关闭: 发送时发生错误。 ---> System.IO.IOException: 由于远程方已关闭传输流，身份验证失败。
+   在 System.Net.Security.SslState.StartReadFrame(Byte[] buffer, Int32 readBytes, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.StartReceiveBlob(Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.CheckCompletionBeforeNextReceive(ProtocolToken message, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.ForceAuthentication(Boolean receiveFirst, Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.ProcessAuthentication(LazyAsyncResult lazyResult)
+   在 System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   在 System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   在 System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   在 System.Net.TlsStream.ProcessAuthentication(LazyAsyncResult result)
+   在 System.Net.TlsStream.Write(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.Net.PooledStream.Write(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.Net.ConnectStream.WriteHeaders(Boolean async)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:36]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:36]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:36]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:37]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:37]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:39]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:40]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:42]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:43]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:45]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:46]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:48]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:48]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:48]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:49]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:50]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:51]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:51]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------基础连接已经关闭: 发送时发生错误。[21:39:52]--------------------------------
+System.Net.WebException: 基础连接已经关闭: 发送时发生错误。 ---> System.IO.IOException: 由于远程方已关闭传输流，身份验证失败。
+   在 System.Net.Security.SslState.StartReadFrame(Byte[] buffer, Int32 readBytes, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.StartReceiveBlob(Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.CheckCompletionBeforeNextReceive(ProtocolToken message, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.ForceAuthentication(Boolean receiveFirst, Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.ProcessAuthentication(LazyAsyncResult lazyResult)
+   在 System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   在 System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   在 System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   在 System.Net.TlsStream.ProcessAuthentication(LazyAsyncResult result)
+   在 System.Net.TlsStream.Write(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.Net.PooledStream.Write(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.Net.ConnectStream.WriteHeaders(Boolean async)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:52]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:54]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:54]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:54]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:55]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:55]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:56]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:57]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:57]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:57]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:58]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:59]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:39:59]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:23]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:23]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:23]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:24]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:24]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:25]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:26]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:26]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:26]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:28]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:29]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:29]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:29]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:31]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:31]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:32]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:33]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------基础连接已经关闭: 发送时发生错误。[21:40:34]--------------------------------
+System.Net.WebException: 基础连接已经关闭: 发送时发生错误。 ---> System.IO.IOException: 由于远程方已关闭传输流，身份验证失败。
+   在 System.Net.Security.SslState.StartReadFrame(Byte[] buffer, Int32 readBytes, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.StartReceiveBlob(Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.CheckCompletionBeforeNextReceive(ProtocolToken message, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.ForceAuthentication(Boolean receiveFirst, Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   在 System.Net.Security.SslState.ProcessAuthentication(LazyAsyncResult lazyResult)
+   在 System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   在 System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   在 System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   在 System.Net.TlsStream.ProcessAuthentication(LazyAsyncResult result)
+   在 System.Net.TlsStream.Write(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.Net.PooledStream.Write(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.Net.ConnectStream.WriteHeaders(Boolean async)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:35]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:35]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:36]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:37]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:37]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:38]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:38]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:38]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:38]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------操作超时[21:40:39]--------------------------------
+System.Net.WebException: 操作超时
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 v2rayN.Handler.SpeedtestHandler.GetRealPingTime(String url, WebProxy webProxy, Int32& responseTime)
+
+ 
+--------------------------------远程服务器返回错误: (503) 服务器不可用。[21:48:21]--------------------------------
+System.Net.WebException: 远程服务器返回错误: (503) 服务器不可用。
+   在 v2rayN.Handler.DownloadHandle.ws_DownloadFileCompleted(Object sender, AsyncCompletedEventArgs e)
+
+ 
+--------------------------------info[22:34:54]--------------------------------
+System.Exception: v2rayN start up v2rayN - V4.14 - 2021/04/26
+
+ 
