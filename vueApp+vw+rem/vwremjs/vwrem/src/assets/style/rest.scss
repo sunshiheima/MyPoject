@@ -1,0 +1,295 @@
+html,
+body,
+#app,
+.home {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	background-color: transparent;
+}
+html{
+	font-size: 13.333333vw;
+	@media only screen and(max-width:375px){
+		font-size: 20px;
+	}
+	@media only screen and(min-width:750px){
+		font-size: 16px;
+	}
+	body{
+		font-size: 0.16rem;
+	}
+}
+p,
+i,
+ul,
+ol,
+table,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-style: none;
+}
+
+$baseBack: #fff;
+$baseBorderColor: #fff;
+
+.h100 {
+	height: 100%;
+}
+
+.w100 {
+	width: 100%;
+}
+
+//flex布局
+.fx {
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: row;
+}
+
+.fx_col {
+	display: flex;
+	flex-direction: column;
+}
+
+.fx_w {
+	flex-wrap: wrap;
+}
+
+.fx_nw {
+	flex-wrap: nowrap;
+}
+
+.fx_1 {
+	flex: 1;
+}
+
+.fcc {
+	justify-content: center;
+	align-items: center;
+}
+
+.jcc {
+	justify-content: center;
+}
+
+.jcb {
+	justify-content: space-between;
+}
+
+.jce {
+	justify-content: space-evenly;
+}
+
+.jca {
+	justify-content: space-around;
+}
+
+.jcs {
+	justify-content: flex-start;
+}
+
+.jce {
+	justify-content: flex-end;
+}
+
+.aic {
+	align-items: center;
+}
+
+.ais {
+	align-items: flex-start;
+}
+
+.aie {
+	align-items: flex-end;
+}
+
+.aca {
+	align-content: flex-start;
+}
+
+.acc {
+	align-content: center;
+}
+
+.ace {
+	align-content: flex-end;
+}
+
+/* position */
+.pr {
+	position: relative;
+}
+
+.pa {
+	position: absolute;
+}
+
+.pf {
+	position: fixed;
+}
+
+//文字样式
+.fc {
+	text-align: center;
+	vertical-align: center;
+}
+
+.fb {
+	font-weight: bold;
+}
+
+.wnw {
+	white-space: nowrap;
+}
+
+/* 怪异盒子模型 */
+.box {
+	box-sizing: border-box;
+}
+
+.ib {
+	display: inline-block;
+}
+
+.if {
+	display: inline-flex;
+}
+
+/*
+    margin padding fontSize width 通用样式表
+    免去你每次重写样式的烦恼
+    marked by Jacky
+*/
+@for $i from 1 through 10 {
+
+	/* padding */
+	.p_#{$i} {
+		padding: (1rem*$i);
+	}
+
+	;
+
+	.pt_#{$i} {
+		padding-top: (1rem*$i);
+	}
+
+	.pr_#{$i} {
+		padding-right: (1rem*$i);
+	}
+
+	.pb_#{$i} {
+		padding-bottom: (1rem*$i);
+	}
+
+	.pl_#{$i} {
+		padding-left: (1rem*$i);
+	}
+
+	/* margin */
+	.m_#{$i} {
+		margin: (1rem*$i);
+	}
+
+	.mt_#{$i} {
+		margin-top: (1rem*$i);
+	}
+
+	.mr_#{$i} {
+		margin-right: (1rem*$i);
+	}
+
+	.mb_#{$i} {
+		margin-bottom: (1rem*$i);
+	}
+
+	.ml_#{$i} {
+		margin-left: (1rem*$i);
+	}
+
+	.fz_#{$i} {
+		//字体大小
+		font-size: (1rem*$i);
+	}
+
+	/* line-height */
+	.lh_#{$i} {
+		//行高
+		line-height: (1rem*$i);
+	}
+
+	.width_#{$i} {
+		width: 1rem*$i;
+	}
+
+	.height_#{$i} {
+		height: 1rem*$i;
+	}
+
+	.fxb_#{$i} {
+		flex: 0 0 (1rem*$i);
+	}
+
+	.br_#{$i} {
+		border-radius: $i*1rem;
+	}
+
+	/* border */
+	.bob_#{$i} {
+		border-bottom: 1rem*$i solid $baseBorderColor;
+	}
+
+	.bol_#{$i} {
+		border-left: 1rem*$i solid $baseBorderColor;
+	}
+
+	.bor_#{$i} {
+		border-right: 1rem*$i solid $baseBorderColor;
+	}
+
+	.bot_#{$i} {
+		border-top: 1rem*$i solid $baseBorderColor;
+	}
+}
+
+//overflow封装
+.flow_h {
+	overflow: hidden;
+}
+
+.flow_x {
+	overflow-y: hidden;
+	overflow-x: auto;
+}
+
+.flow_y {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+/* 隐藏滚动条 */
+.scroll_h {
+
+	/* h5端 */
+	.uni-scroll-view {
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	/* 微信端 */
+	::-webkit-scrollbar {
+		display: none;
+	}
+}
