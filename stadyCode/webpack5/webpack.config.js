@@ -8,7 +8,7 @@ module.exports = {
     /* 出口 */
     output: {
         filename: "build.js",
-        path: path.resolve(__dirname, "dist")
+        path: path.resolve(__dirname, "dist"),
     },
     /* loader 各种加载器*/
     module: {
@@ -34,12 +34,17 @@ module.exports = {
             },
             {
                 test: /\.html$/,
-                loader: "html-loader",
+                loader: 'html-loader'
             },
             {
                 // 打包其他资源
                 exclude: /\.(css|js|html|scss|png|jpg|gif)$/,
-                loader: 'file-loader'
+                loader: "file-loader",
+                options:{
+                    name:"[name][hash:10].[ext]",
+                    publicPath:"./files",
+                    outputPath:"files/"
+                }
             }
         ]
     },
@@ -50,7 +55,7 @@ module.exports = {
             template: "./src/public/index.html",
             filename: "index.html",
             minify: {
-                collapseWhitespace: true,//移除空格
+                // collapseWhitespace: true,//移除空格
                 removeComments: true,//移除注释
             }
         }),
