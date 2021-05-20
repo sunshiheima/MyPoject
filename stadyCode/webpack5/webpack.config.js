@@ -107,5 +107,6 @@ module.exports = {
         hot:true,
     },
     target:"web",//webpack5 需要添加这个参数 启动刷新
+    
     // mode: "development"//development 开发 production 生产
 }
