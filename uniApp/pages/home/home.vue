@@ -1,19 +1,21 @@
 <template>
 	<scroll-view class="home fx_1 fx_col  box backColor flow_y scroll_h" :scroll-y="true" :show-scrollbar="false">
-			<swiper id="swiper1" :indicator-dots="true" indicator-active-color="#ff5000" :autoplay="true"
-				:interval="3000" :duration="1000">
-				<swiper-item class="height_200 fx fcc" v-for="(item,index) in swiperList">
-					<image class="fx_1 w100 h100" :src="item.url" mode="scaleToFill"></image>
-				</swiper-item>
-			</swiper>
+		<Skeleton :show="skeletonShow" :backgColor="'#eee'" />
+		<swiper id="swiper1" class="skeleton_react" :indicator-dots="true" indicator-active-color="#ff5000"
+			:autoplay="true" :interval="3000" :duration="1000">
+			<swiper-item class="height_200 fx fcc" v-for="(item,index) in swiperList">
+				<image class="fx_1 w100 h100" :src="item.url" mode="scaleToFill"></image>
+			</swiper-item>
+		</swiper>
 		<view class="menutabrBox fx_col bfff pl_10 pr_10 box flow_h">
-			<scroll-view class="menutabr fx_1  fx fx_nw "  :scroll-x="true" @scroll="menutabrScroll"
+			<scroll-view class="menutabr fx_1  fx fx_nw " :scroll-x="true" @scroll="menutabrScroll"
 				:show-scrollbar="false">
 				<view class="menutabr_item if fx fx_w jca" v-for="(val,index) in menuList" :key="index+'swiper-item2'">
 					<view class="menutabr_itemMin fx_col m_10  fcc" v-for="(item,index) in val.list"
 						:key="index+'menuList_item'">
-						<image class="width_122 height_96 h100" :src="item.url" mode="scaleToFill"></image>
-						<text class="fz_22">{{item.name}}</text>
+						<image class="width_122 height_96 h100 skeleton_rectRadius" :src="item.url" mode="scaleToFill">
+						</image>
+						<text class="fz_22 ">{{item.name}}</text>
 					</view>
 				</view>
 			</scroll-view>
@@ -32,7 +34,8 @@
 						<view class="recommendRow fx jcb fx_col " v-for="(val,i) in item.rowsList"
 							:key="i+'recommendRow'">
 							<view class="recommendRowTitle fx aic" v-if="val.title">
-								<text class="rowsListTitle fz_32 fb" v-if="val.title"> {{val.title}}</text>
+								<text class="rowsListTitle fz_32 fb skeleton_rectRadius" v-if="val.title">
+									{{val.title}}</text>
 								<view class="rowsListIcon fz_20 fff ml_10 br_5 height_30 lh_30 pl_10 pr_10"
 									v-if="val.titleIcon"
 									:style="{backgroundImage:'linear-gradient(to right,'+val.titleFromColor+','+val.titleToColor+')'}">
@@ -40,10 +43,11 @@
 								</view>
 							</view>
 							<view class="recommendRowBody fx jcb">
-								<view class="recommendRow_min  fx_1 fx_col box jce" :hover-class="'backColor'" v-for="(v,i2) in val.rowMinList"
-									:key="i2+'recommendRow_min'">
+								<view class="recommendRow_min  fx_1 fx_col box jce" :hover-class="'backColor'"
+									v-for="(v,i2) in val.rowMinList" :key="i2+'recommendRow_min'">
 									<text class="rowsListTitle fx_1 box fz_32 fb" v-if="v.title"> {{v.title}}</text>
-									<view class="rowsListImageBox fx_col fcc br_5 mt_20 mb_20 ml_10 mr_10 jce pb_10 box"
+									<view
+										class="rowsListImageBox skeleton_rectRadius fx_col fcc br_5 mt_20 mb_20 ml_10 mr_10 jce pb_10 box"
 										:style="{backgroundColor:v.background?v.background:'fff',}">
 										<text class="fz_28 wnw" v-if="v.minTitle"
 											:style="{fontWeight:v.minBold?'bold':'500',color:v.minTitleColor,}">{{v.minTitle}}</text>
@@ -62,9 +66,14 @@
 </template>
 
 <script>
+	import Skeleton from "../../components/skeleton.vue";
 	export default {
+		components: {
+			Skeleton
+		},
 		data() {
 			return {
+				skeletonShow: false,
 				scrollThumbOpsition: 0,
 				swiperList: [{
 					url: "https://img.alicdn.com/imgextra/i2/109/O1CN014DSINX1Cfxpws5Hpr_!!109-0-luban.jpg",
@@ -85,8 +94,7 @@
 				}, {
 					url: "https://img.alicdn.com/imgextra/i2/2206686532409/O1CN01aVatSu1TfMmqsQi6v_!!2206686532409-0-lubanimage.jpg",
 				}, ],
-				menuList: [
-					{
+				menuList: [{
 						list: [{
 							name: '天猫新品',
 							url: 'https://gw.alicdn.com/tfs/TB1OIxTcLc3T1VjSZLeXXbZsVXa-183-144.png?getAvatar=1',
@@ -150,8 +158,7 @@
 						}, {
 							name: '淘宝吃货',
 							url: 'https://gw.alicdn.com/tfs/TB19dcwVyrpK1RjSZFhXXXSdXXa-183-144.png?getAvatar=1',
-						}, 
-						]
+						}, ]
 					}
 				],
 				homeBodyList: [{
@@ -293,7 +300,37 @@
 				}, ]
 			}
 		},
+		created() {
+			let _this = this;
+			uni.checkSession({
+				success() {
+					//session_key 未过期，并且在本生命周期一直有效
+					_this.$showToast("token有效")
+				},
+				fail() {
+					// session_key 已经失效，需要重新执行登录流程
+					wx.login({
+						success(res) {
+
+						},
+						fail() {
+							_this.$showTaost("code获取失败!",()=>{
+								uni.redirectTo({
+									url: "/pages/login/login"
+								})
+							},{icon:"none"})
+							
+							
+						}
+					})
+				}
+			})
+		},
+		mounted() {
+			this.testSkeleton();
+		},
 		methods: {
+			/* nav滚动计算 */
 			menutabrScroll(event) {
 				let _this = this;
 				console.log(event.detail)
@@ -312,6 +349,14 @@
 						}).exec()
 					}).exec()
 				}).exec()
+			},
+			/* 测试骨架屏 */
+			testSkeleton() {
+				let _this = this;
+				this.skeletonShow = true;
+				this.time = setTimeout(function() {
+					_this.skeletonShow = false;
+				}, 500);
 			}
 		}
 	}
@@ -325,11 +370,13 @@
 			width: 730rpx;
 		}
 	}
-	.homeBody{
-		.recommendList_item{
-			&:last-of-type{
+
+	.homeBody {
+		.recommendList_item {
+			&:last-of-type {
 				margin: 0;
 			}
+
 			// .recommendRow_minHover{
 			// 	background-color: ;
 			// }

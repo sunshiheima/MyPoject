@@ -469,7 +469,6 @@
 						let id = '#type' + i;
 						query.select(id).boundingClientRect(data => {
 							if (data) {
-
 								if (((data.top) <= 0 && data.top > (data.height * -1)) || ((i === 0) && event
 										.detail.scrollTop < 5)) {
 									_this.leftClassList[i].checked = true;

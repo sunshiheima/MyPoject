@@ -45,9 +45,40 @@
 				}
 			}
 		},
+		created(){
+				/* #ifdef MP-WEIXIN  */
+				this.wxLogin();
+				/* #endif */
+		},
 		methods: {
+			/* 微信登陆 */	
+			wxLogin(){
+				
+				
+			},
 			submit() {
 				this.$refs.form.submit().then(res => {
+					uni.login({
+					  // provider: 'weixin',
+					  success: function (loginRes) {
+						  if (res.code) {
+						    //发起网络请求
+						    // wx.request({
+						    //   url: 'https://example.com/onLogin',
+						    //   data: {
+						    //     code: res.code
+						    //   }
+						    // })
+						    this.$showTaost("code获取成功！",()=>{
+						    	uni.switchTab({
+						    		url: "/pages/home/home"
+						    	})
+						    })
+						  } else {
+						  	 this.$showTaost("code获取失败！")
+						  }
+					  }
+					});
 					uni.switchTab({
 						url: "/pages/home/home"
 					})

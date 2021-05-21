@@ -135,7 +135,7 @@
 			},
 		},
 		onLoad() {
-			this.$http.get("http://117.175.169.58:19223/patternSpot/0352ed2cb5bf48faab900976c197ed09").then(res => {
+			this.$http.get("http://117.175.169.58:19223/patternSpot/0352ed2cb5bf48faab900976c197ed09",null,null,true).then(res => {
 
 			})
 		}
