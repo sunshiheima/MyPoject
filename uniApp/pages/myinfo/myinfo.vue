@@ -126,10 +126,8 @@
 						this.myPhotoImg=res.tempFilePaths[0];
 					},
 					fail:error=>{
-						uni.hideToast()
-						uni.showToast({
-							title:"图片选取失败请重试！"
-						})
+						uni.showToast("图片选取失败请重试！",
+						null,{icon:"none"})
 					}
 				})
 			},

@@ -470,7 +470,7 @@
 						query.select(id).boundingClientRect(data => {
 							if (data) {
 								if (((data.top) <= 0 && data.top > (data.height * -1)) || ((i === 0) && event
-										.detail.scrollTop < 5)) {
+										.detail.scrollTop < 20)) {
 									_this.leftClassList[i].checked = true;
 									_this.classActiveId = "class" + i;
 								} else {
