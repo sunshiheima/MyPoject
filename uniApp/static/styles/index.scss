@@ -2,8 +2,8 @@
 uni-page-wrapper,page{
 	display: flex;
 	flex-direction: column;
-	background-color: @basebackColor;
-	color: @baseColor1;
+	background-color: $basebackColor;
+	color: $baseColor1;
 	font-size: 16px;
 	min-height: 100vh;
 	box-sizing: border-box;
@@ -18,7 +18,7 @@ uni-page-wrapper,page{
 		overflow: hidden;
 		flex-direction: column;
 		height: 100%;
-		background-color: @basebackColor;
+		background-color: $basebackColor;
 		/* 适配安全区域 */
 		padding-bottom:constant(safe-area-inset-bottom);/* 兼容 iOS < 11.2 */
 		padding-bottom: env(safe-area-inset-bottom);/* 兼容 iOS >= 11.2 */
@@ -26,14 +26,14 @@ uni-page-wrapper,page{
 }
 /* scroll-view 高度统一设置 */
 .ptabbar {
-	padding-bottom: @tabBarHeight;/* 兼容 iOS < 11.2 */
+	padding-bottom: $tabBarHeight;/* 兼容 iOS < 11.2 */
 }
 .container{
 	padding: 20rpx 10rpx;
 }
 /* vant-tabBar 样式修改 */
 .van-tabbar--safe{
-		height: @tabBarHeight !important;
+		height: $tabBarHeight !important;
 		box-shadow: 0rpx -6rpx 6rpx 0rpx rgba(0,0,0,0.06); 
 		border-radius: 30rpx 30rpx 0rpx 0rpx;
 		.van-tabbar-item{
@@ -42,7 +42,7 @@ uni-page-wrapper,page{
 			/* 选中标签颜色 */
 			&.van-tabbar-item--active{
 				.van-tabbar-item__text{
-					color: @baseActive2;
+					color: $baseActive2;
 				}
 			}
 			

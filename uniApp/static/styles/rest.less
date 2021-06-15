@@ -1,218 +1,386 @@
-html,
-body,
-#app,
-.home {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
-  background-color: transparent;
-  
-}
-
-p,
-i,
-ul,
-ol,
-table,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-button {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-style: none;
-}
-
-@baseBack: #fff;
-.h100{
-	height: 100%;
-}
-.w100{
-	width: 100%;
-}
-//flex布局
-.fx {
-  display: flex;
-  justify-content: flex-start;
-	flex-direction:row;
-}
-
-.fx_col {
-  display: flex;
-  flex-direction: column;
-}
-.fx_w{
-	flex-wrap: wrap;
-}
-.fx_nw{
-	flex-wrap: nowrap;
-}
-.fx_1 {
-  flex: 1;
-}
-
-.fcc {
-  justify-content: center;
-  align-items: center;
-}
-
-.jcc {
-  justify-content: center;
-}
-.jcb{
-	justify-content: space-between;
-}
-.jce{
-	justify-content: space-evenly;
-}
-.jca{
-	justify-content: space-around;
-}
-.jcs {
-  justify-content: flex-start;
-}
-
-.jce {
-  justify-content: flex-end;
-}
-
-.aic {
-  align-items: center;
-}
-
-.ais {
-  align-items: flex-start;
-}
-
-.aie {
-  align-items: flex-end;
-}
-
-.aca {
-  align-content: flex-start;
-}
-
-.acc {
-  align-content: center;
-}
-
-.ace {
-  align-content: flex-end;
-}
-/* position */
-.pr{
-	position: relative;
-}
-.pa{
-	position: absolute;
-}
-.pf{
-	position: fixed;
-}
-//文字样式
-.fc {
-  text-align: center;
-  vertical-align: center;
-}
-.fb {
- font-weight: bold;
-}
-.wnw {
- white-space: nowrap;
-}
-/* 怪异盒子模型 */
-.box{
-	box-sizing: border-box;
-	}
-.ib{
-	display: inline-block;
-}
-.if{
-	display: inline-flex;
-}
-
+/*
+ * @Author: sunshiheima 
+ * @Date: 2021-06-15 16:12:02 
+ * @Last Modified by: sunshiheima
+ * @Last Modified time: 2021-06-15 17:12:54
+ * 全局初始化文件  注意：在全局变量文件配置后引入
+ */
+ html,
+ body,
+ #app,
+ .home {
+   margin: 0;
+   padding: 0;
+   overflow: hidden;
+   height: 100%;
+   width: 100%;
+   background-color: transparent;
+ }
+ 
+ /* 
+     使用rem 做屏幕（超大屏幕）适配 
+     结合媒体查询 做边界限制
+ */
+ // html{
+ // 	font-size: 13.333333vw;
+ // 	@media only screen and(max-width:375px){
+ // 		font-size: 20px;
+ // 	}
+ // 	@media only screen and(min-width:750px){
+ // 		font-size: 16px;
+ // 	}
+ // 	body{
+ // 		font-size: 0.16rpx;
+ // 	}
+ // }
+ p,
+ i,
+ ul,
+ ol,
+ table,
+ h1,
+ h2,
+ h3,
+ h4,
+ h5,
+ h6,
+ button {
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   font-style: none;
+ }
+ 
+ 
+ .h100 {
+   height: 100%;
+ }
+ 
+ .w100 {
+   width: 100%;
+ }
+ 
+ //flex布局
+ .fx {
+   display: flex;
+   justify-content: flex-start;
+   flex-direction: row;
+ }
+ 
+ .fx_col {
+   display: flex;
+   flex-direction: column;
+ }
+ 
+ .fx_w {
+   flex-wrap: wrap;
+ }
+ 
+ .fx_nw {
+   flex-wrap: nowrap;
+ }
+ 
+ 
+ 
+ .fcc {
+   justify-content: center;
+   align-items: center;
+ }
+ 
+ .jcc {
+   justify-content: center;
+ }
+ 
+ .jcb {
+   justify-content: space-between;
+ }
+ 
+ .jcee {
+   justify-content: space-evenly;
+ }
+ 
+ .jca {
+   justify-content: space-around;
+ }
+ 
+ .jcs {
+   justify-content: flex-start;
+ }
+ 
+ .jce {
+   justify-content: flex-end;
+ }
+ 
+ .aic {
+   align-items: center;
+ }
+ 
+ .ais {
+   align-items: flex-start;
+ }
+ 
+ .aie {
+   align-items: flex-end;
+ }
+ 
+ .aca {
+   align-content: flex-start;
+ }
+ 
+ .acc {
+   align-content: center;
+ }
+ 
+ .ace {
+   align-content: flex-end;
+ }
+ 
+ .asc {
+   align-self: center;
+ }
+ 
+ /* position */
+ .pr {
+   position: relative;
+ }
+ 
+ .pa {
+   position: absolute;
+ }
+ 
+ .pf {
+   position: fixed;
+ }
+ 
+ //文字样式
+ .fc {
+   text-align: center;
+   vertical-align: center;
+ }
+ 
+ .fb {
+   font-weight: bold;
+ }
+ 
+ .fnw {
+   white-space: nowrap;
+ }
+ 
+ /* 文字超出... */
+ .fe {
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+ 
+ /* 怪异盒子模型 */
+ .box {
+   box-sizing: border-box;
+ }
+ 
+ .ib {
+   display: inline-block;
+ }
+ 
+ .if {
+   display: inline-flex;
+ }
+ 
+ .br50 {
+   border-radius: 50%;
+ }
 /*
     margin padding fontSize width 通用样式表
     免去你每次重写样式的烦恼
     marked by Jacky
 */
 .loopStyle(@counter) when (@counter <201) {
-	/* padding */
-  .p_@{counter} {
-    padding: (1rpx * @counter);
-  }
-	
-  .pt_@{counter} {
-    padding-top: (1rpx * @counter);
-  }
+  /* padding */
+	.p_@{counter} {
+		padding: (1rpx*counter*@layoutPixel);
+	}
 
-  .pr_@{counter} {
-    padding-right: (1rpx * @counter);
-  }
+	.pt_@{counter} {
+		padding-top: (1rpx*@layoutPixel*counter);
+	}
 
-  .pb_@{counter} {
-    padding-bottom: (1rpx * @counter);
-  }
+	.bpt_@{counter} {
+		padding-top: (1rpx*@layoutPixel*2*counter);
+	}
 
-  .pl_@{counter} {
-    padding-left: (1rpx * @counter);
-  }
-/* margin */
-  .m_@{counter} {
-    margin: (1rpx * @counter);
-  }
+	.pr_@{counter} {
+		padding-right: (1rpx*@layoutPixel*counter);
+	}
 
-  .mt_@{counter} {
-    margin-top: (1rpx * @counter);
-  }
+	.bpr_@{counter} {
+		padding-right: (1rpx*@layoutPixel*2*counter);
+	}
 
-  .mr_@{counter} {
-    margin-right: (1rpx * @counter);
-  }
+	.pb_@{counter} {
+		padding-bottom: (1rpx*@layoutPixel*counter);
+	}
 
-  .mb_@{counter} {
-    margin-bottom: (1rpx * @counter);
-  }
+	.bpb_@{counter} {
+		padding-bottom: (1rpx*@layoutPixel*2*counter);
+	}
 
-  .ml_@{counter} {
-    margin-left: (1rpx * @counter);
-  }
-  .fz_@{counter} {//字体大小
-    font-size: (1rpx * @counter);
-  }
+	.pl_@{counter} {
+		padding-left: (1rpx*@layoutPixel*counter);
+	}
+
+	.bpl_@{counter} {
+		padding-left: (1rpx*@layoutPixel*2*counter);
+	}
+
+	/* margin */
+	.m_@{counter} {
+		margin: (1rpx*@layoutPixel*counter);
+	}
+
+	.mt_@{counter} {
+		margin-top: (1rpx*@layoutPixel*counter);
+	}
+
+	.bmt_@{counter} {
+		margin-top: (1rpx*@layoutPixel*2*counter);
+	}
+
+	.mr_@{counter} {
+		margin-right: (1rpx*@layoutPixel*counter);
+	}
+
+	.bmr_@{counter} {
+		margin-right: (1rpx*@layoutPixel*2*counter);
+	}
+
+	.mb_@{counter} {
+		margin-bottom: (1rpx*@layoutPixel*counter);
+	}
+
+	.bmb_@{counter} {
+		margin-bottom: (1rpx*@layoutPixel*2*counter);
+	}
+
+	.ml_@{counter} {
+		margin-left: (1rpx*@layoutPixel*counter);
+	}
+
+	.bml_@{counter} {
+		margin-left: (1rpx*@layoutPixel*2*counter);
+	}
+
+	.fz_@{counter} {
+		//字体大小
+		font-size: (1rpx*@layoutPixel*counter);
+	}
+
 	/* line-height */
-  .lh_@{counter} {//行高
-    line-height: (1rpx * @counter);
-  }
+	.lh_@{counter} {
+		//行高
+		line-height: (1rpx*@layoutPixel*counter);
+	}
 
-  .width_@{counter} {
-    width: 1rpx * @counter;
-  }
+	.width_@{counter} {
+		width: 1rpx*@layoutPixel*counter;
+	}
+
+	.minw_@{counter} {
+		min-width: 1rpx*@layoutPixel*counter;
+	}
+
+	.maxw_@{counter} {
+		max-width: 1rpx*@layoutPixel*counter;
+	}
+
 	.height_@{counter} {
-    height: 1rpx * @counter;
-  }
-	.fxb_@{counter}{
-		flex: 0 0  (1rpx*@counter);
+		height: 1rpx*@layoutPixel*counter;
 	}
-	.br_@{counter}{
-		border-radius:@counter*1rpx;
+
+	.minh_@{counter} {
+		min-height: 1rpx*@layoutPixel*counter;
 	}
+
+	.maxh_@{counter} {
+		max-height: 1rpx*@layoutPixel*counter;
+	}
+
+	/* 大宽高 */
+	.bh_@{counter} {
+		height: 20rpx*counter;
+	}
+
+	.bw_@{counter} {
+		width: 20rpx*counter;
+	}
+
+	/* flex */
+	.fx_@{counter} {
+		flex: counter;
+	}
+
+	.fxb_@{counter} {
+		flex: 0 0 (1rpx*@layoutPixel*counter);
+	}
+
+	/* 圆角 */
+	.br_@{counter} {
+		border-radius: counter*@layoutPixel*1rpx;
+	}
+
 	/* border */
-	.bob_@{counter}{
-		border-bottom: 1rpx*@counter solid @baseBorderColor;
+	.bo_@{counter} {
+		border: 1rpx*counter solid @baseBorderColor;
 	}
-	.bol_@{counter}{
-		border-left: 1rpx*@counter solid @baseBorderColor;
+
+	.bob_@{counter} {
+		border-bottom: 1rpx*counter solid @baseBorderColor;
 	}
-	.bor_@{counter}{
-		border-right: 1rpx*@counter solid @baseBorderColor;
+
+	.bol_@{counter} {
+		border-left: 1rpx*counter solid @baseBorderColor;
 	}
+
+	.bor_@{counter} {
+		border-right: 1rpx*counter solid @baseBorderColor;
+	}
+
+	.bot_@{counter} {
+		border-top: 1rpx*counter solid @baseBorderColor;
+	}
+
+	/* 定位 */
+	.t_@{counter} {
+		top: 1rpx*counter*@layoutPixel;
+	}
+
+	.bt_@{counter} {
+		top: 1rpx*counter*@layoutPixel*2;
+	}
+
+	.r_@{counter} {
+		right: 1rpx*counter*@layoutPixel;
+	}
+
+	.bbr_@{counter} {
+		right: 1rpx*counter*@layoutPixel*2;
+	}
+
+	.b_@{counter} {
+		bottom: 1rpx*counter*@layoutPixel;
+	}
+
+	.bb_@{counter} {
+		bottom: 1rpx*counter*@layoutPixel*2;
+	}
+
+	.l_@{counter} {
+		left: 1rpx*counter*@layoutPixel;
+	}
+
+	.bl_@{counter} {
+		left: 1rpx*counter*@layoutPixel*2;
+	}；
+
 	.bot_@{counter}{
 		border-top:1rpx*@counter solid @baseBorderColor;
 	}
@@ -224,29 +392,32 @@ button {
 
 //overflow封装
 .flow_h {
-  overflow: hidden;
+	overflow: hidden;
 }
 
 .flow_x {
-  overflow-y: hidden;
-  overflow-x: auto;
+	overflow-y: hidden;
+	overflow-x: auto;
 }
 
 .flow_y {
-  overflow-y: auto;
-  overflow-x: hidden;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
+
 /* 隐藏滚动条 */
-.scroll_h{
+.scroll_h {
+
 	/* h5端 */
-	.uni-scroll-view{
-		&::-webkit-scrollbar{
+	.uni-scroll-view {
+		&::-webkit-scrollbar {
 			display: none;
-			}
-	}
-	/* 微信端 */
-	::-webkit-scrollbar{
-		display: none;
 		}
+	}
+
+	/* 微信端 */
+	::-webkit-scrollbar {
+		display: none;
+	}
 }
 
