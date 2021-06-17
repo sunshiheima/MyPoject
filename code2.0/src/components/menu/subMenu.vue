@@ -1,6 +1,6 @@
 
 <template >
-  <div class="box">
+  <div class="box fx_1"  :class="mode=='vertical'?'fx_col':'fx'">
     <template v-for="(item, index) in subMenuList">
       <el-submenu
         v-if="item.children && item.children.length > 0"
@@ -35,12 +35,17 @@ export default {
     subMenuList: {
       //接收到的菜单信息
       type: Array,
-      defalut: [],
+      default: [],
     },
     authority: {
       //填报权限 0 1不展示
       type: Number,
-      defalut: 0,
+      default: 0,
+    },
+    mode: {
+      //菜单 水平  垂直
+      type: String,
+      default: "horizontal",
     },
   },
   data() {
@@ -52,7 +57,7 @@ export default {
   },
   //生命周期 - 创建完成
   created() {
-    
+   
   },
   //DOM挂载完毕
   mounted() {},
@@ -60,4 +65,11 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.fx_col{
+  display: flex;
+  flex-direction: column;
+}
+.fx{
+  display: flex;
+}
 </style>
