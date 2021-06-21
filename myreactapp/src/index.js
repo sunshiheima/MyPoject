@@ -4,70 +4,59 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import reactDom from 'react-dom';
-
-// ReactDOM.render(
-//   <React.StrictMode>
-//     <App />
-//   </React.StrictMode>,
-//   document.getElementById('root')
-// );
-class Hello extends React.Component{
- state={
-   list:[],
-    formData:{
-      name:"",
-      content:"",
-    }
- }
- onchange=(e)=>{
-  this.setState({
-    formData:{
-      ...this.state.formData,[e.target.name]:e.target.value || e.target.checked,
-    }
+import PropTypes from "prop-types";
+const { Provider, Consumer } = React.createContext();
+class Parent extends React.Component {
+  state = {
+    name: "sun",
+    subName: "",
+    content: "context传参"
   }
- )
-}
-sunmit=()=>{
-  this.setState({
-    list:[this.state.formData,...this.state.list]
-  })
-}
-  render(){
+  getSubValue = (value) => {
+    this.setState({
+      subName: value,
+    })
+  }
+  render() {
     return (
-      <div>
-        <label>姓名：<input type="text" placeholder="请输入" name="name" onChange={this.onchange}/></label>
-        <label>内容：</label>
-        <br/>
-        <textarea rows="5" cols="100" placeholder="请输入" name="content" onChange={this.onchange}> </textarea>
-        <label>{this.state.name}</label>
+      <Provider value={this.state.content}>
         <div>
-          <button type="button" onClick={this.sunmit}>提交</button>
+          <div>子级信息：{this.state.subName}</div>
+          <SubDom subValue={this.state.name} getSubValue={this.getSubValue} bg={this.getSubValue}/>
         </div>
-        <div>
-          {
-            this.state.list.map(item=>{
-              return (
-                <div>
-                  <div><div>姓名：</div>{item.name}</div>
-                  <div><div>内容：</div>{item.content}</div>
-                </div>
-              )
-            })
-          }
-        </div>
-      </div>
+      </Provider>
     )
   }
 }
-// class SubDom extends React.Component{
-//   constructor(props){
 
-//   }
-//   render(){
-//     return(
-//       <p></p>
-//     )
-//   }
-// }
-reactDom.render(<Hello/>, document.getElementById("root"))
+class SubDom extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log("收到参数：", props.name)
+  }
+  state = {
+    name: "sun",
+  }
+  handelClick = () => {
+    this.props.getSubValue(this.state.name)
+  }
+  render() {
+    return (
+      <div>
+        <div>我是父级参数：{this.props.subValue}</div>
+        <button onClick={this.handelClick}>点我</button>
+        <Consumer>
+          {(data)=><div>{data}</div>}
+        </Consumer>
+      </div>
+
+    )
+  }
+}
+SubDom.propTypes={
+  subValue:PropTypes.string,
+  name:PropTypes.bool,
+  bg:PropTypes.func.isRequired
+}
+reactDom.render(<Parent />, document.getElementById("root"))
 reportWebVitals();
