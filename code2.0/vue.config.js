@@ -50,7 +50,7 @@ module.exports = {
             // 为生产环境修改配置...
             config.mode = 'production'
             // 将每个依赖包打包成单独的js文件
-            const plugins = []
+            const plugins = [];
                 // 取消注释和打印
                 plugins.push(
                     new UglifyJsPlugin({
@@ -154,7 +154,7 @@ module.exports = {
         https: false,
         open: true,
         // hotOnly: false,
-        // hot:true,//热刷新 一般不需要 另外添加
+        hot:true,//热刷新 一般不需要 另外添加
         proxy: { // 设置代理
             '/api': {
                 target: 'http://www.taobao.com', // 代理接口地址

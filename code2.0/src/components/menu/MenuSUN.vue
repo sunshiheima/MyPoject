@@ -1,14 +1,15 @@
 <template>
   <el-menu
-    :default-active="this.$route.path"
+    :default-active="$route.path"
     background-color="rgba(0,0,0,0)"
     text-color="#314659"
     active-text-color="#0f8deb"
     unique-opened
-    mode="horizontal"
+    :menu-trigger="menuTrigger"
+    :mode="mode"
     router
   >
-    <SubMenu :subMenuList="menuList" />
+    <SubMenu :subMenuList="menuList"  :mode="mode"/>
   </el-menu>
 </template>
          
@@ -22,15 +23,17 @@ export default {
     menuList: {
       //接收到的菜单信息
       type: Array,
-      defalut: [],
+      default: [],
     },
     mode: {
+      //菜单 水平  垂直 horizontal / vertical
       type: String,
-      defalut: "horizontal",
+      default: "horizontal",
     },
-    menuDefalut: {
+    menuTrigger: {
+      //菜单 水平  垂直 horizontal / vertical
       type: String,
-      defalut: "",
+      default: "click",
     },
   },
   data() {
@@ -40,7 +43,6 @@ export default {
   },
   //生命周期 - 创建完成
   created() {
-   
   },
   //DOM挂载完毕
   mounted() {},
@@ -49,15 +51,10 @@ export default {
 </script>
 <style lang='less' scoped>
 .el-menu {
-  // border: 0;
-  .el-menu-item,
-  .el-submenu {
-    width: 100%;
-    min-width: auto;
-    font-size: 18px;
-  }
-
+  border-bottom: 0;//不要下边框
   /deep/ .el-menu-item {
+    /* 选中菜单颜色 */
+    font-size: 18px;
     &.is-active{
       border-bottom: 2px solid #1890ff !important;
       span{
@@ -66,9 +63,16 @@ export default {
     }
     
   }
+  /* 子级菜单项 */
   /deep/ .el-submenu {
     .el-submenu__title {
-      .el-icon-location{
+      display: flex;
+      align-items: center;
+      span{
+        padding: 0 10px;
+      }
+      .el-icon-location{//前图标
+        position: static;
         margin: 0;
         color:#013c807e;
       }
@@ -78,8 +82,9 @@ export default {
       i{
         font-size: 18px ;
       }
-      .el-icon-arrow-down{
-        // margin-left: 10px;
+      .el-icon-arrow-down{//后图标
+        position: static;
+        margin: 0;
         font-size: 18px;
        span{
         font-size: 18px;
