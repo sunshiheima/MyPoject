@@ -1,0 +1,77 @@
+/* 字体颜色 */
+$baseColor1:#333;
+$baseColor2:#AEB2B3;//灰色字体颜色
+$baseActive1:#fff;
+$baseActive2:#0152d9;
+$baseActive3:#e90808;
+
+/* 背景颜色 */
+$basebackColor:#F5F6F8;
+$baseBackActiveColor1: #0152d9;
+$baseBackActiveColor2: #e2eef9;
+$baseBackActiveColor3: #f9e0e2;
+/* 弹框遮罩层背景 */
+$baseDialogBack:rgba(0,0,0,0.5);
+/* 边框颜色 */
+$baseBorderColor:#cdd4dc;
+$baseBorderActiveColor1:#0152d9;
+$baseBorderActiveColor2:#e90808;
+$baseBorderActiveColor3:#e8ebf0;//浅灰30min
+/* 设计稿尺寸倍数 */
+$layoutPixel:1;
+
+/* tabBar */
+$tabBarHeight:156rpx;
+.fff{
+	color: #fff;
+}
+.c999{
+	color: #999;
+}
+.c777{
+	color: #777;
+}
+/* 文字 */
+.BC1{
+	color: $baseColor1;
+}
+.BC2{
+	color: $baseColor2;
+}
+.BAC1{
+	color: $baseActive1;
+}
+.BAC2{
+	color: $baseActive2;
+}
+.BAC3{
+	color: $baseActive3;
+}
+
+/* 背景 */
+.BFFF{
+	background-color: #fff;
+}
+.BBC{
+	background-color: $basebackColor;
+}
+.BBAC1{
+	background-color:$baseBackActiveColor1;
+}
+.BBAC2{
+	background-color:$baseBackActiveColor2;
+}
+.BBAC3{
+	background-color:$baseBackActiveColor3;
+}
+/* 边框 */
+.BBORAC1{
+	border-color: $baseBorderActiveColor1;
+}
+.BBORAC2{
+	border-color: $baseBorderActiveColor2;
+}
+.BBORAC3{
+	border-color: $baseBorderActiveColor3;
+}
+

@@ -1,4 +1,9 @@
 const path = require("path");
+/* 去除冗余css */
+const purgecss = require('@fullhuman/postcss-purgecss');
+// const PurifyCss = require('purifycss-webpack');
+const glob = require('glob');
+// const PurgecssPlugin = require('purgecss-webpack-plugin');
 module.exports = {
     // 基本路径
     publicPath: process.env.NODE_ENV === 'production' ? './' : './',
@@ -21,7 +26,7 @@ module.exports = {
             filename: 'index.html',
             // 当使用 title 选项时，
             // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-            title: '腾讯oa',//标题名称在此修改
+            title: 'sunshiheima',//标题名称在此修改
             // 在这个页面中包含的块，默认情况下会包含
             // 提取出来的通用 chunk 和 vendor chunk。
             chunks: ['chunk-vendors', 'chunk-common', 'index']
@@ -41,12 +46,44 @@ module.exports = {
     // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
     productionSourceMap: false,
     devServer: {
-       // host: 'localhost',设置本地IP地址
-       contentBase: path.resolve(__dirname, 'dist'),
-       port: 2333,
-       https: false,
-       open: true,
-       // hotOnly: false,
-    //    hot:true,//热刷新 一般不需要 另外添加
+        // host: 'localhost',设置本地IP地址
+        contentBase: path.resolve(__dirname, 'dist'),
+        port: 2333,
+        https: false,
+        open: true,
+        // hotOnly: false,
+        //    hot:true,//热刷新 一般不需要 另外添加
+    },
+    // 第三方插件配置
+    configureWebpack: config => {
+        // let obj=glob.sync(path.join(__dirname, './src/**/rest.scss'));
+        config.plugins.push(
+
+
+        )
+        //  console.log(config.plugins)
+
+    },
+    /* css配置 */
+    css: {
+        loaderOptions: {
+            sass: {
+                /* 全局变量 */
+                prependData: `@import "./src/assets/style/main.scss";`
+            },
+            postcss: {
+                plugins:    [
+                        purgecss({
+                                content: [ `./public/**/*.html`, `./src/**/*.vue` ],
+                                defaultExtractor (content) {
+                                  const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '')
+                                  return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || []
+                                },
+                                safelist: [ /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/ ],
+                          })
+                    ]
+                
+            }
+        }
     }
 }

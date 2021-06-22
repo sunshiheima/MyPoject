@@ -9,18 +9,18 @@ body,
 	width: 100%;
 	background-color: transparent;
 }
-// html{
-// 	font-size: 13.333333vw;
-// 	@media only screen and(max-width:375px){
-// 		font-size: 20px;
-// 	}
-// 	@media only screen and(min-width:750px){
-// 		font-size: 16px;
-// 	}
-// 	body{
-// 		font-size: 0.16rpx;
-// 	}
-// }
+html{
+	font-size: 13.333333vw;
+	@media only screen and(max-width:375px){
+		font-size: 20px;
+	}
+	@media only screen and(min-width:750px){
+		font-size: 16px;
+	}
+	body{
+		font-size: 0.16rem;
+	}
+}
 p,
 i,
 ul,
@@ -177,175 +177,173 @@ button {
 /*
     margin padding fontSize width 通用样式表
     免去你每次重写样式的烦恼
-    marked by Jacky
 */
 @for $i from 0 through 200 {
-
 	/* padding */
 	.p_#{$i} {
-		padding: (1rpx*$i*$layoutPixel);
+		padding: (1rem*$i*$layoutPixel);
 	}
 	
 	.pt_#{$i} {
-		padding-top: (1rpx*$layoutPixel*$i);
+		padding-top: (1rem*$layoutPixel*$i);
 	}
 	
 	.bpt_#{$i} {
-		padding-top: (1rpx*20*$i);
+		padding-top: (1rem*20*$i);
 	}
 
 	.pr_#{$i} {
-		padding-right: (1rpx*$layoutPixel*$i);
+		padding-right: (1rem*$layoutPixel*$i);
 	}
 	.bpr_#{$i} {
-		padding-right: (1rpx*20*$i);
+		padding-right: (1rem*20*$i);
 	}
 	
 	.pb_#{$i} {
-		padding-bottom: (1rpx*$layoutPixel*$i);
+		padding-bottom: (1rem*$layoutPixel*$i);
 	}
 	.bpb_#{$i} {
-		padding-bottom: (1rpx*20*$i);
+		padding-bottom: (1rem*20*$i);
 	}
 
 	.pl_#{$i} {
-		padding-left: (1rpx*$layoutPixel*$i);
+		padding-left: (1rem*$layoutPixel*$i);
 	}
 	
 	.bpl_#{$i} {
-		padding-left: (1rpx*20*$i);
+		padding-left: (1rem*20*$i);
 	}
 
 	/* margin */
 	.m_#{$i} {
-		margin: (1rpx*$layoutPixel*$i);
+		margin: (1rem*$layoutPixel*$i);
 	}
 
 	.mt_#{$i} {
-		margin-top: (1rpx*$layoutPixel*$i);
+		margin-top: (1rem*$layoutPixel*$i);
 	}
 	
 	.bmt_#{$i} {
-		margin-top: (1rpx*20*$i);
+		margin-top: (1rem*20*$i);
 	}
 
 	.mr_#{$i} {
-		margin-right: (1rpx*$layoutPixel*$i);
+		margin-right: (1rem*$layoutPixel*$i);
 	}
 	.bmr_#{$i} {
-		margin-right: (1rpx*20*$i);
+		margin-right: (1rem*20*$i);
 	}
 
 	.mb_#{$i} {
-		margin-bottom: (1rpx*$layoutPixel*$i);
+		margin-bottom: (1rem*$layoutPixel*$i);
 	}
 	
 	.bmb_#{$i} {
-		margin-bottom: (1rpx*20*$i);
+		margin-bottom: (1rem*20*$i);
 	}
 
 	.ml_#{$i} {
-		margin-left: (1rpx*$layoutPixel*$i);
+		margin-left: (1rem*$layoutPixel*$i);
 	}
 	.bml_#{$i} {
-		margin-left: (1rpx*20*$i);
+		margin-left: (1rem*20*$i);
 	}
 
 	.fz_#{$i} {
 		//字体大小
-		font-size: (1rpx*$layoutPixel*$i);
+		font-size: (1rem*$layoutPixel*$i);
 	}
 
 	/* line-height */
 	.lh_#{$i} {
 		//行高
-		line-height: (1rpx*$layoutPixel*$i);
+		line-height: (1rem*$layoutPixel*$i);
 	}
 
-	.width_#{$i} {
-		width: 1rpx*$layoutPixel*$i;
+	.w_#{$i} {
+		width: 1rem*$layoutPixel*$i;
 	}
 	
 	.minw_#{$i} {
-		min-width: 1rpx*$layoutPixel*$i;
+		min-width: 1rem*$layoutPixel*$i;
 	}
 	.maxw_#{$i} {
-		max-width: 1rpx*$layoutPixel*$i;
+		max-width: 1rem*$layoutPixel*$i;
 	}
 	
-	.height_#{$i} {
-		height: 1rpx*$layoutPixel*$i;
+	.h_#{$i} {
+		height: 1rem*$layoutPixel*$i;
 	}
 	
 	.minh_#{$i} {
-		min-height: 1rpx*$layoutPixel*$i;
+		min-height: 1rem*$layoutPixel*$i;
 	}
 	
 	.maxh_#{$i} {
-		max-height: 1rpx*$layoutPixel*$i;
+		max-height: 1rem*$layoutPixel*$i;
 	}
 	/* 大宽高 */
 	.bh_#{$i} {
-		height: 20rpx*$i;
+		height: 20rem*$i;
 	}
 	.bw_#{$i} {
-		width: 20rpx*$i;
+		width: 20rem*$i;
 	}
 	/* flex */
 	.fx_#{$i} {
 		flex: $i;
 	}
 	.fxb_#{$i} {
-		flex: 0 0 (1rpx*$layoutPixel*$i);
+		flex: 0 0 (1rem*$layoutPixel*$i);
 	}
 	/* 圆角 */ 
 	.br_#{$i} {
-		border-radius: 1rpx*$i*$layoutPixel;
+		border-radius: 1rem*$i*$layoutPixel;
 	}
 
 	/* border */
 	.bo_#{$i} {
-		border: 1rpx*$i solid $baseBorderColor;
+		border: 1rem*$i solid $baseBorderColor;
 	}
 	.bob_#{$i} {
-		border-bottom: 1rpx*$i solid $baseBorderColor;
+		border-bottom: 1rem*$i solid $baseBorderColor;
 	}
 
 	.bol_#{$i} {
-		border-left: 1rpx*$i solid $baseBorderColor;
+		border-left: 1rem*$i solid $baseBorderColor;
 	}
 
 	.bor_#{$i} {
-		border-right: 1rpx*$i solid $baseBorderColor;
+		border-right: 1rem*$i solid $baseBorderColor;
 	}
 
 	.bot_#{$i} {
-		border-top: 1rpx*$i solid $baseBorderColor;
+		border-top: 1rem*$i solid $baseBorderColor;
 	}
 	/* 定位 */
 	.t_#{$i}{
-		top:1rpx*$i*$layoutPixel;
+		top:1rem*$i*$layoutPixel;
 	}
 	.bt_#{$i}{
-		top:1rpx*$i*20;
+		top:1rem*$i*20;
 	}
 	.r_#{$i}{
-		right:1rpx*$i*$layoutPixel;
+		right:1rem*$i*$layoutPixel;
 	}
 	.bbr_#{$i}{
-		right:1rpx*$i*20;
+		right:1rem*$i*20;
 	}
 	.b_#{$i}{
-		bottom:1rpx*$i*$layoutPixel;
+		bottom:1rem*$i*$layoutPixel;
 	}
 	.bb_#{$i}{
-		bottom:1rpx*$i*20;
+		bottom:1rem*$i*20;
 	}
 	.l_#{$i}{
-		left:1rpx*$i*$layoutPixel;
+		left:1rem*$i*$layoutPixel;
 	}
 	.bl_#{$i}{
-		left:1rpx*$i*20;
+		left:1rem*$i*20;
 	}
 }
 
