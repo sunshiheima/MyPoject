@@ -2,7 +2,7 @@ const path = require("path");
 /* 去除冗余css */
 const purgecss = require('@fullhuman/postcss-purgecss');
 // const PurifyCss = require('purifycss-webpack');
-const glob = require('glob');
+const glob = require('glob-all');
 // const PurgecssPlugin = require('purgecss-webpack-plugin');
 module.exports = {
     // 基本路径
@@ -72,17 +72,32 @@ module.exports = {
                 prependData: `@import "./src/assets/style/main.scss";`
             },
             postcss: {
-                plugins:    [
-                        purgecss({
-                                content: [ `./public/**/*.html`, `./src/**/*.vue` ],
-                                defaultExtractor (content) {
-                                  const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '')
-                                  return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || []
-                                },
-                                safelist: [ /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/ ],
-                          })
-                    ]
-                
+                plugins: process.env.NODE_ENV === 'production' ? [
+                    purgecss({
+                        content: glob.sync([
+                            path.join(__dirname, "./src/**/*.js"),
+                            path.join(__dirname, "/**/*.vue"),
+                            path.join(__dirname, "./public/**/*.html"),
+                        ]),
+                        css: glob.sync([
+                            path.join(__dirname, "./node_modules/**/*.css"),
+                        ]),
+                        defaultExtractor(content) {
+                            const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '')
+                            return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || []
+                        },
+                        safelist: [/-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/,/^el-/],
+                        /*  /如果使用的时 CSS 动画库，例如 animate.css，你可以通过将 keyframes 参数设置为 true 来删除未使用的 keyframes。*/
+                        keyframes: true,
+                        /* 删除未使用的css变量 */
+                        variables: true,
+                        /* 排除文件路径 */
+                        // skippedContentGlobs: ['node_modules/**'],
+                        /* 自定义样式 */
+                        // dynamicAttributes: [/^el-/,]
+                    })
+                ] : []
+
             }
         }
     }

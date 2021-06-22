@@ -2,6 +2,7 @@
   <div class="home">
     <div :class="bg&&'bor_1'" class="box2  h_10 bw_ BFFF f6666 999 000 999   test_20 "></div>
     <el-button type="danger">el按钮</el-button>
+    <el-button >el按钮</el-button>
   </div>
 </template>
 
