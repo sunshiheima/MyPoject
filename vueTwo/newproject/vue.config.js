@@ -1,7 +1,6 @@
 const path = require("path");
 /* 去除冗余css */
 const purgecss = require('@fullhuman/postcss-purgecss');
-// const PurifyCss = require('purifycss-webpack');
 const glob = require('glob-all');
 // const PurgecssPlugin = require('purgecss-webpack-plugin');
 module.exports = {
@@ -79,20 +78,25 @@ module.exports = {
                             path.join(__dirname, "/**/*.vue"),
                             path.join(__dirname, "./public/**/*.html"),
                         ]),
-                        css: glob.sync([
-                            path.join(__dirname, "./node_modules/**/*.css"),
-                        ]),
+                        /* 要清除的css 文件 */
+                        // css:[ "./node_modules/**/*.css","./src/**/*.scss"],
                         defaultExtractor(content) {
                             const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '')
                             return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || []
                         },
-                        safelist: [/-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/,/^el-/],
+                        safelist: [
+                            /-(leave|enter|appear)(|-(to|from|active))$/, 
+                            /^(?!(|.*?:)cursor-move).+-move$/, 
+                            /^router-link(|-exact)-active$/,
+                            /data-v-.*/, 
+                            /^el-/,//不清除element 样式
+                        ],
                         /*  /如果使用的时 CSS 动画库，例如 animate.css，你可以通过将 keyframes 参数设置为 true 来删除未使用的 keyframes。*/
                         keyframes: true,
                         /* 删除未使用的css变量 */
                         variables: true,
                         /* 排除文件路径 */
-                        // skippedContentGlobs: ['node_modules/**'],
+                        skippedContentGlobs: ["node_modules/**"],
                         /* 自定义样式 */
                         // dynamicAttributes: [/^el-/,]
                     })
