@@ -1,62 +1,42 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React ,{Suspense,lazy} from "react";
 import reactDom from 'react-dom';
-import PropTypes from "prop-types";
-const { Provider, Consumer } = React.createContext();
-class Parent extends React.Component {
-  state = {
-    name: "sun",
-    subName: "",
-    content: "context传参"
+import reportWebVitals from "./reportWebVitals"
+const Children= lazy(()=>import('./pages/2.高级指引/2.代码分割/1.lazy与suspense 加载/children')) ;
+let data = "";
+let promise = "";
+function requestData() {
+  if(data){
+      return data;
   }
-  getSubValue = (value) => {
-    this.setState({
-      subName: value,
-    })
-  }
-  render() {
-    return (
-      <Provider value={this.state.content}>
-        <div>
-          <div>子级信息：{this.state.subName}</div>
-          <SubDom subValue={this.state.name} getSubValue={this.getSubValue} bg={this.getSubValue}/>
-        </div>
-      </Provider>
-    )
-  }
+  if(promise){ throw  promise}
+  promise = new Promise((resolve)=>{
+      setTimeout(()=>{
+          data = "数据出来了";
+          resolve();
+      },2000)
+  })
+  throw promise
 }
 
-class SubDom extends React.Component {
+function LoadingCompontent(){
+  const message= requestData()
+  return <div>{message}</div>
+}
+class Parent extends React.Component {
   constructor(props) {
     super(props);
-    console.log("收到参数：", props.name)
-  }
-  state = {
-    name: "sun",
-  }
-  handelClick = () => {
-    this.props.getSubValue(this.state.name)
-  }
-  render() {
+    this.state = {
+    }
+  };
+  render () {
     return (
-      <div>
-        <div>我是父级参数：{this.props.subValue}</div>
-        <button onClick={this.handelClick}>点我</button>
-        <Consumer>
-          {(data)=><div>{data}</div>}
-        </Consumer>
-      </div>
-
+      <Suspense fallback={<div>Loading...</div>}>
+        <Children/>
+        <LoadingCompontent/>
+      </Suspense>
     )
   }
 }
-SubDom.propTypes={
-  subValue:PropTypes.string,
-  name:PropTypes.bool,
-  bg:PropTypes.func.isRequired
-}
+
 reactDom.render(<Parent />, document.getElementById("root"))
 reportWebVitals();

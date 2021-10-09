@@ -8,7 +8,6 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
-const tset = "3213123";
 @Options({
   components: {
     HelloWorld,
