@@ -1,0 +1,50 @@
+【Object.prototype.toString.call(xxx)】的返回值：
+-字符串：[object String]
+-数字：[object Number]
+-布尔值：[object Boolean]
+-undefined: [object Undefined]
+-null: [object Null]
+-函数：[object Function]
+-数组：[object Array]
+-new Date: [object Date]
+-/\d/:  [object RegExp]
+-{name: "jerry"}: [object Object]
+-new Person: [object Object]
+
+【xxx.toString()】的返回值：
+每个数据类型的原型上都有toString方法，但是null和undefined和Math没有原型，调用toString方法会报错。
+xxx.toString();
+//基本数据类型Number、String、Boolean
+结果为相应的字符串形式: "1", "abc", "true"
+//引用数据类型
+-对象Object：结果为"[object object]"
+-数组Array：无论一维还是多维数组，toString都将数组的每一项元素转化为以逗号隔开的字符串
+ var arr = [1,2,[3,4],7,[[9]]];
+ arr.toString();//"1,2,3,4,7,9"
+-函数Function：在整个函数的首尾加上引号
+-正则RegExp：在正则表达式的首尾加上引号
+-时间Date：将时间对象转为字符串
+ var date=new Date();
+ date.toString();//"Mon Aug 13 2018 15:25:26 GMT+0800 (中国标准时间)"
+
+ 问：为什么同样是调用toString()方法，xxx.toStirng()的结果和Object.prototype.toString.call(obj)的结果不一样？
+ 答：这是因为toString为Object的原型方法，而Array 、Function等类型作为Object的实例，都重写了toString方法。
+    不同的对象类型调用toString方法时，调用的是对应的重写之后的toString方法（Function类型返回内容为函数体的字符串，Array类型返回元素组成的字符串.....）
+    而不会去调用Object上原型toString方法（返回对象的具体类型），所以采用obj.toString()不能得到其对象类型，只能将obj转换为字符串类型；
+    因此，在想要得到对象的具体类型时，应该调用Object上原型toString方法。
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+我们可以验证一下，将数组的toString方法删除，看看会是什么结果：
+var arr=[1,2,3];
+console.log(Array.prototype.hasOwnProperty("toString"));//true
+console.log(arr.toString());//1,2,3
+delete Array.prototype.toString;//delete操作符可以删除实例属性
+console.log(Array.prototype.hasOwnProperty("toString"));//false
+console.log(arr.toString());//"[object Array]"
+
+删除了Array的toString方法后，同样再采用arr.toString()方法调用时，不再有屏蔽Object原型方法的实例方法
+因此沿着原型链，arr最后调用了Object的toString方法，返回了和Object.prototype.toString.call(arr)相同的结果。
+
+
+

@@ -1,0 +1,66 @@
+webpack的优化瓶颈体现在：
+-webpack的构建过程太花时间
+-webpack打包的结果体积太大
+
+-----------------------------------
+
+针对【webpack的构建过程太花时间】
+1.缩小babel-loader的处理范围   expage
+-用include/exclude来帮我们避免不必要的转译
+ //一般就是排除node_modules文件夹/bower_components文件夹
+-选择开启缓存将转译结果缓存至文件系统
+ //设置loader: 'babel-loader?cacheDirectory=true'
+
+2.避免UglifyJsPlugin等webpack插件处理第三方库（以node_modules为代表）
+处理第三方库的方法：Externals(有重复打包的问题)、CommonChunkPlugin(每次构建都会重新构建一次vendor)
+推荐使用：DllPlugin
+DllPlugin会把第三方库单独打包到一个文件中，该文件是一个单纯的依赖库。这个依赖库不会跟着业务代码一起被重新打包，只有当依赖自身发生版本变化时才会重新打包。
+DllPlugin处理文件的步骤：
+-基于dll专属的配置文件，打包dll库 —— 生成vendor.js(第三方库打包出来的结果) && vendor-manifest.json(用于描述每个第三方库的具体路径)
+-基于webpack.config.js文件，打包业务代码(需要在此配置文件中对dll稍作配置，引入vendor-manifest.json文件)
+
+3.将loader由单进程转为多进程 —— HappyPack
+//HappyPack的使用
+把对loader的配置转移到HapplyPack中去，并手动告诉HappyPack我们需要多少个并发的进程
+
+----------------------------------
+
+针对【webpack打包的结果体积太大】
+1.文件结构可视化，找出导致体积过大的原因 —— 工具webpack-bundle-analyzer
+该工具的配置方法和普通的plugin无异
+在使用时，也是将其以插件的形式引入即可
+
+2.删除冗余代码 —— Tree-Shaking 和 uglifyjs-webpack-plugin 
+基于import/export语法，Tree-Shaking可以在编译的过程中获悉哪些模块并没有真正被使用，这些没用的代码，在最后打包的时候会被去除。
+而UglifyJsPlugin，在压缩过程中可以对碎片化的冗余代码（如 console 语句、注释等）进行自动化删除
+//webpack4已经默认使用了 uglifyjs-webpack-plugin 对代码做压缩了，我们只需配置 optimization.minimize 与 optimization.minimizer 来自定义压缩相关的操作。
+
+3.按需加载 —— 进行webpack相关配置 + 修改路由处的代码
+-一次不加载完所有的文件内容，只加载此刻需要用到的那部分（会提前做拆分）
+-当需要更多内容时，再对用到的内容进行即时加载
+//重！所谓按需加载，根本上就是在正确的时机去触发相应的回调
+
+//修改路由处的代码
+核心方法：require.ensure(dependencies, callback, chunkName)
+-这是一个异步的方法，webpack在打包时，BugComponent会被单独打成一个文件。
+-只有在我们跳转 bug 这个路由的时候，这个异步方法的回调才会生效，才会真正地去获取 BugComponent 的内容。
+
+
+3.按需加载 —— React-Router4的Code-Splitting(用到了Bundle-Loader)
+Code-Splitting内部的Bundle Loader，其实也是使用require.ensure()实现的。
+
+4.对文件进行Gzip压缩
+只需要在请求头中加上accept-encoding:gzip即可
+
+//扩展内容：HTTP压缩
+HTTP 压缩就是以缩小体积为目的，对 HTTP 内容进行重新编码的过程。
+压缩方案包括Deflate和Gzip(内核就是Deflate)
+//Gzip压缩的原理
+在一个文本文件中找出一些重复出现的字符串、临时替换它们，从而使整个文件变小。
+//webpack的Gzip和服务端的Gzip
+Webpack 中 Gzip 压缩操作的存在，事实上就是为了在构建过程中去做一部分服务器的工作，为服务器分压。
+这两个地方的Gzip压缩，谁也不能替代谁，需要合作。作为开发者应该根据业务实际情况做其中的权衡。
+
+
+
+

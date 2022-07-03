@@ -1,0 +1,195 @@
+代理模式：
+    即一个对象不能直接访问另一个对象，需要一个第三者（代理）才能间接达到访问的目的。
+
+代理模式的应用：
+1.科学上网（即虚拟专用网络VPN）
+-我们在浏览器上访问某url时，会先向DNS域名系统发送请求，DNS解析出url对象的ip地址之后，才会向目标服务器发送请求。
+当我们访问外网时，会有中间方作用域DNS解析过程，阻止它的解析过程，于是DNS就会返回给我们“查不到”
+-而VPN就是一个第三方代理服务器，这个第三方的ip地址，不在被禁用的那批ip 地址之列，我们可以顺利访问到这台服务器。
+而这台服务器的 DNS 解析过程，没有中间方阻止，它是可以顺利访问 Google.com 的。
+代理服务器在请求到 Google.com 后，将响应体转发给我们，使我们得以间接地访问到目标网址
+
+2.保护代理（婚介所）
+在 ES6 中，提供了专门以代理角色出现的代理器 —— Proxy
+基本用法：const proxy = new Proxy(obj, handler)；   //obj指目标对象，handler是一个对象，用来定义代理的行为
+
+保护代理会有getter层面的拦截和setter层面的校验和拦截
+
+//通过对girl添加代理(proxy)，使得user不能直接访问到girl信息，user对girl信息的get和set行为必须先经过代理的允许！
+const user = {...}
+const girl = {...}
+const JuejinLovers = new Proxy(girl, {
+    get: function(girl, key){
+        //当外界(user)尝试获取(get)到女孩(girl)的某信息(key)时，根据外界权限等各方面信息，进行校验和拦截，从而保护了女孩的信息。
+    },
+    set: function(girl, key, value){
+        //当外界(user)尝试送给(set)女孩(girl)某礼物(value)时，进行校验和拦截。
+    }
+})
+
+3.事件代理（事件委托）
+事件委托：利用的就是事件本身具有“冒泡”的特性，当我们点击 a 元素时，点击事件会“冒泡”到父元素 div 上，从而被监听到。
+因此点击事件的监听函数只需要在 div 元素上被绑定一次即可，而不需要在子元素上被绑定 N 次
+
+//事件代理的实现:
+// 获取父元素
+const father = document.getElementById('father');
+// 给父元素安装一次监听函数
+father.addEventListener('click', function(e) {
+    // 识别是否是目标子元素
+    if(e.target.tagName === 'A') {
+        // 以下是监听函数的函数体
+        e.preventDefault()
+        alert(`我是${e.target.innerText}`)
+    }
+} )
+
+4.虚拟代理（lazy-load懒加载）
+-懒加载是针对图片加载时机的优化。
+如果我们尝试在用户打开页面的时候，就把所有的图片资源加载完毕，那么很可能会造成白屏、卡顿等现象。
+此时我们会采取“先占位、后加载”的方式来展示图片 —— 在元素露出之前，我们给它一个 div 作占位，当它滚动到可视区域内时，再即时地去加载真实的图片资源，这样做既减轻了性能压力、又保住了用户体验。
+
+-除了图片懒加载，还有一种操作叫图片预加载。
+先让这个 img 标签展示一个占位图，然后创建一个 Image 实例，
+让这个 Image 实例的 src 指向真实的目标图片地址、观察该 Image 实例的加载情况，
+其对应的真实图片加载完毕后，即已经有了该图片的缓存内容，再将 DOM 上的 img 元素的 src 指向真实的目标图片地址。
+此时我们直接去取了目标图片的缓存，所以展示速度会非常快，从占位图到目标图片的时间差会非常小。
+
+//图片预加载具体实现（文中的实现，命名有点儿乱，把它改成了我自己的命名。文中原实现见最下面）
+
+//假图片资源是LOADING_URL、真图片资源是targetUrl
+//虚拟图片是virtualImg（实现预加载）、真图片是targetImg
+class TargetImg {
+  constructor(imgNode) {
+    this.imgNode = imgNode;
+  }
+  setSrc = (loadingUrl) => {
+    this.imgNode.src = loadingUrl;
+  };
+}
+class PreLoad {
+  static LOADING_URL = "占位图片资源";
+  constructor(targetImg) {
+    this.targetImg = targetImg;
+  }
+  setSrc = (targetUrl) => {
+    //让【真图片】先加载【占位图片资源】以占位
+    this.targetImg.setSrc(LOADING_URL);
+    //虚拟代理核心逻辑（让【虚拟图片】先加载【真图片资源】到本地，使得之后【真图片】能够直接在本地获取到【真图片资源】）
+    var virtualImg = new Image();
+    virtualImg.onload = () => {
+      this.targetImg.src = targetUrl;
+    };
+    virtualImg.src = targetUrl;
+  };
+}
+var imgNode = document.getElementById("img");
+var targetImg = TargetImg(imgNode);
+var img = PreLoad(targetImg);
+img.setSrc("真图片资源");
+
+5.缓存代理
+应用于一些计算量较大的场景里，需要用空间换时间。
+当我们需要用到某个已经计算过的值的时候，不想再耗时进行二次计算，而是希望能从内存里去取出现成的计算结果(缓存)。
+
+//典型的例子（对传入的参数求和）
+//文中实现取参用的是arguments，而访问arguments是昂贵的，建议使用【扩展运算符+rest参数】来代替。（文中实现见最下面）
+
+const addAll = function (arr) {
+  //注意此处如果用...rest，则rest为[[1,2,3,4,5]]，而我们期待的是[1,2,3,4,5]
+  console.log("计算了一次");
+  var result = 0;
+  var len = arr.length;
+  for (var i = 0; i < len; i++) {
+    result += arr[i];
+  }
+  return result;
+};
+const proxyAddAll = (function () {
+  var resultCache = {};
+  return function (...rest) {
+    console.log(rest);
+    var args = rest.join(); //将数组转化为字符串，默认会用逗号分隔
+    if (args in resultCache) {  //不能使用resultCache[args]判断，因为可能结果会为0
+      return resultCache[args];
+    }
+    return (resultCache[args] = addAll(rest));
+  };
+})();
+proxyAddAll(1, 2, 3, 4, 5);
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------
+
+class PreLoadImage {
+    constructor(imgNode) {
+        // 获取真实的DOM节点
+        this.imgNode = imgNode
+    }
+    // 操作img节点的src属性
+    setSrc(imgUrl) {
+        this.imgNode.src = imgUrl
+    }
+}
+class ProxyImage {
+    // 占位图的url地址
+    static LOADING_URL = 'xxxxxx'
+    constructor(targetImage) {
+        // 目标Image，即PreLoadImage实例
+        this.targetImage = targetImage
+    }
+    // 该方法主要操作虚拟Image，完成加载
+    setSrc(targetUrl) {
+       // 真实img节点初始化时展示的是一个占位图
+        this.targetImage.setSrc(ProxyImage.LOADING_URL)
+        // 创建一个帮我们加载图片的虚拟Image实例
+        const virtualImage = new Image()
+        // 监听目标图片加载的情况，完成时再将DOM上的真实img节点的src属性设置为目标图片的url
+        virtualImage.onload = () => {
+            this.targetImage.setSrc(targetUrl)
+        }
+        // 设置src属性，虚拟Image实例开始加载图片
+        virtualImage.src = targetUrl
+    }
+}
+//使用
+var imgNode = document.getElementById("#img");
+var preLoadImage = new PreLoadImage(imgNode);
+var img = new ProxyImage(preLoadImage);
+img.setSrc("真实图片地址");
+
+-----
+
+const addAll = function() {
+    console.log('进行了一次新计算')
+    let result = 0
+    const len = arguments.length
+    for(let i = 0; i < len; i++) {
+        result += arguments[i]
+    }
+    return result
+}
+// 为求和方法创建代理
+const proxyAddAll = (function(){
+    // 求和结果的缓存池
+    const resultCache = {}
+    return function() {
+        // 将入参转化为一个唯一的入参字符串
+        const args = Array.prototype.join.call(arguments, ',')
+        // 检查本次入参是否有对应的计算结果
+        if(args in resultCache) {
+            // 如果有，则返回缓存池里现成的结果
+            return resultCache[args]
+        }
+        return resultCache[args] = addAll(...arguments)
+    }
+})()
+proxyAddAll(1,2,3,4,5);

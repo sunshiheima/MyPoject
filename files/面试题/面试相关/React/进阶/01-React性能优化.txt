@@ -1,0 +1,142 @@
+参考文章：https://juejin.im/post/5d2d41a7e51d454f723025ad#heading-30
+
+-------------------------React性能优化---------------------------------
+1.react组件性能优化：
+
+1-1.react性能查看工具
+1)在chrome中先安装React Perf扩展
+2)React16以前：需要在入口文件或者redux的store.js中加入相应的代码即可
+  React16以后：在url后加上?react_pref即可！具体使用见文
+
+1-2.单个react组件性能优化
+1)不要将【render中DOM元素或者组件的属性值】设置为对象/数组/函数(而应该设置为对它们的引用)、不要在行内bind(this)。
+  //实例代码
+  <button onClick={this.handleClick.bind(this)}></button>
+  <button onClick={() => this.handleClick()}></button>
+  <button style={{color: "red"}}></button>  //而应该写btnStyle={color: "red"}; <button style={btnStyle} />
+  这些会导致一样的问题：每一次render都会生成一个新的函数或者对象(引用类型)，会导致不必要的重新渲染，影响到性能。
+  ---
+  React在更新阶段会对比原有的Virtual DOM和新生成的Virtual DOM找出两者不同之处，根据两者不同之处进行DOM树重新渲染。
+  在这个过程当中会对render中DOM元素和组件上的属性(props)进行浅层比较。
+  我们知道，如果属性值基础数据类型(字符串/数字)，只要值相同，那么浅层比较就会认为其相同。
+  但是当属性值为引用类型(对象/函数)，浅层比较只会看这两个props是不是同一个引用，如果不是，哪怕这两个对象中的内容完全一样，也会被认为是两个不同的值。进而导致不必要的重新渲染。
+
+2)定制shouldComponentUpdate函数
+render之后会有虚拟DOM的对比过程，以实现DOM树的最小改动。但是计算虚拟DOM的差异是会消耗资源的，如果有办法使得连虚拟DOM的差异计算都不用执行就好了。
+这就是shouldComponentUpdate的作用：当其返回false时，更新过程就终止，之后render不会执行了，自然也就避免了虚拟DOM的差异计算！
+//一般shouldComponentUpdate中的实现就是：对比nextProps和this.props，对比nextState和this.state
+shouldComponentUpdate(nextProps, nextState){
+  if((nextProps.title !== this.props.title) || (nextState.num !==  this.state.num)){
+      return true;
+  }
+  return false;
+}
+---
+还可以使用react提供的React.PureComponent
+class Demo extends React.PureComponent{...}
+
+1-3.多个react组件性能优化
+1)为每一个列表元素加上key
+key的作用。。。
+key应该唯一而且稳定不变。不适合使用数组的索引作为key，因为虽然唯一但是不稳定。
+可以使用shortid生成唯一key的数组，和数组一起使用(例如在每一条数据当中加入一个id属性，值为key数组中的某一项）。
+
+2)尽量不要改变包裹功能的节点类型！
+每一次更新过程，是首先将新生成的虚拟DOM和原来的虚拟DOM进行对比，根据差异对DOM树进行改变的。
+如果包裹元素的类型改变了，React就会将此组件开始（以及其子组件）全部卸载重装，这肯定比更新过程要的时间长！
+
+---------------------
+
+2.redux性能优化：
+
+2-1.Redux Store的状态树设计应该尽量扁平、尽量范式化。
+范式化的数据结构设计即：要让一份数据只存储一份，数据冗余造成的后果就是难以保证数据一致性！
+
+2-2.数据获取时优化（使用reselect库）
+mapStateToProps也被叫做selector，在store发生变化的时候就会被调用，即使不是selector关心的数据。
+所所以如果selector计算量非常大，每次更新都重新计算可能会带来性能问题。
+【reselect库】就能帮助你省去这些没必要的计算，原理是：只要相关的状态没有改变，那么就直接使用上一次的缓存结果！
+
+
+---------------------
+
+3.按需加载
+React.lazy和React.Suspense来实现组件的按需加载
+//当某个功能很少被用到时，我们可以痛快的使用React.lazy和React.Suspense来按需加载功能，而无需牺牲用户体验了。
+//React.lazy和React.Suspense的使用一定程度上加快了首屏的渲染速度，使得我们的页面加载更快。
+//(另外，当我们想添加一个新功能而引入一定新依赖时，我们往往会评估该依赖的大小以及引入该依赖会对原有bundle造成多大影响。)
+
+---------------------
+
+4.使用React.memo()来优化函数组件的性能
+注意，上面提到的有些优化只能用于【类组件】，但无法用于【函数式组件】
+-在类组件当中根据情况自己实现shouldComponentUpdate
+-使用PureComponent(即class Demo extends React.PureComponent)
+
+1)解决方案：使用React.memo()
+const FuncComponent = () => {
+    return (
+        <div>
+            I am a Functional Component
+        </div>
+    )
+}
+const MemoFuncComponent = React.memo(FunComponent);
+---
+原理：React.memo会返回一个纯化的组件MemoFuncComponent,这个组件将会在JSX标记中渲染出来。
+当组件重新渲染的时候，React将会检查之前的之后的state和props是否相同。如果相同，组件将不会被重新渲染。
+
+
+
+
+
+
+
+------------------------------题外话-------------------------------
+题外话：
+1.显示html
+<div dangerouslySetInnerHTML={{ __html: LANG.auth_register_tips1 }}/>
+2.常用库
+具体见文章
+3.react-devtools调试工具
+4.组件之间通信
+
+--------
+
+1.在componentDidMount请求服务器数据并利用setState时应注意，在组件卸载componentWillUnmount应该把去请求去掉
+
+2.setState的其他用法
+// 一般改变state值的一种方式
+const { data } = this.state;
+this.setState({ data: {...data, key: 1 } });
+// 另外一种可以通过callback的方式改变state的值
+this.setState(({ data }) => ({ data: {...data, key: 1 } }));
+// 还可以
+this.setState((state, props) => {
+return { counter: state.counter + props.step };
+});
+
+3.shouldComponentUpdate内部实现
+// React 性能优化有很多种方式，
+// 那常见的一种就是在生命周期函数shouldComponentUpdate里面判断
+// 某些值或属性来控制组件是否重新再次渲染。
+// 判断一般的字符串，数字或者基础的对象，数组都还是比较好处理
+// 那嵌套的对象或者数组就比较麻烦了，对于这种
+// 推荐使用lodash(或者其他的类似库)的isEqual对嵌套数组或对象进行判断
+shouldComponentUpdate(nextProps, nextState) {
+if (_.isEqual(nextState.columns, this.state.columns)) return false;
+return true;
+}
+
+4.bind绑定函数
+利用bind绑定函数，是默认有event这个参数的，只是这个参数在给定参数之后
+handleClick(id, e){
+    console.log(id, e);
+}
+<button onClick={this.handleClick.bind(this, 2)}></button>
+
+5.组合vs继承
+React推荐使用组合，而不是继承。
+组合在UI来的更加直观，代码看起来也比较容易，更符合我们的认知，也符合React component-base的特性。
+
+

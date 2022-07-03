@@ -1,0 +1,30 @@
+Node代理跨域
+和Nginx道理相同，都是启一个代理服务器。
+
+VUE-CLI：
+是基于webpack的，通过webpack-dev-server在本地启动脚手架，也就是【在本地启动了一个Node服务】，来实时监听和打包编译静态资源。
+我们只需要进行相关配置即可，即在vue-config.js当中配置，proxy: {"/xxx": "www.haha1.com", changeOrigin: true, ...}
+
+自己实现一个Node代理服务器：
+使用express + http-proxy-middleware来搭建一个代理服务器。   //webpack-dev-server当中用的就是http-proxy-middleware这个中间件
+
+--------------------------------------------
+
+let express = require('express')
+let proxy = require('http-proxy-middleware')
+let app = express()
+app.use('/', proxy({
+    // 代理跨域目标接口
+    target: 'http://www.hahaha1.com:9999',
+    changeOrigin: true,
+
+    // 修改响应头信息，实现跨域并允许带cookie
+    onProxyRes: function(proxyRes, req, res) {
+        res.header('Access-Control-Allow-Origin', 'http://www.hahaha.com')
+        res.header('Access-Control-Allow-Credentials', 'true')
+    },
+
+    // 修改响应信息中的cookie域名，为false时，表示不修改
+    cookieDomainRewrite: 'www.hahaha.com'
+}))
+app.listen(3000)

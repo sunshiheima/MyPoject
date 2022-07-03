@@ -1,0 +1,38 @@
+【函数柯里化】 —— 尚未完全看懂！
+
+函数柯里化：
+柯里化（Currying）是把接受多个参数的函数变换成接受一个单一参数(最初函数的第一个参数)的函数，并且返回接受余下的参数和返回结果的新函数的技术
+柯里化是函数式编程重要标志，函数式编程灵活性和执行效率很高，但是整体逻辑不太好捋。
+
+
+原写法
+const curry = (fn) => {
+    if(fn.length <= 1) return fn;
+    const generator = (args) => (args.length === fn.length ? fn(...args) : arg => generator([...args, arg]));
+    return genertor([]);
+}
+
+//我的改写(未验证改写是否与原写法等价)
+const curry = (fn) => {
+    //当函数fn的形参个数为0个或1个时，不做处理，原样返回该函数
+    if(fn.length <= 1) return fn;   
+    const generator = (args) => {
+        //看数组args当中的元素个数 是否等于 函数fn的形参个数
+        if(args.length === fn.length){
+            //若相等，则将args当中的元素，作为参数传入函数fn中
+            return fn(...args);
+        }else{
+            //若不相等（貌似是函数fn形参个数 > 数组args当中的元素个数？）
+            //这一部分是关键！尚未理解！
+            return (arg) => {
+                return generator([...args, arg]);       //重新调用generator，是在递归调用
+            } 
+        }
+    }
+    return generator([]);
+}
+
+//可以看出，curry函数最终的返回值为：fn(...args)的执行结果！
+但是只有在args.length===fn.length才会执行这句返回结果，只要args.length!==fn.length，就【还需要做一些处理】，直到两者长度相等！（这个处理还没看懂？这是想处理什么？）
+
+

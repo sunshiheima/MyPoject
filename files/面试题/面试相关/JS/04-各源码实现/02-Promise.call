@@ -1,0 +1,42 @@
+用法：
+Promise.call([promise1, promise2, promise3]).then((res) => {
+    //res是：一个包含全成功的数组 或者 一个error
+})
+
+分析：
+-入参是由Promise实例组成的数组
+-返回值是个promise实例，因为可以使用.then
+-如果全部成功，状态变为resolved，并且返回值组成一个数组传给回调
+-但凡有一个失败，状态变为rejected，并将error返回给回调
+
+实现：
+function myPromiseAll(promises){
+    return new Promise((resolve, reject) => {
+        if(Array.isArray(promises)){
+            throw new TypeError("param must be an array");
+        }
+        let result = [];
+        let count = 0;
+        promises.forEach((promise, index) => {
+            promise.then((res) => {
+                result[index] = res;
+                count++;
+                count === promises.length && resolve(result)  //判断是否完成
+            }, (err) => {
+                reject(err);
+            })
+        })
+    })
+}
+
+//验证
+let p1 = Promise.resolve(1),        //第二次将此改为Promise.reject(1);
+    p2 = Promise.resolve(2),
+    p3 = Promise.resolve(3);
+
+diPromiseAll([p1, p2, p3]).then((res)=>{
+    console.log(res, 'res')
+}, (err)=>{
+    console.log(err, 'err')
+})
+

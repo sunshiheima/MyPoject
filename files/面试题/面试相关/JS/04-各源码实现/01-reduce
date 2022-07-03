@@ -1,0 +1,99 @@
+arr.reduce(callback(accumulator, currentValue[, index[, array]])[, initialValue])
+
+//已运行成功
+Array.prototype.myreduce = function (callbackFn) {
+  var arr = this;
+  var len = arr.length;
+  //1.初始化
+  var accumulator = undefined;
+  var currentValue = undefined;
+  var index = 0;
+  var initialValue = arguments.length > 1 ? arguments[1] : undefined;
+
+  //2.错误处理
+  //当传入的参数不为函数时，报错
+  if (typeof callbackFn !== "function") {
+    throw TypeError(callbackFn + "is a function");
+  }
+  //当数组为空，并且无initialValue时，报错
+  if (arr.length === 0 && !initialValue) {
+    throw TypeError("reduce a empty arr with no initial value");
+  }
+
+  //3.初始化accumultor
+  if (initialValue) {
+    accumulator = initialValue;
+  } else {
+    accumulator = arr[index];
+    ++index;
+  }
+
+  //4.循环累加
+  while (index < len) {
+    currentValue = arr[index];
+    if (currentValue) {
+      //accumulator = callbackFn.call(null, accumulator, currentValue, index, arr);
+      accumulator = callbackFn(accumulator, currentValue, index, arr);
+    }
+    ++index;
+  }
+  return accumulator;
+};
+var arr = [1, 2, 3, 4, 5];
+arr.myreduce(function (acc, cur) {
+  return acc + cur;
+}, 100);
+
+
+
+
+
+
+--------------------------------------------------------------原版（有点儿啰嗦）---------------------------------------------
+
+
+Array.prototype.myreduce = function (callbackfn){
+    //1.初始化
+    //拿到数组
+    const arr = this,
+    len = arr.length;
+    //初始化下标值、累加器、初始值
+    let index = 0,
+    accumulator = undefined,
+    present = false,    //当前索引对应的值是否存在
+    initialValue = arguments.length > 1 ? arguments[1] : undefined;
+
+    //2.错误处理
+    //当myreduce传入的第一个参数不为函数时，报错
+    if(typeof callbackfn !== 'function'){
+        throw new TypeError(callbackfn + 'is not a function');
+    }
+    //当数组为空，并且无初始值时，报错
+    if(len === 0 && arguments.length<2){
+        throw new TypeError('Reduce of empty array with no initial value');
+    }
+
+    //3.初始化累加器
+    if(arguments.length>1){
+        accumulator = initialValue;
+    }else{
+        accumulator = arr[index];
+        ++index;
+    }
+
+    //4.循环累加
+    while(index<len){
+        //判断当前索引对应的值是否为存在
+        present = arr.hasOwnProperty(index);
+        if(present){
+            const value = arr[index];
+            //调用callbackfn
+            accumulator = callbackfn.apply(undefined, [accumulator, value, index, arr]);
+        }
+        ++index;
+    }
+
+    //5.返回最终结果
+    return accumulator;
+}
+

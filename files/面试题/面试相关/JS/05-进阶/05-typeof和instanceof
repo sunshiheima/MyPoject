@@ -1,0 +1,20 @@
+【typeof xxx】的返回值：
+返回值可能有：number、boolean、string、undefined、object、【function】、symbol
+-数值(20,NaN,Infinity): number
+-字符串: string
+-布尔类型: boolean
+-undefined: undefined
+-对象(普通对象、new xxx、null、数组): object
+-函数(普通函数、Date): function
+-symbol: symbol
+
+typeof适用于基础数据类型判断（用于判断引用类型，返回结果都是object，无法区分）
+instanceof适用于判断两个对象是否为实例和原型的关系（因为存在严重的原型继承问题，故不建议使用instanceof判断引用类型的具体类型）
+//例如：（原型链实则为[] -> Array.prototype -> object.prototype）
+[] instanceof Array;        //true
+[] instanceof Object;       //true
+Array instanceof Object;    //true
+
+至于引用类型具体类型的判断，建议使用Object.prototype.toString(xxx);来判断！
+当然该方法同样适用于基础数据类型判断
+

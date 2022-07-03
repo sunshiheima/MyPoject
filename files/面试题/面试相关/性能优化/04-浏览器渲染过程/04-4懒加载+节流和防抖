@@ -1,0 +1,141 @@
+懒加载：是争对图片加载时间的优化
+当页面打开时只加载首屏的图片资源，至于下面的图片，会等到用户下拉的瞬间再即时去请求、即使呈现。
+
+首先是将background-image: none;
+当用户下拉到那个地方时，将background-image属性的值变成一个在线图片的URL，于是图片才得以呈现。
+
+//如何确定 我们的图片是否已经到达当前用户界面当中
+-【当前可视区域的高度】：const viewHeight = window.innerHeight || document.documentElement.clientHeight 
+-【元素距离可视区域顶部的高度】：用getBoundingClientRect()方法来获取返回元素的大小及其相对于视口的位置。
+
+//Lazy-Load具体代码：
+<script>
+    // 获取所有的图片标签
+    const imgs = document.getElementsByTagName('img')
+    // 获取可视区域的高度
+    const viewHeight = window.innerHeight || document.documentElement.clientHeight
+    // num用于统计当前显示到了哪一张图片，避免每次都从第一张图片开始检查是否露出
+    let num = 0
+    function lazyload(){
+        for(let i=num; i<imgs.length; i++) {
+            // 用可视区域高度减去元素顶部距离可视区域顶部的高度
+            let distance = viewHeight - imgs[i].getBoundingClientRect().top
+            // 如果可视区域高度大于等于元素顶部距离可视区域顶部的高度，说明元素露出
+            if(distance >= 0 ){
+                // 给元素写入真实的src，展示图片
+                imgs[i].src = imgs[i].getAttribute('data-src')
+                // 前i张图片已经加载完毕，下次从第i+1张开始检查是否露出
+                num = i + 1
+            }
+        }
+    }
+    // 【监听Scroll事件】
+    window.addEventListener('scroll', lazyload, false);
+</script>
+
+-------------------------------------------------------------------------------------------------
+
+但是若监听了scroll事件，则用户的每一次滚动都将触发我们的监听函数。频繁响应某个事件将会造成大量不必要的页面计算。
+因此需要针对那些【可能频繁触发的事件】，做进一步优化 —— 节流和防抖
+
+可能频繁触发的事件：scroll 事件，resize 事件、鼠标事件（比如 mousemove、mouseover 等）、键盘事件（keyup、keydown 等）
+频繁触发回调导致的大量计算会引发页面的抖动甚至卡顿。
+
+事件节流(throttle)和事件防抖(debounce)：
+都是以闭包的形式存在的。它们通过对事件对应的回调函数进行包裹、以自由变量的形式缓存时间信息，最后用setTimeout来控制事件的触发频率。
+
+【节流throttle】
+在某段时间内，不管你触发了多少次回调，我都只认第一次，并在计时结束时给予响应。
+具体代码：
+// fn是我们需要包装的事件回调, interval是时间间隔的阈值
+function throttle(fn, interval) {
+  // last为上一次触发回调的时间
+  let last = 0
+  // 将throttle处理结果当作函数返回
+  return function () {
+      // 保留调用时的this上下文
+      let context = this
+      // 保留调用时传入的参数
+      let args = arguments
+      // 记录本次触发回调的时间
+      let now = +new Date()
+      
+      // 判断上次触发的时间和本次触发的时间差是否小于时间间隔的阈值
+      if (now - last >= interval) {
+      // 如果时间间隔大于我们设定的时间间隔阈值，则执行回调
+          last = now;
+          fn.apply(context, args);
+      }
+    }
+}
+// 用throttle来包装scroll的回调
+const better_scroll = throttle(() => console.log('触发了滚动事件'), 1000)
+document.addEventListener('scroll', better_scroll)
+
+----------------
+
+【防抖debounce】
+在某段时间内，不管你触发了多少次回调，我都只认最后一次。
+具体实现：
+// fn是我们需要包装的事件回调, delay是每次推迟执行的等待时间
+function debounce(fn, delay) {
+  // 定时器
+  let timer = null
+  // 将debounce处理结果当作函数返回
+  return function () {
+    // 保留调用时的this上下文
+    let context = this
+    // 保留调用时传入的参数
+    let args = arguments
+
+    // 每次事件被触发时，都去清除之前的旧定时器
+    if(timer) {
+        clearTimeout(timer)
+    }
+    // 设立新定时器
+    timer = setTimeout(function () {
+      fn.apply(context, args)
+    }, delay)
+  }
+}
+// 用debounce来包装scroll的回调
+const better_scroll = debounce(() => console.log('触发了滚动事件'), 1000)
+document.addEventListener('scroll', better_scroll)
+
+---------------
+
+【用节流来优化防抖】—— 没理解这个优化。。。我感觉就是节流和防抖的综合
+？？？delay时间内，我可以为你重新生成定时器；但只要delay的时间到了，我必须要给用户一个响应。
+
+// fn是我们需要包装的事件回调, delay是时间间隔的阈值
+function throttle(fn, delay) {
+  // last为上一次触发回调的时间, timer是定时器
+  let last = 0, timer = null
+  // 将throttle处理结果当作函数返回
+  return function () { 
+    // 保留调用时的this上下文
+    let context = this
+    // 保留调用时传入的参数
+    let args = arguments
+    // 记录本次触发回调的时间
+    let now = +new Date()
+    // 判断上次触发的时间和本次触发的时间差是否小于时间间隔的阈值
+    if (now - last < delay) {
+    // 如果时间间隔小于我们设定的时间间隔阈值，则为本次触发操作设立一个新的定时器
+       clearTimeout(timer)
+       timer = setTimeout(function () {
+          last = now
+          fn.apply(context, args)
+        }, delay)
+    } else {
+        // 如果时间间隔超出了我们设定的时间间隔阈值，那就不等了，无论如何要反馈给用户一次响应
+        last = now
+        fn.apply(context, args)
+    }
+  }
+}
+// 用新的throttle包装scroll的回调
+const better_scroll = throttle(() => console.log('触发了滚动事件'), 1000)
+document.addEventListener('scroll', better_scroll)
+
+

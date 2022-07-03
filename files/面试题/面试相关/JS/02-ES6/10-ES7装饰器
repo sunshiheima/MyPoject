@@ -1,0 +1,27 @@
+当我们使用了ES7的装饰器语法糖之后，会将被装饰者作为参数传给装饰器，并且调用装饰器（实则为一个函数）
+
+
+【@装饰器名称】这一行写的位置直接决定了被装饰者是谁:
+-类装饰器，写在类的上一行
+-方法装饰器，写在类的里面（目标方法的上面？）
+
+装饰者函数：
+function funcDecorator(target, name, descriptor){
+    //装饰(或改变) 被装饰者的某方法
+}
+-target: 被装饰者
+-name: 我们将要修饰的目标属性的属性名
+-descriptor: 用于改变目标方法。类似于Object.defineProperty(obj, prop, descriptor)当中的descriptor
+             可通过descriptor.value来获取该目标方法
+
+被装饰者:
+class xxx {
+    //下面等价于onClick: function(){...}
+    onClick(){
+        ...
+    }
+}
+
+//故target为类xxx，name为onClick，descriptor为function(){...}
+//其中target无需我们指定，会根据【@装饰器】写的位置判断出target，并将其自动作为参数传给装饰器函数
+//我们写的重点应该是descriptor

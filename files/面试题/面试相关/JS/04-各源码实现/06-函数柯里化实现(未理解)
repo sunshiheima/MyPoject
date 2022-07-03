@@ -1,0 +1,34 @@
+未理解！关键在于代码中的args和arg分别表示什么？以及拓展运算符的相关知识！
+https://juejin.im/post/6844903989083897870#heading-14
+
+函数柯里化的本质：
+    就是将一个参数很多的函数分解成单一参数的多个函数。
+
+实际应用中：？？？
+    延迟计算 （用闭包把传入参数保存起来，当传入参数的数量足够执行函数时，开始执行函数）
+    动态创建函数 （参数不够时会返回接受剩下参数的函数）
+    参数复用（每个参数可以多次复用）
+
+//下面为改写版，我感觉是和文章版本等价。但是运行结果是undefined，说明还是不等价。。。
+function curry(fn){
+    //此行的args为调用此返回的函数(currySum)时，传入的实参
+    return judge = (...args) => {
+        //比较currySum的实参个数和形参个数，根据比较结果来决定下一步做什么
+        var flag = args.length >= fn.length;
+        if(flag){
+            //若实参个数大于形参个数，则直接调用fn，并将所有实参传入
+            fn(...args)
+        }else{
+            //若实参个数小于形参个数，则返回一个函数（递归的过程）。相当于curry直接return judge(...args, ...arg);直到args.length >= fn.length为止
+            //下面的arg指？？？
+            return (...arg) => judge(...args, ...arg);
+        }
+
+    }
+}
+const sum = (a, b, c, d) => a + b + c + d;
+const currySum = curry(sum);
+
+currySum(1)(2)(3)(4); // 10
+currySum(1, 2)(3)(4); // 10
+currySum(1)(2, 3)(4); // 10

@@ -1,0 +1,10 @@
+Babel原理：（抽象语法树）
+-解析：将代码转为AST（包含词法分析/语法分析）
+-转换：访问 AST的节点进行变换操作生产新的 AST
+-生成：以新的AST为基础生成代码
+
+了解babel(基础用法）
+https://juejin.im/post/5c19c5e0e51d4502a232c1c6
+
+深入babel(Babel是怎么工作的，Babel插件是怎么工作的，以及怎么去写Babel插件）
+https://juejin.im/post/5c21b584e51d4548ac6f6c99
