@@ -2,6 +2,7 @@ let path = require("path");
 module.exports = {
     devServer: {
         contentBase: path.resolve(__dirname, "build"),
+        location:"127.0.0.1",
         port: 2333,
         https: false,
         open: true,
