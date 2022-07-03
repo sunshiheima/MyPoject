@@ -1,0 +1,44 @@
+来自MDN，很好简介易懂
+https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control
+
+--------------
+
+【缓存请求指令】
+//可缓存性
+no-store:
+no-cache:
+max-age:
+//到期（下面两个）
+max-stale: 表明客户端愿意接收一个已经过期的资源。可以设置一个可选的秒数，表示响应不能已经过时超过该给定的时间。
+min-fresh: 表示客户端希望获取一个能在指定的秒数内保持其最新状态的响应.
+//其他（下面两个）
+no-transform: 不得对资源进行转换或转变。Content-Encoding、Content-Range、Content-Type等HTTP头不能由代理修改。
+              非透明代理或者如Google's Light Mode可能对图像格式进行转换，以便节省缓存空间或者减少缓慢链路上的流量。no-transform指令不允许这样做。
+only-if-cached: 表明客户端只接受已缓存的响应，并且不要向原始服务器检查是否有更新的拷贝。
+
+----------------
+
+【缓存响应指令】
+//可缓存性（下面四个）
+no-store: 缓存不应存储有关客户端请求或服务器响应的任何内容，即不使用任何缓存
+no-cache: 强制要求缓存把请求提交给原始服务器进行验证(协商缓存验证)
+public: 表明响应可以被任何对象(发送请求的客户端/代理服务器)缓存
+        即使是通常不可缓存的内容(例如：该响应没有max-age指令或Expires消息头 / 该响应对应的请求方法是 POST )
+private: 表明响应只能被单个用户缓存(比如用户本地浏览器)，不能作为共享缓存（即代理服务器不能缓存它）
+//到期（下面两个）
+max-age: 设置被缓存资源的有效期，超过这个时间缓存被认为过期(单位秒)，是相对于请求的时间
+s-maxage: 仅适用于共享缓存(比如各个代理)，私有缓存会忽略它。会覆盖max-age或者Expires头。
+//重新验证和重新加载（下面两个）
+must-revalidate: 一旦资源过期（比如已经超过max-age），在成功向原始服务器验证之前，缓存不能用该资源响应后续请求。
+proxy-revalidate: 与must-revalidate作用相同，但它仅适用于共享缓存（例如代理），并被私有缓存忽略
+//其他
+no-transform:
+
+----------------------------------------------------------
+
+具体示例：
+
+1.禁止缓存 Cache-Control: no-store      //此外，可以参考Expires和Pragma消息头
+2.缓存静态资源 Cache-Control:public, max-age=31536000    //对于应用程序中不会改变的文件(图像/CSS/JS等静态文件)，你通常可以在发送响应头前添加积极缓存
+3.需要重新验证 Cache-Control: no-cache 或 Cache-Control: max-age=0   
+ 指定 no-cache 或 max-age=0 表示客户端可以缓存资源，每次使用缓存资源前都必须重新验证其有效性（这意味着每次都会发起HTTP请求）

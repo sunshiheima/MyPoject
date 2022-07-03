@@ -1,0 +1,26 @@
+//没看懂，下面为更贴近【实现继承的方法】中的代码
+https://juejin.im/post/6844903989083897870#heading-3
+
+function B(opt){
+    this.name = opt.name;
+}
+function A(){
+    //方法2：构造函数继承（对象冒充）
+    return (B!===null && B.apply(this, {name: 'B'})) || this;
+}
+//下面为_entend内部代码(child为A, parent为B)
+
+//这句没看懂? 让A.prototype = B?
+Object.setProtptypeOf(A, B);   
+
+if(B===null){
+    //方法4：原型式继承
+    A.prototype = Object.create(B)
+}else{
+    //方法1：原型链继承
+    function _(){   
+        this.constructor = A;   //修正constructor指向
+    }
+    _.prototype = B.prototype;
+    A.prototype = new _();
+}

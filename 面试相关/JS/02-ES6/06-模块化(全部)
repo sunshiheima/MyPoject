@@ -1,0 +1,16 @@
+模块化主要用来抽离公共代码，隔离作用域，避免变量冲突等。
+
+1.IIFE(自执行函数)：在一个单独的函数作用域中执行代码，避免变量冲突。
+
+2.requireJS(基于AMD规范)：依赖必须提前声明好
+
+3.seaJS(基于CMD规范)：支持动态引入依赖文件
+
+4.CommonJS(nodejs自带的)
+
+5.UMD：兼容AMD、CommonJS模块化语法
+
+6.webpack中的require.ensure()
+
+7.ES6的Modules：import/export
+

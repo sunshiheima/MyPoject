@@ -1,0 +1,41 @@
+具体见./ES6/08-Object-assign()
+
+"use strict"
+const isComplexDataType = (obj) => return (typeof obj === "object" || typeof obj === "function") && obj !== null;
+const myassign = function(target, ...source){
+  //方法会保证target为一个对象。若是基本类型，那么会自动转为基本包装类型；但是null/undefined没有基本包装类型，所以传入会报错
+  if(target===null || target===undefined) throw TypeError("目标对象不能为null/undefined");
+  return source.reduce((acc, cur) => {
+    isComplexDataType(acc) || (acc = Object(acc));
+    //当source对象为null/undefined时，直接忽略
+    if(cur ===null || cur === undefined) return acc;
+    
+    //遍历出自身可枚举属性和Symbol属性
+    [...Object.keys(cur), ...Object.getOwnPropertySymbols(cur)].forEach(
+      (key) => {
+        acc[key] = cur[key];
+      }
+    );
+    return acc;
+  }, target)
+};
+
+-----------------------------------------------------------------------------------------
+
+"use strict"     //启用严格模式，使得在尝试给基本包装类型已定义的下标赋值时报错？
+const isComplexDataType = (obj) => (typeof obj === "object" || typeof obj === "function") && obj !== null;
+//简单实现ES6的Object.assign(target, source)
+const myassign = function (target, ...source) {
+  if (target == null) throw new TypeError("目标对象不能为null/undefiend");
+  return source.reduce((acc, cur) => {
+    isComplexDataType(acc) || (acc = new Object(acc)); //变成一个基本包装类型
+    if (cur == null) return acc; //source为null/undefined时忽略
+    //遍历出可枚举属性和Symbol属性（需要查一下Object.keys()、forEach()）
+    [...Object.keys(acc), ...Object.getOwnPropertySymbols(cur)].forEach(
+      (key) => {
+        acc[key] = cur[key];
+      }
+    );
+    return acc;
+  }, target);
+};

@@ -1,0 +1,31 @@
+从React绑定this，看JS语言发展和框架设计
+
+//1)React.createClass自动绑定
+//在老版本的React中，是用createClass创建组件，这种方式创建的组件，会自动绑定this
+//缺点：但是React已经不推荐这种创建组件的方式了，而是推荐用【class声明组件】或者是【functional无状态组件】
+
+1)行内bind
+即<button onClick={this.handleSubmit.bind(this,参数)} >
+缺点：存在性能问题。因为当组件每次重新渲染时，都会有一个新的函数创建(bind就是会创建新函数的)
+
+2)行内箭头函数绑定
+即<button onClick={ ()=>{this.handleSubmit(e)} }>
+这种方式是借助了箭头函数（箭头函数内部的this指向其声明时所在的环境）
+缺点：也存在性能问题。原因也是，当组件每次重新渲染时，都会有一个新的函数创建
+
+3)Constructor内绑定（推荐）
+this.handleSubmit = this.handleSubmit.bind(this, 参数)
+constructor方法是类的默认方法，通过new命令生成对象实例时，会自动调用该方法。
+缺点：在constructor内绑定在可读性和可维护性上也许有所欠缺。
+      更重要的是，我们知道在constructor声明的方法不会存在实例的原型上，而属于实例本身的方法。每个实例都有同样一个handleChange，这本身也是一种重复和浪费。
+
+4)ES Next的新特性，在声明函数的时候直接使用箭头函数（推荐）
+handleChange = () => {
+    ...
+}
+优点：使用箭头函数，有效绑定了this；没有2和3潜在的性能问题；没有4的组件实例方法的重复问题。
+
+
+
+
+

@@ -1,0 +1,45 @@
+当new的时候做了什么事情：
+1.创建一个新对象
+2.将构造函数中的作用域赋给新对象（即this指向这个新对象）
+3.执行构造函数中的代码（为这个新对象添加属性）
+4.返回该新对象
+
+注意：因为new没办法重写，所以我们仅使用myNew函数来模拟new
+
+1.创建一个新对象 --- 1
+2.显式绑定原型：将该新对象的_proto_属性指向构造器原型 --- 多出来的一步！
+3.执行该构造函数，并将构造函数的this指向该新对象 --- 23
+4.如果构造函数返回值是对象则返回这个对象，如果不是对象则返回新的实例对象 --- 4
+
+function myNew(fn, ...args){
+    //1.创建一个新对象
+    var obj = new Object();
+    //2.显式绑定原型：将该新对象的_proto_属性指向构造器原型
+    obj._proto_ = fn.prototype;
+
+    //1和2可以合并为：var obj = Object.create(fn.prototype);
+
+    //3.执行该构造函数，并将构造函数的this指向该新对象
+    var result = fn.apply(obj, args)
+    //4.如果构造函数返回值是对象则返回这个对象，如果不是对象则返回新的实例对象
+    return Object.prototype.toString.call(result) === '[object Object] ? result : obj;
+}
+
+//测试myNew
+
+// ========= 无返回值 =============
+const testNewFun = function(name) {
+  this.name = name;
+};
+const newObj = myNew(testNewFun, 'foo');
+console.log(newObj); // { name: "foo" }
+console.log(newObj instanceof testNewFun); // true
+
+// ========= 有返回值 =============
+const testNewFun = function(name) {
+  this.name = name;
+  return {};
+};
+const newObj = myNew(testNewFun, 'foo');
+console.log(newObj); // {}
+console.log(newObj instanceof testNewFun); // false

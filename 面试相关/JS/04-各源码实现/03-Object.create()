@@ -1,0 +1,45 @@
+
+//简易版：
+Object.create = function(obj, properties){
+    if(typeof obj !== "object"){ throw TypeError(); }
+    //1.创建一个新对象，将obj作为该新对象的原型对象
+    var temp = function(){};
+    temp.prototype = obj;
+    var o = new temp();
+    //修正o的构造函数属性
+    if(obj){
+        o.constructor = temp;
+    }
+    //2.将properties中包含的属性和方法添加到新对象身上
+    Object.defineProperties(o, properties);
+    //3.返回新对象
+    return o;
+}
+
+//返回新对象
+//obj之后可能会被改变
+
+------------------------------------------------------------------
+
+if(typeof Object.create !== "function"){
+    Object.create = function(obj, properties){
+        //如果传入的第一个参数不为一个对象，则报错
+        if(typeof obj !== "object"){ throw TypeError(); }
+        
+        //Object.create内部核心原理
+        function Ctor(){};
+        Ctor.prototype = obj;
+        var o = new Ctor();
+
+        //修正constructor指向
+        if(obj){ o.constructor = Ctor; }
+        
+        //将properties中的属性，添加到实例o身上，这样就覆盖了原型上的同名属性
+        if(prototype !== undefined){
+            //若properties不为对象，则报错
+            if(prototype !== Object(properties)){ throw TypeError(); }
+            Object.defineProperties(o, properties);
+        }
+        return o;
+    }
+}

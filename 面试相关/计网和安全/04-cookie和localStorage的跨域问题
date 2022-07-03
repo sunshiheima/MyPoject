@@ -1,0 +1,58 @@
+
+【同一个主域下的跨域问题】（www.baidu和yun.baidu）
+答：将cookie的domain属性设置为".baidu.com"
+
+前置知识：设置cookie时，path和domain属性的作用
+
+----
+
+path：
+cookie一般都是由于用户访问页面而被创建的，可是并不是只有在创建 cookie 的页面才可以访问这个cookie.
+默认情况下，只有与创建cookie的页面处于【同一个目录?】或在创建cookie页面的【子目录?】下才可以访问。
+如果希望【父级目录或者整个网页?】都能使用cookie，就需要进行路径的设置！
+
+例如：
+cookie1的path为/tag/ ；那么tag下的所有页面（即子目录）都可以访问到cookie1
+cookie2的path为/tag/id ；那么/tag/（即父目录）和/tag/haorooms/（兄弟目录haha）的子页面不能访问cookie2
+
+重！让这个设置的cookie能被其他目录或父级目录访问的方法：document.cookie = "name=value; path=/"
+
+----
+
+domain：
+domain表示cookie所在的域，默认为请求的地址。如网址为http://www.baidu.com/post/xxx；那么domain默认为www.baidu.com
+而跨域访问，如域A为www.baidu.com，域B为yun.baidu.com。
+-若想在域A产生一个“令域A和域B都能访问到的cookie”，就应将该cookie的domain设置为".baidu.com"
+-若想在域A产生一个“令域A不能访问，而域B能访问的cookie”，就应将该cookie的domain设置为"yun.baidu.com"
+
+//所以要想【www.baidu和yun.baidu共享cookie】，就只需要将cookie的domain属性设置为".baidu.com"
+
+---------------------------
+
+【天猫和淘宝是如何共享cookie的？】
+答：jsonp实现跨域传递cookie
+
+打开淘宝首页时，会向天猫发送一个请求，这个请求是为了将cookie传递给天猫。跨域传递-jsonp
+淘宝发送请求时，会约定一个回调函数名fn，；服务器接收到请求后会调用该回调函数，并向其中传入“可以执行的js代码-即重写cookie的path和domain”，callback(可执行的js代码)
+淘宝回调函数内部会执行该“可执行的js代码”，那么cookie的path和domain就被重写了。（那这不就是使用js来操作cookie吗？）
+
+-----------------------------
+
+【同一域下，不同工程下的cookie携带问题】
+本地的前端工程在请求后端工程时，很多是基于ajax的，但是ajax默认不携带cookie。解决方式有两种：
+-使用.jsonp格式发送？
+-ajax请求中加上字段xhrFields: {withCredentials: true}，这样可以携带cookie
+//重要！服务器需设置 Access-Control-Allow-Credentials: true
+
+-----------------------------------------------------------------------------------
+
+【跨域操作localStorage】—— iframe+postMessage
+//即如何通过a.haorooms.com/text.html页面去修改b.haorooms.com/text.html页面的本地数据
+-在页面A中创建一个iframe，嵌入页面B
+-页面A通过postMessage传递指定格式的消息给页面B
+-页面B解析页面A传递过来的消息内容，调用localStorage操作本地数据。 —— 实现了页面A操作页面B的数据
+-页面B包装localStorage的操作结果，并通过postMessage传递给页面A。页面A解析页面B传递回来的消息内容，得到localStorage的操作结果。 —— 实现页面A获取页面B的数据
+
+
+
+

@@ -1,0 +1,19 @@
+webpack中的模块化（import / require / export / module.exports混合使用）。写的很好，尚未看完！
+https://juejin.im/post/6844903520865386510
+
+1.require引用模块时加上default?     require('xxx').default
+2.各大UI组件库中文档会写 —— import {button} from "xxx"，这样会引入所有组件内容
+  需添加额外的babel配置，比如babel-plugin-component
+3.es6的import去引用commonjs规范定义的模块，或者反过来也可以？
+4.npm下载下来的UI组件模块时，看到的都是webpack编译好的js文件，可以使用import或require再去引用。
+  但是我们平时编译好的js是无法再被其他模块import的？
+5.babel和webpack在模块化场景中充当了什么角色？哪个起到了关键作用？
+6.听说es6还有tree-shaking功能，怎么才能使用这个功能？
+
+------------------------------------------------------------
+
+webpack和babel在模块化中的作用
+
+【webpack模块化的原理】
+
+  

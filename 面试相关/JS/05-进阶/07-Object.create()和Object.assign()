@@ -1,0 +1,46 @@
+【Object.create(obj, propertise)】
+Object.create()使用现有对象作为新创建的对象的原型，来创建新对象。   //原对象obj之后也可能被改变
+-第一个参数obj：（必须）为一个对象，将作为新对象的原型对象
+-第二个参数properties：（可选）为包含键值对的对象，将被添加到新对象身上，作为新对象自身的属性和方法
+
+//【小技巧】创建一个没有原型的对象：Object.create(null);
+
+Object.create()的源码实现：
+Object.create = function(obj, properties){
+    if(typeof obj !== "object"){ throw TypeError(); }
+    //1.创建一个新对象，将obj作为该新对象的原型对象
+    var temp = function(){};
+    temp.prototype = obj;
+    var o = new temp();
+    //修正o的构造函数属性
+    if(obj){
+        o.constructor = temp;
+    }
+    //2.将properties中包含的属性和方法添加到新对象身上
+    Object.defineProperties(o, properties);
+    //3.返回新对象
+    return o;
+}
+
+因为properties是直接添加到新对象身上的，所以properties会屏蔽掉obj上面的同名属性或方法
+之后修改新对象的属性和方法（若实则是原型对象obj身上的属性和方法），那么obj会被改变！
+
+----------------------------------------------------------------------------------------
+
+【Object.assign(target, source)】
+Object.assign()将所有【可枚举的自身属性】从一个或多个源对象复制到目标对象，它返回目标对象。 //也会改变目标对象
+//注意：
+-此处的复制为浅拷贝！
+-此处源对象将覆盖目标对象上的同名属性或方法！
+
+//我们通常的使用方式，即将多个对象合并为一个对象：Object.assign({}, source1, source2, ...);
+
+//示例
+const target = { a: 1, b: 2 };
+const source = { b: 4, c: 5 };
+const returnedTarget = Object.assign(target, source);
+console.log(target);    //Object { a: 1, b: 4, c: 5 }
+console.log(returnedTarget);    //Object { a: 1, b: 4, c: 5 }
+
+
+

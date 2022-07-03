@@ -1,0 +1,19 @@
+在HTML中：类似<input>,<textarea>,<select>这样的表单元素会维护自身的状态，并基于用户的输入来更新。
+          当用户提交表单时，这些元素的值将随表单一起被发送。
+在React中：当用户提交表单时，我们需要手动获取各个表单元素的值。我们可以通过ref来获取DOM元素，但是更优的方法还是将组件变为受控组件！
+
+
+受控组件：
+利用组件状态(state)来同步记录DOM元素的值，即将元素的属性value设置为this.state.value。
+这样，当我们往元素当中输入值时，元素当中是不会有内容的，因为此时其值受value属性的控制，this.state.value没变，元素的内容也不会变！
+这是我们需要在元素的onChange属性挂上一个事件处理函数，这样每当元素的值发生变化时，该事件处理函数就会被调用。我们在此事件处理函数中：
+onInputChange(event){
+    this.setState({
+        value: event.target.value
+    })
+}
+handleSubmit = () =>{
+    console.log(this.state.value);
+}
+<input value={this.state.value} onChange={this.onInputChange} />
+<button onClick={this.handleSubmit} />

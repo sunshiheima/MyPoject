@@ -1,0 +1,3 @@
+在super()被调用之前，子类是不能使用this的。
+在ES6中，子类必须在constructor中调用super()
+传递props给super()的原因则是便于(在子类中)能在constructor访问this.props

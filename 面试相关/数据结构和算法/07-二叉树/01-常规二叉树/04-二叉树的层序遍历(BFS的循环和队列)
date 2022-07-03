@@ -1,0 +1,102 @@
+-------------------------------------------广度优先搜索思想--------------------------------------------------------------------------
+当然啦，这个问题若采用 BFS 的思路来解，那么它其实已经不能说是一个严格的迷宫游戏了
+在一个真正的迷宫游戏里，大概率并不会允许我们如此顺利地逐个访问身在同一层次的所有坐标（比如C和D之间可能就会隔了厚厚的一堵墙，导致你无法在访问C后直接去访问D）
+
+在分层遍历的过程中，大家会发现两个规律：
+1.每访问完毕一个坐标，这个坐标在后续的遍历中都不会再被用到了，也就是说它可以被丢弃掉。
+2.站在某个确定坐标的位置上，我们所观察到的可直接抵达的坐标，是需要被记录下来的，因为后续的遍历还要用到它们。
+
+重点！！！（BFS和队列的关系）
+丢弃已访问的坐标、记录新观察到的坐标，这个顺序毫无疑问符合了“先进先出”的原则，因此整个 BFS 算法的实现过程，和队列有着密不可分的关系。
+
+在整个BFS过程里，我们其实循环往复地做了以下事情：
+依次访问队列里已经有的坐标，将其出队；记录从当前坐标出发可直接抵达的所有坐标，将其入队。
+
+BFS是一种算法，“二叉树的层序遍历”是BFS算法的应用之一
+
+------------------------------------------BFS的代码实现------------------------------------------------------------------------------
+
+//二叉树层序遍历模板
+function BFS(root){
+    var res = [];
+    const queue = [];
+    queue.push(root);
+    while(queue.length){
+        const top = queue.shift();
+        res.push(top.val);
+        //将top能够遍历到的所有元素都放到队列中去（此处不一定是for循环）
+        for(检查 top能够遍历到的所有元素){
+            queue.push(top能够直接抵达的元素)
+        }
+    }
+    return res;
+}
+
+//二叉树的层序遍历（已运行通过）
+function TreeBFS(root) {
+  var res = []
+  var queue = [];
+  queue.push(root);
+  while (queue.length) {
+    var top = queue.shift();
+    res.push(top.val);
+    //将top能够遍历到的所有元素都放到队列中去
+    if (top.left) {
+      queue.push(top.left);
+    }
+    if (top.right) {
+      queue.push(top.right);
+    }
+  }
+  return res;
+}
+const root = {
+  val: "A",
+  left: { val: "B", left: { val: "D" }, right: { val: "E" } },
+  right: { val: "C", right: { val: "F" } },
+};
+console.log(TreeBFS(root));     //结果符合预期！
+
+---------------------------------------------------------------下面为文中所写--------------------------------------------------------------
+
+BFS伪代码如下：
+function BFS(入口坐标){
+    //初始化队列queue
+    const queue = [];
+    //入口坐标首先入队
+    queue.push(入口坐标)
+    //队列不为空，说明没有遍历完全
+    while(queue.length){
+        //取出对头元素
+        const top = queue[0]
+        
+        //此处是一个和top相关的逻辑，比如记录它对应的信息、检查它的属性等等
+        访问top ...
+
+        //注意这里也可以不用for循环，视题意而定
+        for(检查 top元素能够遍历到的所有元素){
+            queue.push(top能够直接抵达的元素)
+        }
+
+        //删除队首元素
+        queue.shift();
+    }
+
+}
+
+//BFS思想实现“二叉树层序遍历”
+function TreeBFS(root){
+    const queue = [];
+    queue.push(root);
+    while(queue.length){
+        const top = queue[0];
+        console.log(top.val);
+        if(top.left){
+            queue.push(top.left)
+        }
+        if(top.right){
+            queue.push(top.right)
+        }
+        queue.shift();
+    }
+}
