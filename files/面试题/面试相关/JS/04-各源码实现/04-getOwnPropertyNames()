@@ -1,0 +1,19 @@
+注意：本来这个方法是可以拿到不可枚举属性的，但是我们下面的实现无法访问到不可枚举属性
+//下面实现的本质就是for-in + hasOwnProperty()
+
+if (typeof Object.getOwnPropertyNames !== 'function') {
+  Object.getOwnPropertyNames = function(obj) {
+    //若传入的不是一个对象，就报错
+    if (obj !== Object(obj)) {
+      throw TypeError('Object.getOwnPropertyNames called on non-object');
+    }
+    //用for-in循环遍历obj，借用hasOwnProperty
+    var props = [];
+    for (prop in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+        props.push(prop);
+      }
+    }
+    return props;
+  };
+}

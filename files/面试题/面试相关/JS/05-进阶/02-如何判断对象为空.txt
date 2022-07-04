@@ -1,0 +1,10 @@
+for-in循环 + hasOwnProperty判断
+Object.keys().length
+Object.getOwnProperties().length
+
+//下面所谓的对象包含数组！
+Object.keys()  可以得到对象自身 可枚举属性（键名而非值）
+for-in循环     用于所有对象，遍历出对象(包括原型链上的) 可枚举属性（键名而非值）
+for-of循环     只能用于可迭代对象，遍历出对象自身 可枚举属性值（值）
+
+

@@ -1,0 +1,208 @@
+这篇文章讲的是webpack的基本使用
+作为入门特别好！清晰易懂！下面我做的笔记很齐全，可直接看笔记！
+https://juejin.im/post/6844903498350329869
+
+这是一个真实react项目的所需工程化配置，可结合这个来看：
+https://juejin.im/post/6844903655770963976
+
+webpack是把项目当作一个整体，通过一个给定的主文件，webpack将从这个文件开始找到你的项目的所有依赖文件。
+使用loader处理它们，最终打包成一个或多个浏览器可识别的js文件。
+
+webpack常见配置：
+1.开发阶段
+-devServer
+-entry入口
+-output出口
+-常用loader
+-常用plugins
+
+2.生产阶段（还需要对资源进行别的处理，例如压缩，优化，缓存，分离css和js）
+-定义生产环境，修改script命令
+-常用plugins
+
+-----------------------------------------------------------下面为细节---------------------------------------------------------
+
+1.npm i webpack webpack-dev-server --save-dev
+//webpack: 模块打包机
+//webpack-dev-server: 用于创建本地服务器，监听你的代码修改，并自动刷新修改后的结果。
+2.在webpack.config.js中，进行devServer的配置
+var baseConfig = {
+	//...
+	devServer: {
+		contentBase: './src',		//本地服务器所加载的页面所在的目录
+		historyApiFallback: true,   // 不跳转？所有的页面跳转指向index.html?
+		inline: true				//实时刷新
+		//默认端口port是8080
+	}
+}
+3.在package.json中，添加用于本地开发和生产发布的命令
+"script": {
+	"start": "webpack-dev-server",
+	"build": "webpack"		//在我们使用webpack命令时，默认将接收webpack.config.js作为其配置文件
+}
+
+--------------
+
+entry: 用来写入口文件，它将是整个依赖关系的根。当我们需要多个入口文件时，可以把entry写成一个对象（推荐）
+output: 即使入口文件有多个，但是只有一个输出配置。如果你定义的入口文件有多个，那么需要使用占位符来确输出文件的唯一性
+//webpack.config.js中
+var baseConfig = {
+	entry: {
+		main: './src/index.js'
+	},
+	output: {
+		filename: '[name].js',		//filename: 'main.js'
+		path: path.resolve('./build')
+	},
+	//...
+}
+
+注：以上这些配置，足以运行npm start或npm run build来打包我们的代码进行发布了！
+-------------------------------------------------------
+
+【Loader】
+1.通过使用不同的loader，我们能够调用外部的脚本或工具，实现对不同格式文件的处理，
+  比如说将scss转换为css，或者typescript转化为js，从而使其能够被添加到依赖图中。
+//webpack.config.js中	//以处理less文件为例
+var baseConfig = {
+	//...,
+	module: {
+		rules: [
+			{
+				test: /\.less$/,		//匹配所处理文件的扩展名的正则表达式（必须）
+				use: [					//用一个数组表示我们即将使用的loader（当然这些loader需要通过npm安装）
+					{loader: 'style-loader'},	
+					{loader: 'css-loader'},
+					{loader: 'less-loader'}
+				],
+				exclude: /node_modules/
+			}
+		]
+	}
+}
+
+2.常用的loader
+-babel-loader： 让下一代的js文件转换成现代浏览器能够支持的JS文件（即ES6、ES7 => ES5）
+ //babel有些复杂，所以大多数都会新建一个.babelrc进行配置
+-css-loader,style-loader:两个建议配合使用，用来解析css文件，能够解释@import,url()
+ //如果需要解析less就在后面加一个less-loader
+-file-loader: 生成的文件名就是文件内容的MD5哈希值并会保留所引用资源的原始扩展名
+-url-loader: 功能类似 file-loader,但是文件大小低于指定的限制时，可以返回一个DataURL?
+ //事实上，在使用less,scss,stylus这些的时候，npm会提示你差什么插件，差什么，你就安上就行了
+
+-------------------------------------------------------------
+
+【Plugins】
+1.不是像loader直接操作单个文件将其内容进行转换，它直接作用于构建过程（能够扩展webpack的功能）
+//webpack.config.js中		//以ExtractTextWebpackPlugin为例：它会将入口中引用css文件，都打包都独立的css文件中，而不是内嵌在js打包文件中
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var lessRules = {
+	use: [
+		{loader: 'css-loader'},
+		{loader: 'less-loader'}
+	]
+}
+var baseConfig = {
+	// ... 
+	module: {
+		rules: [
+			// ...
+			{test: /\.less$/, use: ExtractTextPlugin.extract(lessRules)}
+		]
+	},
+	plugins: [
+		new ExtractTextPlugin('main.css')
+	]
+}
+//注意module和plugins都进行了相关配置
+
+2.常用的plugins
+-HtmlWebpackPlugin：依据一个简单的index.html模版，生成一个自动引用你打包后的js文件的新index.html
+-HotModuleReplacementPlugin：它允许你在修改组件代码时，自动刷新实时预览修改后的结果
+ //注意永远不要在生产环境中使用HMR（环境分为开发环境、测试环境、生产环境）
+
+----------------------------------------------------------------
+
+【综合上述内容，webpack.config.js当中的完整配置】
+const webpack = require("webpack")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var lessRules = {
+	use: [
+		{loader: 'css-loader'},
+		{loader: 'less-loader'}
+	]
+}
+module.exports = {
+	entry: {
+		main: './src/index.js'
+	},
+	output: {
+		filename: '[name].js',
+		path: path.resolve('./build')
+	},
+	devServer: {
+		contentBase: '/src',
+		historyApiFallback: true,
+		inline: true,
+		hot: true			//所以此处的hot字段表示使用HMP插件嘛？（此插件只能在开发环境中使用，不得用于生产环境中）
+	},
+	module: {
+		rules: [
+			{test: /\.less$/, use: ExtractTextPlugin.extract(lessRules)}
+		]
+	},
+	plugins: [
+		new ExtractTextPlugin('main.css'),
+		new HtmlWebpackPlugin(),
+		new webpack.HotModuleReplacementPlugin()		//所以HMR插件是webpack内置的嘛？
+	]
+}
+
+---------------------------------------------------------------------
+
+//上面都是开发阶段的配置
+【产品阶段(即生产环境)的构建】
+还需要对资源进行别的处理，例如压缩，优化，缓存，分离css和js。
+
+1.定义生产环境
+//webpack.config.js中
+var ENV = process.env.NODE_ENV
+var baseConfig = {
+	// ... 
+	plugins: [
+		new webpack.DefinePlugin({		//webpack内置的插件DefinePlugin
+			'process.env.NODE_ENV': JSON.stringify(ENV)		//此处的ENV应该是webpack自动根据环境实时获取的吧？将其值序列化，然后赋给'process.env.NODE_ENV'字段
+		})
+	]
+}
+
+2.修改script命令
+//package.json中
+"scripts": {		
+	//当运行start命令时：对NODE_ENV的值等于'development'的代码，运行webpack-dev-server；
+	//当运行build命令时：对NODE_ENV的值等于'production'的代码，运行webpack；
+	"start": "NODE_ENV=development webpack-dev-server",		//此处的NODE_ENV应该就是'process.env.NODE_ENV'
+	"build": "NODE_ENV=production webpack"
+}
+
+//结合上面两点可看出，process.env.NODE_ENV的值是webpack自动根据环境实时获取的（暂时不知道判断环境的依据），值可能为development或production
+//当我们仅需要某部分代码在开发环境下，而不包含在生产环境下时，可以：
+if (process.env.NODE_ENV === 'development') {
+	仅在开发环境中运行的代码
+	//console.warn('这个警告会在生产阶段消失')
+}
+//结合上面的scripts/build命令：因为运行build命令，只会将process.env.NODE_ENV为production的代码打包到生产环境，否则在打包的时候就会被排除。所以我们if中代码在打包到生产环境时会被排除。
+
+---------------------------------------------------------------------------
+
+【介绍几个插件用来优化代码】
+-OccurenceOrderPlugin：为组件分配ID,通过这个插件webpack可以分析和优先考虑使用最多 的模块，然后为他们分配最小的ID
+-UglifyJsPlugin: 压缩代码
+//webpack.config.js中
+var baseConfig = {
+	// ...,
+	new webpack.optimize.OccurenceOrderPlugin(),		//应该要写在plugins数组当中吧？
+	new webpack.optimize.UglifyJsPlugin()
+}
+

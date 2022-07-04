@@ -1,0 +1,30 @@
+Math.trunc()        //对于数值，去除小数部分返回整数部分；对于非数值，内部使用Number方法将其先转为数值；对于空值和无法截取整数的值，返回NaN。
+Math.cbrt()         //计算数的立方根（内部也是先使用Number方法将其转为数值）
+Math.hypot()        //返回所有参数的平方和的平方根（勾股定理）
+指数运算符 **
+
+Number.isNaN()
+Number.parseInt()和Number.parseFloat()：不变，只是将全局方法移到了Number对象上面而已
+
+Array.from()：将类数组转为真正的数组
+Array.of()：将一组值转换为数组
+arr.fill()：使用给定的值填充数组（注意：如果填充的类型为对象，那么被赋值的是同一个内存地址的对象，而不是深拷贝对象）
+arr.includes()：是否包含给定的值
+arr.flat()：数组扁平化
+
+Object.is()：用于比较两个值是否严格相等（与===行为基本一致），不同之处只有+0不再等于-0，NaN等于自身
+Object.keys()
+Object.values()：返回顺序可能不再按照原顺序
+Object.entries()：将对象转为键值对数组
+Object.fromEntries()：将键值对数组转为对象
+
+-------------------
+
+Symbol.for()
+Symbol.keyFor()
+
+Set / Map / Weakset / Weakmap
+
+
+
+

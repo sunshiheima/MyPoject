@@ -1,0 +1,46 @@
+节流和防抖常用于：
+常用于频繁操作事件的事件处理。例如搜索框/滚动条，如果不做防抖，每输入一个字/滚动屏幕，都会触发事件处理，造成性能浪费和页面卡顿。
+
+节流和防抖的区别：
+节流是间隔执行，防抖是延迟执行
+节流是在定时器到时间后就做出响应并且清空定时器，防抖是每次触发事件时都重置定时器
+
+//节流函数：在某段时间内，不管你触发了多少次回调，我都只认第一次，并在计时结束时给予响应。
+//触发事件之后，会设置一个定时器，约定xx毫秒后调用事件处理函数，如果时间到了，那么执行事件处理函数并重置定时器
+function throttle(fn, interval) {
+  var last = 0;
+  return function() {
+    var now = +new Date();    //或者Date.now();
+    if (now - last > interval) {
+      fn.apply(this, arguments);
+      last = now;
+    }
+  };
+}
+// 使用
+window.onscroll = throttle(function() {
+  console.log('throttle');
+}, 1000);
+
+----------------------------------------------------
+
+//防抖函数：在某段时间内，不管你触发了多少次回调，我都只认最后一次。
+//触发事件之后，会设置一个定时器，约定在xx毫秒后再调用事件处理函数，每次触发事件都会重新设置计时器。直到xx毫秒内无第二次操作，才会调用事件处理函数。
+function debounce(func, delay) {
+  let timer = null;
+  return function() {
+    let context = this;
+    let args = arguments;
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
+// 使用
+window.onscroll = debounce(function() {
+  console.log('debounce');
+}, 1000);
+
+
+

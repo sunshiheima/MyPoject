@@ -1,0 +1,43 @@
+直接背！https://juejin.im/post/6844903842773991431
+
+set-Cookie的所有可选字段：
+Expires、Max-Age、Domain、Path、Secure、HttpOnly、SameSite
+//Expires和Max-Age共存时，Max-Age优先级更高
+
+第一层楼：【什么是Cookie和Session？】
+-Cookie：。。。
+-Session:
+ session代表着服务器和客户端一次会话的过程。Session 对象存储特定用户会话所需的属性及配置信息。
+ 这样，当用户在应用程序的Web页之间跳转时，存储在Session对象中的变量将不会丢失，而是在整个用户会话中一直存在下去。
+ 当客户端关闭会话，或者 Session 超时失效时会话结束。
+
+第二层楼：【Cookie和Session有什么不同？】
+。。。
+
+第三层楼：【为什么需要Cookie和Session，它们的工作机制？】
+//因为HTTP是无状态的，可以利用Cookie保持用户的已登录状态。
+SessionID是连接Cookie和Session的一道桥梁
+
+第四层楼：【如果浏览器中禁止了Cookie，如何保障整个机制的正常运转？】
+1.每次请求都携带一个SessionID的参数，也可以Post的方式提交，也可以在请求地址后面拼接?SessionID=xxx
+2.Token多用于App客户端和服务端交互的模式，也可以用于Web端做用户状态管理
+
+第五层楼：【如何考虑分布式Session问题？】
+//后端往往需要多台服务器共同来支撑前端用户请求，那如果用户在 A 服务器登录了，第二次请求跑到服务 B 就会出现登录失效问题。
+分布式Session的解决方案
+1.服务端使用Nginx代理，每个请求按访问IP的hash分配，这样来自同一IP固定访问一个后台服务器，避免了在服务器A创建Session，第二次分发到服务器B的现象。
+2.Session复制，任何一个服务器上的Session发生改变（增删改），该节点会把这个Session的所有内容序列化，然后广播给所有其它节点。
+3.(推荐)共享Session，将用户的Session等信息使用缓存中间件来统一管理，保障分发到每一个服务器的响应结果都一致。
+  //将session保存到redis当中？
+  应该是把session保存在数据库中(因为数据库服务器是中心存储的状态，数据会唯一的存储在其中，使数据在所有web服务器之间共享)
+  那数据库又有两种：关系型数据库(MySQL)和非关系型数据库(NoSQL)，非关系型数据库的性能更高，更适合用来存储session!
+
+---------------
+
+会话管理实战:
+-使用koa-session2插件，通过session和cookie结合来管理会话
+-用户登录成功之后将用户信息存入session中，生成一个sessionId
+-koa-session2会将sessionId写入cookie，再把【sessionId: session对象】写入redis
+-在服务端就可以从redis中获取登录信息，也可以用作会话拦截
+-注销时只需将ctx.session置为空对象，这样cookie就会被清除掉了
+

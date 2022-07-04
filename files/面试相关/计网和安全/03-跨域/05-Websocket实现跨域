@@ -1,0 +1,4 @@
+websocket
+是HTML5提供的API，服务端可以使用nodejs-websocket(更推荐使用socket.io)来实现websocket server。
+//socket.io: 在发送数据时可以直接发送可序列化的对象，也可以自定义消息，利用事件字符串来区分不同消息。
+

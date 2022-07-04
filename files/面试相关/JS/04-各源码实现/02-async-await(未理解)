@@ -1,0 +1,12 @@
+未看懂，等待更深刻的理解了promise、generator、async/await之后再复盘！
+https://juejin.im/post/6844903989083897870#heading-3
+
+原理：
+    利用 generator（生成器）分割代码片段。
+    然后我们使用一个函数让其自迭代，每一个yield 用 promise 包裹起来。
+    执行下一步的时机由 promise 来控制
+
+函数_asyncToGenerator中每一行看懂了，但是不理解为什么要这么做
+函数_asyncGeneratorStep中未看懂
+测试代码看懂了
+

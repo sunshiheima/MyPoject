@@ -1,0 +1,14 @@
+1.webpack从入口文件开始使用loader进行处理，根据import找到其依赖文件，对依赖文件继续使用loader进行处理。重复以上过程。
+  //01-entry（单页/多页）
+  调用getPages()方法时传入的options是什么？
+
+2.最终生成会生成一个js文件，将其输出为bundle.js（但是代码表示输出的filename为[name].[hash].js）
+  //02-output
+  疑惑很多。。。
+
+3.该js文件只有被添加到html文件中，才能被浏览器执行。
+  //03-如何将生成的boundle.js插入到对应的html中 —— 使用HtmlWebpackPlugin插件自动处理（单页/多页）
+  多页情况下new HtmlWebpackPlugin时传入的最后一项chunks是什么？
+
+3.output配置
+

@@ -1,0 +1,35 @@
+【Object.defineProperty(obj, prop, descriptor)】
+直接在对象上定义新属性，或修改对象上现有属性，然后返回该对象。  //原obj也会被改变
+//一次性只能操作一个属性
+
+//示例
+const object1 = {};
+Object.defineProperty(object1, 'property1', {
+    //value、get、set、writable、enumerable、configurable
+    value: 42,
+    writable: false
+})
+object1.property = 77;      //throws an error in strict mode
+console.log(object1.property1);     //42
+
+------------------------------------------------------------------------
+
+
+【Object.defineProperties(obj, props)】
+直接在对象上定义新属性，或修改对象上现有的属性，然后返回该对象。    //原obj也会被改变
+//一次性能操作多个属性
+
+//示例
+const object1 = {};
+Object.defineProperties(object1, {
+  property1: {
+    value: 42,
+    writable: true
+  },
+  property2: {}
+});
+console.log(object1.property1);     //42
+
+
+
+

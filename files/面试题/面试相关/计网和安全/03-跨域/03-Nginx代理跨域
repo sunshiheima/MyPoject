@@ -1,0 +1,11 @@
+nginx反向代理：
+
+因为同源策略只是浏览器的安全策略，只存在于浏览器和服务器之间。服务器和服务器之间并未同源策略的限制，也就不存在跨域问题。
+
+我们可以通过Nginx配置一个代理服务器，会接收我们的请求，并代理访问跨域的接口。
+//在发送请求时，可以修改Cookie中domain信息，方便当前域cookie写入；在响应时，可以添加一些响应头信息，例如Access-Control-Allow-Origin 和 Access-Control-Allow-Credentials
+
+------------------------------
+
+即：浏览器(www.haha.com) ---> Nginx代理服务器(www.haha.com) ---> 服务器(www.haha1.com)
+Nginx代理服务器中会设置：proxy_pass http://www.haha1.com:9999;  

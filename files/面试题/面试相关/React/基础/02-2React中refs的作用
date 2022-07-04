@@ -1,0 +1,26 @@
+Refs是React提供给我们的安全访问DOM元素或者某个组件实例的句柄(即引用)。
+当一个包含ref属性的组件完成装载的时候，会看一看ref属性是不是一个函数。如果是，就会调用这个函数，参数就是这个组件代表的DOM元素。
+(注意是DOM元素而不是Virtual DOM元素)，通过这种方法，我们的代码可以访问到实际的DOM元素。
+
+代码通过React的ref功能来访问DOM中元素，这种功能的需求往往来自于表单的操作，在提交表单的时候，需要读取当前表单中input元素的值。
+但是，React的产生就是为了避免直接操作DOM元素，因为直接访问DOM元素很容易产生失控的情况，因此使用ref是不太好的做法。
+更好的办法是：可以利用组件状态来同步记录DOM元素的值，这种方法可以控制住组件不使用ref.----可控组件
+
+在产品开发中，应该尽量避免ref的引用，而换用这种状态绑定的方法来获取元素的值。
+
+用ref通常有两种写法（但原理其实是一样的）
+1.<input ref={this.handleRef}>
+  handleRef = (node) => {
+    this.input = node;
+  }
+  handleSubmit = () => {
+    console.log(this.input.value);
+  }
+
+2.<input ref={(input) => this.input = input}
+  handleSubmit = () => {
+    console.log(this.input.value);
+  }
+
+
+

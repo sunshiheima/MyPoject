@@ -1,0 +1,262 @@
+Promise文档（阮一峰，很好很全面，也没有逻辑问题）
+https://es6.ruanyifeng.com/#docs/promise
+注意：
+1.两个实际应用例子：用promise对象实现异步图片加载、用promise对象实现原生AJAX操作
+2.文中“微任务是在【本轮事件循环】的末尾执行，总是晚于本轮循环的同步任务”，“本轮”二字很恰当
+3.then方法可接收两个参数(均为函数），第一个参数是resolved状态的回调函数，第二个参数(可选)是rejected状态的回调函数。
+   两个回调函数只有一个会被调用，回调函数返回的结果将被用于创建then方法返回的Promise对象
+4.getJSON("/post.json").then(function(json){
+	return json.post;	//阮一峰说：then方法返回的是一个【Promise实例】（注意他说的不是"then方法内部的回调函数返回的是......")
+   }).then(function(post){
+   	//...
+   });
+5."采用链式的then，可以指定一组按照次序调用的回调函数。
+      这时，前一个回调函数，又可能返回的还是一个Promise对象（即有异步操作）；
+      则后一个回调函数，就会等待该Promise对象的状态发生变化，才会被调用。"
+6.Promise.prototype.catch()方法是.then(null, rejection)或.then(undefined, rejection)的别名，用于指定发生错误时的回调函数
+7.注意文中三种【生成错误的写法】—— 可以发现reject()方法的作用，等同于抛出错误
+   -throw new Error('test');
+   -try { throw new Error('test'); } catch(e) { reject(e) };
+   -reject(new Error('test'));
+8.一般来说，不要在then()方法里面定义Reject状态的回调函数(即then得第二个参数)，总是使用catch方法
+9.Promise会吃掉错误：即没有使用catch()方法指定错误处理的回调函数，Promise对象抛出的错误也不会传递到外层代码，浏览器不会有任何反应；
+   这也就是说，Promise内部的错误不会影响到Promise外部的代码（即后面的代码会继续执行）
+   ---------
+   try/catch是：如果try内部的代码中有错误，则会被catch捕获，而不会传递到外层，故程序还能继续运行
+   但是如果不用try/catch：代码出现错误就会被传递到外层，程序会终止运行，浏览器报错Uncaught Error
+10.但是，不是只要是放在Promise相关函数内部的代码错误，都代表Promise内部的错误！
+     所谓【Promise内部的错误】应该是指【本次Promise微任务执行过程中的错误】
+     至于【Promise内部又注册的一个宏任务的错误】不在本次Promise微任务范围内，故该宏任务的错误并不会被Promise吃掉，而是会冒泡到外层，成为未捕获的错误(浏览器会报Uncaught Error: xxx)
+11.catch()方法返回的还是一个Promise对象，因此后面还可以接着调用then()方法
+12.Promise.prototype.finally()
+    用于指定不管Promise对象最后状态如何，都会执行的操作。
+    finally方法的回调函数不接受任何参数，这意味着没有办法知道，前面的Promise状态到底是fulfilled还是rejected。这表明，finally方法里面的操作，应该是与状态无关的，不依赖于Promise的执行结果
+    且finally方法总会返回原来的值
+13.Promise.all()和Promise.race()和提案Promise.any()
+     用于将多个Promise实例，包装成一个新的Promise实例
+     三个方法都接收一个数组作为参数，p1,p2,p3都是Promise实例，如果不是，就会先调用Promise.resolve()，将参数转为Promise实例，再进一步处理
+     对于Promise.all()，如果作为参数的Promise实例，自己定义了catch方法，那么它一旦被rejected，并不会触发Promise.all()的catch方法
+     感觉：Promise.all()像"&&"，Promise.any()像"||"
+14.Promise.allSettled(）—— 由ES2020引入的
+     只有等到所有这些参数实例都返回结果，不管是fulfilled还是rejected，包装实例才会结束
+     有时候，我们不关心异步操作的结果，只关心这些操作有没有结束。这时，Promise.allSettled()方法就很有用
+15.Promise.resolve()
+     -Promise.resolve('foo') ==等价于==> new Promise(resolve => resolve('foo'))
+     -当参数是一个thenable对象时，Promise.resolve方法会将这个对象转为Promise对象，然后就立即执行thenable对象的then方法，示例代码如下：
+       let thenable = {
+	then: function(resolve, reject){
+		resolve(42);
+	}
+       };
+       let p1 = Promise.resolve(thenable);		//p1为一个Promise对象，为resolved的42	
+       p1.then(function(value){
+	console.log(value);		//42
+       });	
+     -当不带任何参数时，直接返回一个resolved状态的Promise对象。所以希望得到一个Promise对象，比较方便的方法就是直接调用Promise.resolved()方法
+       const p = Promise.resolved();
+       p.then(function(){
+	//...
+       });
+16.Promise.reject()
+     -注意，和Promise.resolve()不一样的是：Promise.reject()方法的参数，会原封不动的作为reject的理由，变成后续方法的参数。
+       const thenable = {
+	then(resolve, reject){
+		reject("出错了");
+	}
+       };
+       Promise.rejected(thenable).catch(e => { console.log(e === thenable) });	//true
+17.Generator函数与Promise的结合
+     使用Generator函数管理流程，遇到异步操作的时候，通常返回一个Promise对象
+     示例代码没看懂。。。
+18.Promise.try()
+     原来（f函数是同步的，但是用Promise包装了以后，就变成异步执行了 —— 因为是微任务内部的同步代码，而非和微任务平级的同步代码）
+     const f = () => console.log("now");
+     Promise.resolve().then(f);	
+     console.log("next");   //next now
+
+     要使同步函数能同步执行
+     //方法1（用new Promise())
+     const f = () => console.log("now");
+     (
+	() => new Promise(
+		resolve => resolve(f());
+	)
+     )();
+     console.log("next");   //now next
+     //方法2（用async函数来写：如果f是同步的，就会得到同步的结果；如果f是异步的，就可以用then指定下一步）
+     const f = () => console.log("now");
+     (async () => f())().then(...).catch(...);	//注意：async () => f() 会吃掉f()抛出的错误。所以。如果想捕获错误，要使用promise.catch方法
+     console.log("next");   //now next
+     //方法3（用Promise.try()：这样就能捕获和微任务平级的同步错误了，效果等同于将微任务放在try/catch语句当中执行)
+     示例代码见文
+     
+     注意：其实，Promise.try就是模拟try代码块，就像promise.catch模拟的就是catch代码块
+     
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Promise常用API+面试常见问题+一个代码示例(送饭给老婆，很不错）
+https://juejin.im/post/5b31a4b7f265da595725f322#heading-6
+注意:
+1.【做饭】事情内部并未用到【买好的菜】——这只是因为省略掉了做饭的步骤
+2. Promise是三个状态：pending(异步任务正在执行）、resolved/fulfilled(异步任务执行成功）、rejected（异步任务执行失败）
+3. 有部分描述感觉有问题，更正如下：
+    then方法中回调函数可以return promise对象，也可以return 普通值。函数的返回值将被用作创建then返回的Promise对象
+    如果需要有异步操作才能得到结果【下一个then回调想要的参数值】，那么就return promise对象； //promise对象即代表有内部有异步操作，后一个回调函数就会等待该Promise对象的状态发生变化，才会被调用
+    如果直接就能得到结果【下一个then回调想要的参数值】，那么就return 普通值
+
+    重点！要知道，只有Promise对象才有then方法，而一个普通值不能调用then方法。我们知道promise可链式调用，即then后面还可以继续接then。若一个then方法【注意，不是指then方法内回调函数】的返回值不是一个Promise对象，那么怎么会有接下来继续调用的then方法
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Promise的几个重点以及代码示例（都是很典型的示例）
+https://juejin.im/post/597724c26fb9a06bb75260e8#heading-4
+
+1.Promise的三种状态部分：
+//我预想的输出：
+fulfilled/resolved pending pending
+fulfilled/resolved rejected
+1 2 3
+//实际输出：
+fulfilled/resolved pending pending	这是同步代码的执行结果（是当前【脚本宏任务】中的同步代码，是在本轮事件循环之中)
+1 2 3				这是微任务的执行结果（是当前【脚本宏任务】中的微任务，也是在本轮事件循环之中）
+fulfilled/resolved rejected		这是其他宏任务的执行结果（是当前【脚本宏任务】中的宏任务，已不在本轮事件循环之中，属于下轮以及下下轮事件事件循环）
+
+2.Promise的链式调用
+//预想和实际输出都是：
+1 2 undefined resolve reject:reject
+重点！！！（有关回调函数返回值）
+Promise对象是then方法返回一个新的Promise对象，因此可以通过链式调用then方法。then方法接收两个函数作为参数，第一个参数是Promise执行成功时的回调，第二个参数是Promise执行失败时的回调。
+两个函数只会有一个会被调用，并且被调用的那个函数的返回值，将被用作创建then返回的Promise对象。具体如下：
+1) return一个同步的值，或者undefined(当没有返回一个有效值时，默认返回undefined) —— then方法将返回一个resolved状态的Promise对象，Promise对象的值就是这个返回值。
+2) return另一个Promise —— then方法将根据这个Promise的状态和值创建一个新的Promise对象返回。
+3) throw一个同步异常，then方法将返回一个rejected状态的Promise，值是该异常。
+
+3.Promise中的异常部分
+我预想的
+//p1 then err: foo is not defined
+//p1 then then value: undefined
+//p2 then value: 2
+//p2 then then err: foo is not defined
+//p2 then then then value: 1
+实际输出
+//p1 then err: ReferenceError: foo is not defined
+//p2 then value: 2
+//p1 then then value: undefined
+//p2 then then err: ReferenceError: foo is not defined
+//p2 then then then value: 1
+
+注意：
+-Promise中的异常由then参数中第二个回调函数(Promise执行失败的回调）处理，异常信息将作为Promise的值。
+  异常一旦得到处理，then返回的后续Promise对象【将恢复正常】，并会被Promise执行成功的回调函数处理。
+-需要注意！p1、p2多级then的回调函数是交替执行的，这正是由Promise的then回调的异步性决定的？？？
+
+4.
+我预想的
+//true false true? false
+//p4=1 p2=1 p1=1
+实际输出的
+//true false false false
+//p2=1 p1=1 p4=1		//为什么不是p1 p2 p4?
+
+注意：
+-Promise.resolve(...)可以接收一个值或者是一个Promise对象作为参数。
+当参数是普通值时，它返回一个resolved状态的Promise对象，对象的值就是这个参数；当参数是一个Promise对象时，它直接返回这个Promise参数。
+-但通过new的方式创建的Promise对象都是一个新的对象
+-为什么p4最先调用，但在控制台上是最后输出结果的呢？
+  因为p4的resolve中接收的参数是一个Promise对象p1，resolve会对p1"拆箱"，获取p1的状态和值，但这个过程是异步的。。。？？？
+
+5.resolve vs reject部分
+我预想的
+//p1 fullfilled: resolve
+//p2 rejected: reject
+//p3 rejected: (Promise: [status: fullfilled, value: resolve])
+实际输出
+//p3 rejected: [object Promise]
+//p1 fullfilled: resolve
+//p2 rejected: reject
+
+注意：【resolve会"拆箱”，而reject不会"拆箱"】【拆箱是异步操作，不具备拆箱的就是reject是同步操作】
+-Promise回调函数中的第一个参数resolve，会对Promise执行"拆箱"动作。
+  即【当resolve的参数是一个Promise对象时，resolve会"拆箱"获取这个Promise对象的状态和值】，但【此过程是异步的】。
+  p1"插箱"后，获取到Promise对象的状态是resolved，因此fulfilled回调被执行；p2"拆箱"后，获取到Promise对象的状态是rejected，因此rejected回调被执行。
+-但Promise回调函数中的第二个参数reject不具备"拆箱"的能力，reject的参数会直接传递给then方法中的rejected回调，即【此过程为同步的】。
+  因此，即使p3reject接收了一个resolved状态的Promise，then方法中被调用的依然是rejected，并且参数就是reject接收到的Promise对象
+
+-----------------------------------------------------------------------------------------------------
+
+有关Promise的十道题（比较一般，但也是有可取之处的）
+https://juejin.im/post/5a04066351882517c416715d
+1.例1
+注意new Promise回调函数中，在调用resolve/reject方法后还会继续执行后续代码；
+但是其中resolve或reject只有第一个执行有效，多次调用没有任务作用(Promise状态改变则不能再变）
+2.例4
+注意catch未被调用，链式调用到此处便中断，catch后面的then也不会被调用
+3.例5
+Promise构造函数只执行一次，执行完则返回的状态就确定了。
+之后可以为其多次【单独】调用then（而非链式调用）
+4.例6
+我的预想结果是catch: error!!!
+实际输出是then: Error: error!!!
+注意：
+任意一个非promise的值都会被then方法包裹过程promise对象
+.then或者.catch中return一个error对象并不会抛出错误。return new Error("error!!!")等价于return Promise.resolve(new Error("error!!!"))
+要想返回一个能被后续catch捕获到的错误的话，需要throw new Error("error!!!")或者return Promise.reject(new Error("error!!!"))
+5.例7
+.then或.catch返回的值不能是promise本身，否则会造成死循环
+6.例8
+Promise.resolve(1).then(2).then(Promise.resolve(3)).then(console.log);	//1?
+注意：.then或者.catch的参数期望是函数。传入非函数则会发生值穿透
+7.例10
+注意：在nodejs环境下，process.nectTick和promise.then都属于微任务，而setImmediate属于宏任务
+
+-----------------------------------------------------------------------------------------------------------
+
+MDN的Promise基础篇（MDN的写作实在不接地气，看一遍不想再看第二遍，但是有一些概念描述还是挺好的）
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+-Promise对象用于表示一个异步操作的最终完成（或失败），及其结果值
+-Promise对象是一个代理对象（代理一个值），被代理的值在Promise对象创建时可能是未知的。
+  它允许你为异步操作的成功和失败分别绑定相应的处理方法。
+  这让异步方法可以像同步方法那样返回值。
+  但并不是立即返回最终执行结果，而是一个能代表未来出现的结果的promise对象
+-在异步操作的完成和绑定处理方法(onfulfilled/onrejected)之间不存在竞争
+-因为Promise.prototype.then和Promise.prototype.catch方法返回promise对象，所以它们可以被链式调用
+-如果一个promise对象处在fulfilled或rejected状态而不是pending状态，那么它也可以被成为settled状态。
+  你可能也会听到一个术语resolved，它表示promise对象处于settled状态。
+-属性Promise.length，其值总是1（即构造器参数的数目，即仅有一个函数作为构造器的参数）
+-Promise.allSettled(iterable)
+ 等到所有promise都完成（每个promise返回成功或失败）
+ 会返回一个promise，该promise在所有promise完成后完成。并带有一个对象数组，每个对象对应每个promise的结果
+
+//到Promise原型
+
+
+待看：
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+文章一般般，但是举例还不错吧
+https://juejin.im/post/5e9c03bcf265da47e22f2d01
+//Promise.all(iterable):
+一个页面，有多个请求，为了提升用户体验，我们需要让所有的请求都返回数据后再一起处理渲染，此时再关闭loading提示
+我们能否把多个请求合并在一起，哪怕有的请求失败了，也返回给我们，我们只需要在一个地方处理这些数据和错误的逻辑即可
+做一个表单输入内容安全验证，表单有7个字段需要验证，都是调用的一个内容安全校验接口。要使全部验证通过才可以进行提交
+//Promise.race(iterable)：
+图片请求超时
+其他异步请求超时（和上面图片请求超时同理）
+//Promise.prototype.then()：
+下个请求依赖上个请求的结果（即then的常规使用）
+模拟中间件（即接口返回的数据量比较大，在一个then里面处理显得臃肿，多个渲染数据分别then，让其各司其职）
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+学习方法的问题：
+如果先有疑问，再去针对疑问查找查找资料：这样很可能花费大量的时间看各种资料，看了各种资料之后，可能你之前的某些疑惑解开了，但是当前的疑惑还是没办法得到解决。
+正确的做法应该是，查找出这一类的资料，都通篇看一遍，如果自己都会，那就当复习了，也很可能有自己意想不到的惊喜哦~~~
+
+
+
+
+
+

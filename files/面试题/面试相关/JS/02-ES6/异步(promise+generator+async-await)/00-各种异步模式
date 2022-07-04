@@ -1,0 +1,179 @@
+﻿-JS中的异步编程：异步回调callback promise generator async await 甚至 RxJS
+
+首先应该明确：在Promise之前，JS语言本身是没有异步机制的。
+
+异步的操作系统基础：
+1)进程和线程：进程是资源分配最小单位，线程是程序执行的最小单位。
+2)并行和并发：并行是指多个事件在同一时刻发生，并发是指多个事件在同一时间间隔内发生。
+
+-----------------------------四种异步模式-----------------------------------
+
+1.异步callback(即异步回调函数)
+(callback的概念：当一个函数作为参数传入另外一个函数时，我们就可以把这个函数叫做回调函数(有同步的有异步的)。此处[另外一个函数]即高阶函数。)
+典型的异步回调函数：
+    setTimeout(fn, 1000)、fs.readFile('./demo.text', fn))
+异步回调函数的特点：
+    1)callback实际上把程序分成了【立即执行部分】和【稍后执行部分】，而两部分之间发生了什么，则在一定程度上并不受我们控制；
+    2)上面的setTimeout和fs.readFile都不是JS语言提供的方法，JS中的异步严重依赖于宿主环境。实际上在Promise之前，JS语言本身是没有异步机制的。
+异步回调函数的缺点：
+    1)控制反转：实际上就是第三方会直接调用我们的函数，这个第三方不一定完全是可信的，我们的回调函数可能会被调用，可能不会被调用，还可能会调用多次。
+    2)难以理解：这个指的是可怕的回调地狱，回调地狱的最大问题也不是多层嵌套。
+                最大的问题在于-因为每个请求的[时间]是不确定的，如果我们需要控制输出顺序，就必须使用额外的外层变量来协同不同的回调，这会明显的增加代码的复杂度。
+
+3.Promise
+Promise实际上有三重身份：
+    1)为一个未来值提供了占位符，消除时间的影响
+    2)事件监听器，监听then事件
+    3)提供了一种可靠的方式管理我们的回调
+Promise的优点：
+    (其实并不仅仅是【链式调用】这种清晰的书写方式，因为其实链式调用是可以通过callback模拟的。)
+    Promise使代码的执行控制在我们自己手里，要么成功要么失败，then后面的函数只会执行一次。
+Promise的缺点：
+    1)一旦执行就没办法手动终止(在满足一些条件时我们可能会希望不再执行后续的then，这在Promise中就很难优雅的做到)
+    2)我们无法完全捕获可能的错误，比如说链式调用结尾的那个.catch中的错误就难以被捕获！
+
+
+4.generator
+(generator：将我们的代码分割成了独立可阻塞的部分，并且局部的阻塞不会导致全局的阻塞，这个特性可以去模拟独立的线程做的事情)
+generator的特点：
+    1)函数可暂停和继续
+    2)在暂停时，可返回多个值给外部
+    3)在继续时，外面也可以再传入值
+    4)通过Generator写的异步代码看起来就像是同步的
+    5)可以像同步代码那样捕获错误
+generator的缺点：
+    控制反转：即generator每当遇到yield就会暂停，就需要我们手动调用.next()才会继续执行后面的内容。而这个方法再任何地方都可能被调用，因此又出现了类似异步回调出现的[控制反转]问题。
+
+
+6.async-await函数
+首先应该明确：async函数实则是一种让generator更便于使用的语法糖。
+缺点：
+    1)await关键字只能结合Promise控制异步
+    2)我们没有充分的控制权：
+      async函数只有在结束时，才会返回的是一个Promise，我们无法控制其中间状态。也无法在外界取消一个正在运行中的async函数。
+     【而generator返回的是迭代器，迭代器让你有充分的控制权】
+
+
+其他的异步实现模式：async generator和Observable(RxJS是Observable的JavaScript实现)
+
+有博客里面提到：
+-在浏览器中永远存在着并发，就该优先使用RxJS
+-而Promise和Async函数，在node端会更有用！
+具体原因我还不知道，还需要进一步的学习异步才能知晓！
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------以下仅供了解--------------------------------------------------------------
+
+
+2.异步thunk
+(thunk的概念：可以看作一个值的包裹体，我们完全不用考虑其在内部做了什么。但是我们却能保证，只要调用thunk函数，我们就能获得一个固定的值)
+优点：
+    借用thunk能够将时间管理从回调地狱当中抽象出去，可以使代码好理解一些。
+缺点：
+    但是仍然无法解决【控制反转】的这个问题
+
+
+
+5.Promise+Generator
+两者结合的优点：
+    Promise-用以弥补Generator的【控制反转】问题。(即我们可以在Promise中调用.next()，Promise机制保证了.next()的调用是受控制的。)
+    Generator-用以弥补Promise的【一旦执行就无法终止】问题。并且使我们的异步代码看起来像是同步的，非常容易书写和理解
+
+
+6.async-await函数
+首先应该明确：async函数实则是一种让generator更便于使用的语法糖。
+缺点：
+    1)await关键字只能结合Promise控制异步
+    2)我们没有充分的控制权：
+      async函数只有在结束时，才会返回的是一个Promise，我们无法控制其中间状态。也无法在外界取消一个正在运行中的async函数。
+     【而generator返回的是迭代器，迭代器让你有充分的控制权】
+
+
+7.async generator
+(在ES2018中引入了Asynchronous iteration的概念，我们可以在async函数中使用for await ... of语法，迭代异步对象。还可以通过Symbol.asyncIterator自定义异步迭代处理逻辑。)
+async generator允许await和yield两个关键字一起使用，await负责获取值(pull, 从其他地方读取内容)，yield负责输出值(push将值输出).
+
+
+8.Observable
+RxJS是Observable的JavaScript实现。具体的不知道。。。只知道我们需要换一种思维模式来看待异步。
+之前在博客上有看到一句话：
+    如果我们换个角度看待异步，其实它们就像是时间流中的数据片段，这和我们熟悉的数组很像。
+    数组中元素的索引是从小变大的数值，可以开一下脑洞，将异步数据流中的元素的索引看作是时间的先后。
+    额。。。这个脑洞确实有点儿大！
+
+
+--------------------------该选择什么异步模式------------------------------------
+有博客里面提到：
+-在浏览器中永远存在着并发，就该优先使用RxJS
+-而Promise和Async函数，在node端会更有用！
+具体原因我还不知道，还需要进一步的学习异步才能知晓！
+
+
+
+
+
+----------------------promise/generator/async-await解决同一问题的代码-----------------------------------------
+注意：下面getFile方法和output方法是已经实现好了的（在此不写了）
+//1.promise
+const p1 = getFile('file1');
+const p2 = getFile('file2');
+const p3 = getFile('file3');
+p1.then(output)
+    .then(function(){
+        return p2
+    })
+    .then(output)
+    .then(function(){
+        return p3
+    })
+    .then(output)
+    .then(function(){
+        output('Complete!')
+    })
+
+//2.generator
+//这里封装一个有点儿长、代码我难以理解的runGenerator，其作用是【让generator自动动起来】
+function* loadFiles() {
+  const p1 = getFile('file1')
+  const p2 = getFile('file2')
+  const p3 = getFile('file3')
+
+  output(yield p1)
+  output(yield p2)
+  output(yield p3)
+}
+runGenerator(loadFiles);    //需多封装此runGenerator函数
+
+//3.async-await
+async function loadFiles(){
+  const p1 = getFile('file1')
+  const p2 = getFile('file2')
+  const p3 = getFile('file3')
+
+  output(await p1)
+  output(await p2)
+  output(await p3)
+}
+loadFiles()
+
+
+
+

@@ -1,0 +1,54 @@
+【从输入URL到页面加载完成，发生了什么？】
+
+（浏览器解析URL、查询缓存）
+1.DNS查询   //浏览器DNS缓存、httpdns、DNS prefetch、域名收敛
+2.TCP连接   //长连接和连接复用、预连接、接入SPDY协议
+3.发出HTTP请求      //见下【网络层面的优化！】
+4.服务端处理请求，返回HTTP响应     //CDN、服务端渲染
+5.浏览器拿到响应数据，将其解析渲染出来展现给用户       //见下【渲染层面的优化！】
+-解析HTML和CSS，构建渲染树
+-开始显示内容（白屏时间）
+-首屏内容加载完成（首屏时间）
+-用户可交互(DOMContentLoaded)
+-加载完成(load)
+
+上面五个过程，其中后端性能优化有：缓存、DNS查询、TCP连接、处理请求时间和响应时间
+前端性能优化的重点是下面【网络层面的优化】和【渲染层面的优化】
+
+
+----------------------------------------
+
+最先应该进行性能监控：
+不使用工具：则起点-服务端渲染返回的时间/SPA路由跳转离开的时间 ； 结束点-DOMContentLoaded事件/load事件
+使用工具：Google Analytics、Performance、LightHouse、可编程（W3C规范为我们提供了Performance相关的API）
+
+推荐使用PerformanceTiming，可以获取到很多页面加载相关的数据。
+-DNS解析时间： domainLookupEnd - domainLookupStart
+-TCP建立连接时间： connectEnd - connectStart
+-白屏时间： responseStart - navigationStart
+-dom渲染完成时间： domContentLoadedEventEnd - navigationStart
+-页面onload时间： loadEventEnd - navigationStart
+
+---------------------------------------------------------------下面两部分是重点！------------------------------------------------------------------
+
+【网络层面的优化】
+1.HTTP请求过程的优化（减少请求次数 + 减少单次请求所花费的时间）
+  -构建工具webpack性能调优：webpack的构建过程太花时间（减小babel-loader的处理范围、处理第三方库、将loader由单线程转为多线程)）
+                           webpack打包的结果体积太大（文件结构可视化、删除冗余代码、按需加载、压缩文件）
+  -图片优化：JPEG/JPG 、 PNG 、  SVG 、雪碧图(CSS Sprites)和Base64 、 WebP
+2.提升首次请求的响应能力
+  -CDN
+  -服务端渲染
+3.后续减少网络请求次数（本地存储-能够让WebApp性能和Native应用相近）
+  -浏览器缓存机制：Memory Cache / Service Worker Cache / Http Cache / Push Cache(http2.0)
+  -浏览器存储技术：Cookie / Web Storage / IndexedDB
+  //近年来基于缓存/存储技术的第三方库层出不绝，此外还衍生出了【PWA】这样优秀的Web应用模型！
+
+---------------------------------------------------------
+
+【渲染层面的优化】
+1.CSS性能优化：CSS写法和加载优化-尽早(放入head中)尽快(CDN)
+2.JS性能优化：JS资源加载优化(async/defer)
+3.DOM优化：减少过桥次数(即先用JS操作内容，最后再进行一次DOM操作)；减少DOM操作之后带来的影响(减少回流和重绘、Chrome的flush队列)
+//Event-loop与异步更新：【如果我想要在异步任务里进行DOM操作，应该将其包装成微任务】—— 【Vue的nextTick()和React的setState()原理】
+4.首屏渲染提速以及稳定性：懒加载、节流和防抖（对于频繁触发的事件）

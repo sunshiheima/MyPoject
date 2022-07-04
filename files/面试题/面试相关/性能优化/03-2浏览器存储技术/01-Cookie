@@ -1,0 +1,36 @@
+Cookie：
+是服务器发送到用户浏览器并保存在本地的一小块数据，它会在浏览器下次向同一服务器再发起请求时被携带并发送到服务器上。
+ 
+Cookie主要用于：
+-会话状态管理（如用户登录状态、购物车、游戏分数或其它需要记录的信息）
+-个性化设置（如用户自定义设置、主题等）
+
+浏览器所持有的Cookie分为两种：
+1.Session Cookie(会话期 Cookie)
+会话期Cookie是最简单的Cookie，它不需要指定过期时间（Expires），它仅在会话期内有效，浏览器关闭之后它会被自动删除。
+2.Permanent Cookie(持久性 Cookie) 
+与会话期 Cookie 不同的是，持久性 Cookie 可以指定一个特定的过期时间（Expires）或有效期（Max-Age）。
+
+例如：
+res.setHeader('Set-Cookie', ['mycookie=222', 'test=3333; expires=Sat, 21 Jul 2018 00:00:00 GMT;']);
+上述代码创建了两个Cookie：mycookie和test，前者属于会话期Cookie，后者则属于持久性Cookie。
+
+另外：
+一个页面若包含存放在其他域上的资源（如图片）时，
+页面在请求资源时，不会将Cookie发送给该图片资源所在的服务器，而仅会发送给设置该Cookie的服务器。
+
+-----------------------
+
+Cookie的问题：
+-同一个域名下的所有请求，都会携带Cookie。仅仅是请求一张图片或者一个CSS文件，都要携带Cookie。当请求数很多时，Cookie带来的不必要开销会增大。
+-只能存储4KB大小的数据
+
+-----------------------
+
+Cookie和Session的区别：
+-cookie存储于浏览器端，而session存储于服务端
+-cookie的安全性相比于session较弱,cookie容易被第三方劫持,考虑到安全应当使用session
+-session保存在服务器上,当访问增多时，会占用服务器的资源
+-cookie存储容量有限制，单个cookie保存数据不能超过4k，且很多浏览器限制一个站点最多保存20个cookie。对于session,默认大小一般是1M
+
+

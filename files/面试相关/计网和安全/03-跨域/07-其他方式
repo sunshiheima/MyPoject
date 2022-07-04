@@ -1,0 +1,4 @@
+//比较古老的（算是投机取巧吧）
+document.domain + iframe
+location.hash + iframe
+window.name + iframe
