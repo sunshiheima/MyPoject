@@ -1,0 +1,8 @@
+{
+  "name": "sunfirstday",
+  "version": "1.0.2",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "我是一个测试npm上传文档！",
+  "keywords": "moment date html filter"
+}

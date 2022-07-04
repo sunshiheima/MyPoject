@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .box {
+      height: 200px;
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      background-color: coral;
+      color: #fff;
+      align-items: center;
+      font-size: 100px;
+    }
+
+    .box2 {
+      margin-top: 5px;
+      transform: rotateX(180deg);
+      background-color: transparent;
+      background: linear-gradient(rgba(255, 127, 80, 0.035), rgba(255, 127, 80, 0.426));
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <span id="timeText">我是时间...</span>
+  </div>
+  <div class="box box2">
+    <span id="timeText2">我是时间...</span>
+  </div>
+  <script>
+    (function () {
+      const dom = document.getElementById("timeText");
+      const dom2 = document.getElementById("timeText2");
+      getTime();
+
+      (function timeRun () {
+        setTimeout(() => {
+          getTime();
+          timeRun();
+        }, 1000)
+      })();
+
+      function getTime () {
+        const time = new Date();
+        const newTimeStr = `${filterNum(time.getHours())} : ${filterNum(time.getMinutes())} : ${filterNum(time.getSeconds())
+          }`
+        dom.firstChild.nodeValue = newTimeStr;
+        dom2.firstChild.nodeValue = newTimeStr;
+      }
+      function filterNum (num) {
+        if (num > 9) return num;
+        return "0" + num;
+      }
+    })()
+  </script>
+</body>
+
+</html>

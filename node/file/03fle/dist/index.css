@@ -1,0 +1,34 @@
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .box {
+      height: 200px;
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      background-color: coral;
+      color: #fff;
+      align-items: center;
+      font-size: 100px;
+    }
+
+    .box2 {
+      margin-top: 5px;
+      transform: rotateX(180deg);
+      background-color: transparent;
+      background: linear-gradient(rgba(255, 127, 80, 0.035), rgba(255, 127, 80, 0.426));
+    }
+  

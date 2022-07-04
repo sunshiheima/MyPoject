@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button class="btn1">get</button>
+  <button class="btn2">post</button>
+  <button class="btn3">delete</button>
+  <button class="btn4">jsonp</button>
+  <script>
+    const xhr = new XMLHttpRequest();
+    const baseUrl = 'http://127.0.0.1/api';
+
+    /* 接口封装 */
+    class Ajax {
+      constructor(BASEURL) {
+        this.BASEURL = BASEURL;
+      }
+      get (url, params = {},) {
+        if (Object.keys(params).length > 0) {
+          let newParams = "?";
+          Object.keys(params).forEach((key, i) => {
+            if (Object.keys(params).length == i + 1) {
+              newParams += `${key}=${params[key]}`;
+            } else {
+              newParams += `${key}=${params[key]}&`;
+            }
+          })
+          return this.request("GET", url + newParams, null, params)
+        } else {
+          return this.request("GET", url, null, params)
+        }
+      }
+      post (url, params = {},) {
+        const newParams = new FormData();
+        for (let key in params) {
+          newParams.append(key, params[key]);
+        }
+        return this.request("POST", url, newParams, params);
+      }
+      request (method, url, params, oldParams) {
+        return new Promise((res, rej) => {
+          xhr.open(method, this.BASEURL + url, true);
+          xhr.onload = function (e) {
+            if (this.status == 200 || this.status == 304) {
+              const data = JSON.parse(this.responseText);
+              console.log('请求成功！', data);
+            } else {
+              rej("请求失败");
+            }
+          }
+          xhr.ontimeout = function () { rej("请求超时！") };
+          xhr.onerror = function () {
+            rej("请求失败！")
+          };
+          xhr.send(params);
+        })
+      }
+    }
+    const server = new Ajax(baseUrl);
+    const btn1 = document.getElementsByClassName('btn1')[0];
+    const btn2 = document.getElementsByClassName('btn2')[0];
+    const btn3 = document.getElementsByClassName('btn3')[0];
+    const btn4 = document.getElementsByClassName('btn4')[0];
+    btn1.addEventListener('click', () => {
+      server.get('/user/3', { name: 'sun', age: 18 });
+    })
+    btn2.addEventListener('click', () => {
+      server.post('/post', { name: 'sun', age: 18 });
+    })
+    btn3.addEventListener('click', () => {
+      server.request('delete', '/delete', { name: 'sun', age: 18 });
+    })
+    btn4.addEventListener('click', () => {
+      server.request('get', '/jsonp');
+    })
+    // var str = 'sjnjjj hhh gjjj bsgsg rr a'
+    // // var reg = /\b\w*(?=jjj\b)/g;
+    // var reg = /\b\w*(?<!jjj$)\w+\b/g;
+    // console.log(str.match(reg));
+    var str = 'aaaaaaa5';
+    var reg = /(?!^[0-9]{3,12}$)(?!^[A-Z]{3,12}$)(?!^[a-z]{3,12}$)^[0-9A-Za-z]{6,12}$/;
+    console.log(reg.test(str))
+  </script>
+</body>
+
+</html>
