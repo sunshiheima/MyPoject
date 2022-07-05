@@ -1,7 +1,0 @@
-原理：Array.isArray()内部，实则是借助Object.prototype.toString.call(xxx) === '[object Array]'来实现的！！！
-
-Array.myIsArray = function(o) {
-  return Object.prototype.toString.call(Object(o)) === '[object Array]';
-};
-console.log(Array.myIsArray([])); // true
-
