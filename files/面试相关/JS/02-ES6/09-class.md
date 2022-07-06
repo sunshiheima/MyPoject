@@ -1,3 +1,4 @@
+```js
 /*
 从下面代码可以看出:
 -ES6【子类constructor中的super(xxx)】 => ES5【子类构造函数中的Parent.apply(this, xxx)】
@@ -48,3 +49,4 @@ class Child extends Parent {
 var child = new Child("yf");
 console.log(child.age); //22
 child.show(); //yf
+```
