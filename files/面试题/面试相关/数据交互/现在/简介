@@ -1,4 +1,0 @@
-请求接口可以使用xhr(jquery的ajax / axios)或fetch
-请求一个服务端地址会返回相应的数据
-而用xhr或fetch请求一个图片或视频地址，需要设置正确的responseType，我们才能拿到想要的格式的数据。
-xhr和fetch请求会有跨域问题，可以通过跨域资源共享Cors解决

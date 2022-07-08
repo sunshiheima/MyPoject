@@ -1,3 +1,0 @@
-value instanceof Array
-Array.isArray()
-Object.prototype.toString.call(arr) === "[object Array]"
