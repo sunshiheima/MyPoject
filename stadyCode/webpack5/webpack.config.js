@@ -2,9 +2,9 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const OptimizeCssAssetsWebpackPlugin = require("optimize-css-assets-webpack-plugin");
-const PurgecssWebpackPlugin=require("purgecss-webpack-plugin");
-const PATHS={src:path.join(__dirname,"src")};
-const glob=require("glob");
+const PurgecssWebpackPlugin = require("purgecss-webpack-plugin");
+const PATHS = { src: path.join(__dirname, "src") };
+const glob = require("glob");
 module.exports = {
     /* 入口 */
     entry: "./src/main.js",
@@ -69,7 +69,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: "eslint-loader",
-                exclude:/node_modules/,
+                exclude: /node_modules/,
                 options: {
                     fix: true,
                 }
@@ -95,7 +95,7 @@ module.exports = {
         new OptimizeCssAssetsWebpackPlugin(),
         /* 去除死代码 */
         new PurgecssWebpackPlugin({
-            paths:glob.sync(`${PATHS.src}/**/*`,{nodir:true}),
+            paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true }),
         })
     ],
     /* 开发服务器 */
@@ -103,10 +103,10 @@ module.exports = {
         port: 2333,//端口
         contentBase: path.join(__dirname, "dist"),
         compress: true,//为静态文件开启gzip 压缩
-        open:true,
-        hot:true,
+        open: true,
+        hot: true,
     },
-    target:"web",//webpack5 需要添加这个参数 启动刷新
-    
+    target: "web",//webpack5 需要添加这个参数 启动刷新
+
     // mode: "development"//development 开发 production 生产
 }
