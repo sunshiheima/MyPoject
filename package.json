@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "mycliTest": "link:E:/AAAwebCode/MyProject/MyPoject/工程化/code/mycliTest",
-    "purgecss-webpack-plugin": "^4.0.3"
-  }
-}
