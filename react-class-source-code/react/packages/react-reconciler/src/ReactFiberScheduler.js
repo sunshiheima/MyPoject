@@ -1842,20 +1842,26 @@ function recomputeCurrentRendererTime() {
   currentRendererTime = msToExpirationTime(currentTimeMs);
 }
 
+/*
+     异步调度
+     react 独立的包
+     会在浏览器有空闲的时候去执行，并且会有一个时间，
+     在这个时间之前可以执行自己的任务，超过这个时间就必须把控制权交换给浏览器
+   */
 function scheduleCallbackWithExpirationTime(
   root: FiberRoot,
   expirationTime: ExpirationTime,
 ) {
   if (callbackExpirationTime !== NoWork) {
-    // A callback is already scheduled. Check its expiration time (timeout).
+    //如果比当前的优先级低 直接return不做处理
     if (expirationTime > callbackExpirationTime) {
       // Existing callback has sufficient timeout. Exit.
       return;
-    } else {
+    } else {//如果当前的优先级高 清除之前的callBack
       if (callbackID !== null) {
         // Existing callback has insufficient timeout. Cancel and schedule a
         // new one.
-        cancelDeferredCallback(callbackID);
+        cancelDeferredCallback(callbackID);//通过下面的生成的callBackID来取消
       }
     }
     // The request callback timer is already running. Don't start a new one.
@@ -1864,9 +1870,11 @@ function scheduleCallbackWithExpirationTime(
   }
 
   callbackExpirationTime = expirationTime;
-  const currentMs = now() - originalStartTimeMs;
+  const currentMs = now() - originalStartTimeMs;//js加载代码到现在的时间差
+  //expirationTime转化为ms，通过expirationTimeToMs去除10单位毫秒
   const expirationTimeMs = expirationTimeToMs(expirationTime);
-  const timeout = expirationTimeMs - currentMs;
+  const timeout = expirationTimeMs - currentMs;//计算出超时时间
+  //通过这个方法计算一个id，用来取消这个任务，callbackID全局变量
   callbackID = scheduleDeferredCallback(performAsyncWork, { timeout });
 }
 
@@ -1957,16 +1965,16 @@ function requestWork(root: FiberRoot, expirationTime: ExpirationTime) {
     return;
   }
 
-  if (isBatchingUpdates) {
+  if (isBatchingUpdates) {//是批量更新
     // Flush work at the end of the batch.
-    if (isUnbatchingUpdates) {
+    if (isUnbatchingUpdates) {//是否取消批量更新
       // ...unless we're inside unbatchedUpdates, in which case we should
       // flush it now.
       nextFlushedRoot = root;
       nextFlushedExpirationTime = Sync;
-      performWorkOnRoot(root, Sync, true);
+      performWorkOnRoot(root, Sync, true);//同步
     }
-    return;
+    return;//直接return出去
   }
 
   // TODO: Get rid of Sync and use current time?
@@ -2375,7 +2383,7 @@ function onUncaughtError(error: mixed) {
 // the reconciler.
 function batchedUpdates<A, R>(fn: (a: A) => R, a: A): R {
   const previousIsBatchingUpdates = isBatchingUpdates;
-  isBatchingUpdates = true;
+  isBatchingUpdates = true;//每次进来设置true
   try {
     return fn(a);
   } finally {
