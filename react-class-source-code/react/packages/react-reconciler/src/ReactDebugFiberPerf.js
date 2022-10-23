@@ -7,9 +7,9 @@
  * @flow
  */
 
-import type {Fiber} from './ReactFiber';
+import type { Fiber } from './ReactFiber';
 
-import {enableUserTimingAPI} from 'shared/ReactFeatureFlags';
+import { enableUserTimingAPI } from 'shared/ReactFeatureFlags';
 import getComponentName from 'shared/getComponentName';
 import {
   HostRoot,

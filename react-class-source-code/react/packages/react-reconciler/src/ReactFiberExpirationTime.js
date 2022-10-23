@@ -18,12 +18,11 @@ export const Never = MAX_SIGNED_31_BIT_INT;
 const UNIT_SIZE = 10;
 const MAGIC_NUMBER_OFFSET = 2;
 
-// 1 unit of expiration time represents 10ms.
+// 过期时间单位为 10ms。
 export function msToExpirationTime(ms: number): ExpirationTime {
-  // Always add an offset so that we don't clash with the magic number for NoWork.
   /*
     ms 为js加载完成到现在的值
-    UNIT_SIZE为10，UNIT_SIZE/10再取整，就如：m*10到(m+1)*10的误差被磨平
+    UNIT_SIZE为10，UNIT_SIZE/10再取整，10ms的误差被磨平
     即为磨平10ms以内调用msToExpirationTime的误差
   */
   return ((ms / UNIT_SIZE) | 0) + MAGIC_NUMBER_OFFSET;
@@ -38,8 +37,8 @@ function ceiling(num: number, precision: number): number {
 }
 
 function computeExpirationBucket(
-  currentTime,//近乎看成是js加载到现在的时间
-  expirationInMs,
+  currentTime,//近乎看成是js加载到现在的时间 磨平10ms误差
+  expirationInMs,//传入的默认超时时间
   bucketSizeMs,
 ): ExpirationTime {
   return (
@@ -52,7 +51,7 @@ function computeExpirationBucket(
       ceiling((currentTime-2)+(5000/10),250/10);
       结合ceiling中的方法最终的结果为：
       (((currentTime-2+ 500)/25 |0)+1)*25；
-      这里的减去2可以无视，而除以 10 取整应该是要抹平 10 毫秒内的误差，
+      这里的减去2可以无视，可以算作是计算误差，而除以 25 取整应该是要抹平 25 毫秒内的误差，
       当然最终要用来计算时间差的时候会调用 expirationTimeToMs 恢复回去
      */
   );

@@ -44,7 +44,7 @@ var hasNativePerformanceNow =
 
 var timeRemaining;
 if (hasNativePerformanceNow) {
-  timeRemaining = function() {
+  timeRemaining = function () {
     if (
       firstCallbackNode !== null &&
       firstCallbackNode.expirationTime < currentExpirationTime
@@ -59,7 +59,7 @@ if (hasNativePerformanceNow) {
     return remaining > 0 ? remaining : 0;
   };
 } else {
-  timeRemaining = function() {
+  timeRemaining = function () {
     // Fallback to Date.now()
     if (
       firstCallbackNode !== null &&
@@ -280,7 +280,7 @@ function unstable_runWithPriority(priorityLevel, eventHandler) {
 
 function unstable_wrapCallback(callback) {
   var parentPriorityLevel = currentPriorityLevel;
-  return function() {
+  return function () {
     // This is a fork of runWithPriority, inlined for performance.
     var previousPriorityLevel = currentPriorityLevel;
     var previousEventStartTime = currentEventStartTime;
@@ -439,14 +439,14 @@ var getCurrentTime;
 var ANIMATION_FRAME_TIMEOUT = 100;
 var rAFID;
 var rAFTimeoutID;
-var requestAnimationFrameWithTimeout = function(callback) {
+var requestAnimationFrameWithTimeout = function (callback) {
   // schedule rAF and also a setTimeout
-  rAFID = localRequestAnimationFrame(function(timestamp) {
+  rAFID = localRequestAnimationFrame(function (timestamp) {
     // cancel the setTimeout
     localClearTimeout(rAFTimeoutID);
     callback(timestamp);
   });
-  rAFTimeoutID = localSetTimeout(function() {
+  rAFTimeoutID = localSetTimeout(function () {
     // cancel the requestAnimationFrame
     localCancelAnimationFrame(rAFID);
     callback(getCurrentTime());
@@ -455,11 +455,11 @@ var requestAnimationFrameWithTimeout = function(callback) {
 
 if (hasNativePerformanceNow) {
   var Performance = performance;
-  getCurrentTime = function() {
+  getCurrentTime = function () {
     return Performance.now();
   };
 } else {
-  getCurrentTime = function() {
+  getCurrentTime = function () {
     return localDate.now();
   };
 }
@@ -484,7 +484,7 @@ if (typeof window !== 'undefined' && window._schedMock) {
 ) {
   var _callback = null;
   var _currentTime = -1;
-  var _flushCallback = function(didTimeout, ms) {
+  var _flushCallback = function (didTimeout, ms) {
     if (_callback !== null) {
       var cb = _callback;
       _callback = null;
@@ -496,7 +496,7 @@ if (typeof window !== 'undefined' && window._schedMock) {
       }
     }
   };
-  requestHostCallback = function(cb, ms) {
+  requestHostCallback = function (cb, ms) {
     if (_currentTime !== -1) {
       // Protect against re-entrancy.
       setTimeout(requestHostCallback, 0, cb, ms);
@@ -506,13 +506,13 @@ if (typeof window !== 'undefined' && window._schedMock) {
       setTimeout(_flushCallback, maxSigned31BitInt, false, maxSigned31BitInt);
     }
   };
-  cancelHostCallback = function() {
+  cancelHostCallback = function () {
     _callback = null;
   };
-  getFrameDeadline = function() {
+  getFrameDeadline = function () {
     return Infinity;
   };
-  getCurrentTime = function() {
+  getCurrentTime = function () {
     return _currentTime === -1 ? 0 : _currentTime;
   };
 } else {
@@ -521,15 +521,15 @@ if (typeof window !== 'undefined' && window._schedMock) {
     if (typeof localRequestAnimationFrame !== 'function') {
       console.error(
         "This browser doesn't support requestAnimationFrame. " +
-          'Make sure that you load a ' +
-          'polyfill in older browsers. https://fb.me/react-polyfills',
+        'Make sure that you load a ' +
+        'polyfill in older browsers. https://fb.me/react-polyfills',
       );
     }
     if (typeof localCancelAnimationFrame !== 'function') {
       console.error(
         "This browser doesn't support cancelAnimationFrame. " +
-          'Make sure that you load a ' +
-          'polyfill in older browsers. https://fb.me/react-polyfills',
+        'Make sure that you load a ' +
+        'polyfill in older browsers. https://fb.me/react-polyfills',
       );
     }
   }
@@ -549,7 +549,7 @@ if (typeof window !== 'undefined' && window._schedMock) {
   var previousFrameTime = 33;
   var activeFrameTime = 33;
 
-  getFrameDeadline = function() {
+  getFrameDeadline = function () {
     return frameDeadline;
   };
 
@@ -559,7 +559,7 @@ if (typeof window !== 'undefined' && window._schedMock) {
     Math.random()
       .toString(36)
       .slice(2);
-  var idleTick = function(event) {
+  var idleTick = function (event) {
     if (event.source !== window || event.data !== messageKey) {
       return;
     }
@@ -608,7 +608,11 @@ if (typeof window !== 'undefined' && window._schedMock) {
   // something better for old IE.
   window.addEventListener('message', idleTick, false);
 
-  var animationTick = function(rafTime) {
+  /*
+  scheduledHostCallback = callback;
+    timeoutTime = absoluteTimeout;
+   */
+  var animationTick = function (rafTime) {
     if (scheduledHostCallback !== null) {
       // Eagerly schedule the next animation callback at the beginning of the
       // frame. If the scheduler queue is not empty at the end of the frame, it
@@ -654,7 +658,7 @@ if (typeof window !== 'undefined' && window._schedMock) {
     }
   };
 
-  requestHostCallback = function(callback, absoluteTimeout) {
+  requestHostCallback = function (callback, absoluteTimeout) {
     scheduledHostCallback = callback;
     timeoutTime = absoluteTimeout;
     if (isFlushingHostCallback || absoluteTimeout < 0) {
@@ -670,7 +674,7 @@ if (typeof window !== 'undefined' && window._schedMock) {
     }
   };
 
-  cancelHostCallback = function() {
+  cancelHostCallback = function () {
     scheduledHostCallback = null;
     isMessageEventScheduled = false;
     timeoutTime = -1;
