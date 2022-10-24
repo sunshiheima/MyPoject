@@ -343,7 +343,7 @@ ReactRoot.prototype.render = function (
   children: ReactNodeList,//app
   callback: ?() => mixed,
 ): Work {
-  const root = this._internalRoot;
+  const root = this._internalRoot;//root
   const work = new ReactWork();
   callback = callback === undefined ? null : callback;
 
@@ -538,7 +538,7 @@ function legacyRenderSubtreeIntoContainer(
       };
     }
     // Initial mount should not be batched.
-    DOMRenderer.unbatchedUpdates(() => {
+    DOMRenderer.unbatchedUpdates(() => {//非批量处理 快速创建应用
       if (parentComponent != null) {
         root.legacy_renderSubtreeIntoContainer(
           parentComponent,
