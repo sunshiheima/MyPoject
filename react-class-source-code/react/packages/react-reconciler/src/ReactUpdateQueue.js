@@ -128,10 +128,10 @@ export type UpdateQueue<State> = {
   lastCapturedEffect: Update<State> | null,
 };
 
-export const UpdateState = 0;
-export const ReplaceState = 1;
-export const ForceUpdate = 2;
-export const CaptureUpdate = 3;
+export const UpdateState = 0;//正常更新
+export const ReplaceState = 1;//替换更新
+export const ForceUpdate = 2;//手动触发的更新
+export const CaptureUpdate = 3;//render过程error抛出的更新
 
 // Global state that is reset at the beginning of calling `processUpdateQueue`.
 // It should only be read right after calling `processUpdateQueue`, via
@@ -151,14 +151,14 @@ if (__DEV__) {
 
 export function createUpdateQueue<State>(baseState: State): UpdateQueue<State> {
   const queue: UpdateQueue<State> = {
-    baseState,
-    firstUpdate: null,
-    lastUpdate: null,
-    firstCapturedUpdate: null,
-    lastCapturedUpdate: null,
-    firstEffect: null,
-    lastEffect: null,
-    firstCapturedEffect: null,
+    baseState,// 每次操作完更新之后的`state`
+    firstUpdate: null, // 队列中的第一个`Update`
+    lastUpdate: null, // 队列中的最后一个`Update`
+    firstCapturedUpdate: null,// 第一个捕获error类型的`Update`
+    lastCapturedUpdate: null,// 最后一个捕获error类型的`Update`
+    firstEffect: null, // 第一个`side effect`
+    lastEffect: null, // 最后一个`side effect`
+    firstCapturedEffect: null, // 以下第一个和最后一个捕获产生的`side effect`
     lastCapturedEffect: null,
   };
   return queue;
@@ -203,18 +203,19 @@ function appendUpdateToQueue<State>(
   queue: UpdateQueue<State>,
   update: Update<State>,
 ) {
-  // Append the update to the end of the list.
+  //将更新附加到列表的末尾。
   if (queue.lastUpdate === null) {
-    // Queue is empty
+    // 队列为空
     queue.firstUpdate = queue.lastUpdate = update;
   } else {
     queue.lastUpdate.next = update;
     queue.lastUpdate = update;
   }
 }
-
+//fiber为 rootFiber
+//这个函数就是将两个queue的lastUpdate设为一致
 export function enqueueUpdate<State>(fiber: Fiber, update: Update<State>) {
-  // Update queues are created lazily.
+  // 更新队列是延迟创建的.
   // 在Fiber树更新的过程中，每个Fiber都会有一个跟其对应的Fiber
   // 我们称他为`current <==> workInProgress`
   // 在渲染完成之后他们会交换位置
@@ -231,8 +232,8 @@ export function enqueueUpdate<State>(fiber: Fiber, update: Update<State>) {
   } else {
     // There are two owners.
     queue1 = fiber.updateQueue;
-    queue2 = alternate.updateQueue;
-    if (queue1 === null) {
+    queue2 = alternate.updateQueue;//上次更新的queue
+    if (queue1 === null) {//都为null 表示他们都没有更新过
       if (queue2 === null) {
         // Neither fiber has an update queue. Create new ones.
         queue1 = fiber.updateQueue = createUpdateQueue(fiber.memoizedState);
@@ -248,7 +249,7 @@ export function enqueueUpdate<State>(fiber: Fiber, update: Update<State>) {
         // Only one fiber has an update queue. Clone to create a new one.
         queue2 = alternate.updateQueue = cloneUpdateQueue(queue1);
       } else {
-        // Both owners have an update queue.
+        // 两个所有者都有一个更新队列。
       }
     }
   }
@@ -256,18 +257,18 @@ export function enqueueUpdate<State>(fiber: Fiber, update: Update<State>) {
     // There's only a single queue.
     appendUpdateToQueue(queue1, update);
   } else {
-    // There are two queues. We need to append the update to both queues,
-    // while accounting for the persistent structure of the list — we don't
-    // want the same update to be added multiple times.
+    // 有两个队列。 我们需要将更新附加到两个队列中，
+    // 同时考虑到列表的持久结构——我们没有
+    // 希望多次添加相同的更新。
     if (queue1.lastUpdate === null || queue2.lastUpdate === null) {
       // One of the queues is not empty. We must add the update to both queues.
-      appendUpdateToQueue(queue1, update);
+      appendUpdateToQueue(queue1, update);//这个两个更新一致
       appendUpdateToQueue(queue2, update);
     } else {
-      // Both queues are non-empty. The last update is the same in both lists,
-      // because of structural sharing. So, only append to one of the lists.
+      //两个队列都是非空的。 两个列表中的最后一次更新相同，
+      // 因为结构共享。 因此，仅附加到列表之一。
       appendUpdateToQueue(queue1, update);
-      // But we still need to update the `lastUpdate` pointer of queue2.
+      //但是我们仍然需要更新 queue2 的 `lastUpdate` 指针。
       queue2.lastUpdate = update;
     }
   }

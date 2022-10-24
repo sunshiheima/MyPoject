@@ -1503,24 +1503,25 @@ function computeUniqueAsyncExpiration(): ExpirationTime {
 
 function computeExpirationForFiber(currentTime: ExpirationTime, fiber: Fiber) {
   let expirationTime;
-  if (expirationContext !== NoWork) {//NOWork为0 sync为1
+  if (expirationContext !== NoWork) {//NOWork为0 sync为1  只有在flushSync api中调用expirationContext设为sync
     expirationTime = expirationContext;//通过提前设置expirationContext值来指定expirationTime使用那种expirationTime
-  } else if (isWorking) {
+  } else if (isWorking) {//commitRoot和renderRoot开始都会设置为true，然后在他们各自阶段结束的时候都重置为false
     if (isCommitting) {
       //如果是commit阶段直接就是同步更新
       expirationTime = Sync;
     } else {
       // Updates during the render phase should expire at the same time as
       // the work that is being rendered.
+      //nextRenderExpirationTime下一个任务的超时时间
       expirationTime = nextRenderExpirationTime;
     }
   } else {
     if (fiber.mode & ConcurrentMode) {//mode的值为TypeOfMode，表示是否异步渲染 ConcurrentMode的值为：0b001（二进制）
       if (isBatchingInteractiveUpdates) {
-        // 异步的过期时间计算 低优先级
+        // 批处理交互的过期时间计算 低优先级
         expirationTime = computeInteractiveExpiration(currentTime);
       } else {
-        // 异步的过期时间计算 高优先级
+        // 计算异步过期计算 高优先级
         expirationTime = computeAsyncExpiration(currentTime);
       }
       // If we're in the middle of rendering a tree, do not update at the same
@@ -1534,9 +1535,9 @@ function computeExpirationForFiber(currentTime: ExpirationTime, fiber: Fiber) {
     }
   }
   if (isBatchingInteractiveUpdates) {
-    // This is an interactive update. Keep track of the lowest pending
-    // interactive expiration time. This allows us to synchronously flush
-    // all interactive updates when needed.
+    // 这是一个交互式更新。 跟踪最低挂起
+    // 交互式过期时间。 这允许我们同步刷新
+    // 需要时的所有交互式更新。
     if (expirationTime > lowestPriorityPendingInteractiveExpirationTime) {
       lowestPriorityPendingInteractiveExpirationTime = expirationTime;
     }
@@ -1619,7 +1620,7 @@ function retrySuspendedRoot(
     requestWork(root, rootExpirationTime);
   }
 }
-
+/* expirationTime 一开始计算的过期时间 */
 function scheduleWorkToRoot(fiber: Fiber, expirationTime): FiberRoot | null {
   recordScheduleUpdate();//记录更新的时间  暂时不讲
   if (__DEV__) {
@@ -1631,7 +1632,7 @@ function scheduleWorkToRoot(fiber: Fiber, expirationTime): FiberRoot | null {
   // Update the source fiber's expiration time
   if (
     fiber.expirationTime === NoWork ||//之前没有更新就为NoWork
-    fiber.expirationTime > expirationTime//这种情况就是之前有更新但是没有，当前的优先级高，更新完后会将expirationTime清理为空
+    fiber.expirationTime > expirationTime//这种情况就是之前有更新，但是没有当前的优先级高，更新完后会将expirationTime清理为空
   ) {
     fiber.expirationTime = expirationTime;//更新为最高优先级的expirationTime
   }
@@ -1646,7 +1647,7 @@ function scheduleWorkToRoot(fiber: Fiber, expirationTime): FiberRoot | null {
   // Walk the parent path to the root and update the child expiration time.
   let node = fiber.return;
   let root = null;
-  if (node === null && fiber.tag === HostRoot) {//这种情况为RootFilber才会有这个情况
+  if (node === null && fiber.tag === HostRoot) {//这种情况为RootFiber才会有这个情况
     root = fiber.stateNode;//RootFiber的stateNode就是fiberRoot
   } else {
     while (node !== null) {//fiber如果不为rootFiber的情况，需要一个一个循环向上找
@@ -1727,12 +1728,11 @@ function scheduleWork(fiber: Fiber, expirationTime: ExpirationTime) {
   if (root === null) {
     return;
   }
-
+  /*
+     nextRenderExpirationTime记录上的下一个要更新的ExpirationTime（全局变量）
+   */
   if (
-    !isWorking &&//任务正在执行当中，可能被中断了
-    /*
-      nextRenderExpirationTime记录上的下一个要更新的ExpirationTime（全局变量）
-    */
+    !isWorking &&//任务正在执行当中，可能被中断了 只有commitRoot和workLoop的时候才会为true
     nextRenderExpirationTime !== NoWork &&//之前有一个任务没有做完，将调度还给了浏览器，而产生的一个更新
     expirationTime < nextRenderExpirationTime//当前的优先级高于上一个没执行完update
   ) {
@@ -1740,15 +1740,16 @@ function scheduleWork(fiber: Fiber, expirationTime: ExpirationTime) {
     interruptedBy = fiber;//记录是哪个值打断了更新
     resetStack();
   }
-  markPendingPriorityLevel(root, expirationTime);
+  markPendingPriorityLevel(root, expirationTime);//中可能会改变expirationTime
   if (
     // If we're in the render phase, we don't need to schedule this root
     // for an update, because we'll do it before we exit...
     !isWorking ||
     isCommitting ||
-    // ...unless this is a different root than the one we're rendering.
+    // ...除非这与我们正在渲染的根不同。
     nextRoot !== root
   ) {
+    //root.expirationTime 当前更新对应的过期时间 不一定与传进来的expirationTime一致
     const rootExpirationTime = root.expirationTime;
     requestWork(root, rootExpirationTime);
   }
@@ -1852,7 +1853,7 @@ function scheduleCallbackWithExpirationTime(
   root: FiberRoot,
   expirationTime: ExpirationTime,
 ) {
-  if (callbackExpirationTime !== NoWork) {
+  if (callbackExpirationTime !== NoWork) {//当前调度的ExpirationTime
     //如果比当前的优先级低 直接return不做处理
     if (expirationTime > callbackExpirationTime) {
       // Existing callback has sufficient timeout. Exit.
@@ -1939,39 +1940,43 @@ function onCommit(root, expirationTime) {
 
 function requestCurrentTime() {
 
-  if (isRendering) {
+  if (isRendering) {//这种情况可以忽略，因为performWorkOnRoot是同步的，并且只会在这个函数中赋值
     // 如果是在rendering阶段又新建了一个任务，那就将expirationTime设置为当前的任务一致，从而使它更快的调度渲染
     return currentSchedulerTime;//当成是全局变量js加载完成到现在的时间
   }
   // Check if there's pending work.
   findHighestPriorityRoot();//获取最高优先级work
+  /*
+    nextFlushedExpirationTime 这个是在fiber-scheduler中的一个全局变量，用来记录下一个需要渲染的FiberRoot的过期时间
+  */
   if (
     nextFlushedExpirationTime === NoWork ||//NoWork与Never是默认值，所以一开始是成立的
     nextFlushedExpirationTime === Never
   ) {
-    recomputeCurrentRendererTime();//进行了currentRendererTime赋值
+    //第一次加载，或者是之前的update都已经更新完毕
+    recomputeCurrentRendererTime();//进行了currentRendererTime赋值,相当于刷新currentSchedulerTime的值
     currentSchedulerTime = currentRendererTime;
     return currentSchedulerTime;
   }
   return currentSchedulerTime;
 }
 
-// requestWork is called by the scheduler whenever a root receives an update.
-// It's up to the renderer to call renderRoot at some point in the future.
-function requestWork(root: FiberRoot, expirationTime: ExpirationTime) {
+// 每当root收到更新时，调度程序都会调用 requestWork。
+// 由渲染器在未来某个时间点调用 renderRoot。
+function requestWork(root: FiberRoot, expirationTime: ExpirationTime) {//ExpirationTim为rootExpirationTime
   addRootToSchedule(root, expirationTime);
-  if (isRendering) {
+  if (isRendering) {//因为performWorkOnRoot是同步的，并且只会在这个函数中赋值
     // 如果已经是在调度中了，就不需要任何操作，会自动将上面的更新全部执行掉
     return;
   }
 
-  if (isBatchingUpdates) {//是批量更新
+  if (isBatchingUpdates) {//是否批量更新 一开始是否，快速创建
     // Flush work at the end of the batch.
     if (isUnbatchingUpdates) {//是否取消批量更新
       // ...unless we're inside unbatchedUpdates, in which case we should
       // flush it now.
-      nextFlushedRoot = root;
-      nextFlushedExpirationTime = Sync;
+      nextFlushedRoot = root;//用来标志下一个需要渲染的root
+      nextFlushedExpirationTime = Sync;//用来标志下一个expirtaionTime
       performWorkOnRoot(root, Sync, true);//同步
     }
     return;//直接return出去
@@ -1991,9 +1996,9 @@ function requestWork(root: FiberRoot, expirationTime: ExpirationTime) {
   }
 }
 
-function addRootToSchedule(root: FiberRoot, expirationTime: ExpirationTime) {
-  // Add the root to the schedule.
-  // Check if this root is already part of the schedule.
+function addRootToSchedule(root: FiberRoot, expirationTime: ExpirationTime) {//ExpirationTim为rootExpirationTime
+  // 将根添加到计划中。
+  // 检查这个根是否已经是计划的一部分。
   /*
   root之间关联的链表结构
     nextScheduledRoot 下一个要执行的root
@@ -2023,11 +2028,11 @@ function addRootToSchedule(root: FiberRoot, expirationTime: ExpirationTime) {
     }
   }
 }
-
+//找到最高优先级root 和 expirationTime下次要使用他
 function findHighestPriorityRoot() {
   let highestPriorityWork = NoWork;
   let highestPriorityRoot = null;
-  if (lastScheduledRoot !== null) {
+  if (lastScheduledRoot !== null) {//是否还有更新
     let previousScheduledRoot = lastScheduledRoot;
     let root = firstScheduledRoot;
     while (root !== null) {
@@ -2043,18 +2048,18 @@ function findHighestPriorityRoot() {
           'Should have a previous and last root. This error is likely ' +
           'caused by a bug in React. Please file an issue.',
         );
-        if (root === root.nextScheduledRoot) {
+        if (root === root.nextScheduledRoot) {//只有一个root更新
           // This is the only root in the list.
           root.nextScheduledRoot = null;
           firstScheduledRoot = lastScheduledRoot = null;
           break;
-        } else if (root === firstScheduledRoot) {
+        } else if (root === firstScheduledRoot) {//不止一个root更新
           // This is the first root in the list.
           const next = root.nextScheduledRoot;
           firstScheduledRoot = next;
           lastScheduledRoot.nextScheduledRoot = next;
           root.nextScheduledRoot = null;
-        } else if (root === lastScheduledRoot) {
+        } else if (root === lastScheduledRoot) {//最后一个root
           // This is the last root in the list.
           lastScheduledRoot = previousScheduledRoot;
           lastScheduledRoot.nextScheduledRoot = firstScheduledRoot;
@@ -2088,23 +2093,25 @@ function findHighestPriorityRoot() {
     }
   }
 
-  nextFlushedRoot = highestPriorityRoot;
-  nextFlushedExpirationTime = highestPriorityWork;
+  nextFlushedRoot = highestPriorityRoot;//赋值默认值
+  nextFlushedExpirationTime = highestPriorityWork;//赋值默认值
 }
-
+/*
+  调度结束之后回调 dl为undefined
+ */
 function performAsyncWork(dl) {
-  if (dl.didTimeout) {
-    // The callback timed out. That means at least one update has expired.
-    // Iterate through the root schedule. If they contain expired work, set
-    // the next render expiration time to the current time. This has the effect
-    // of flushing all expired work in a single batch, instead of flushing each
-    // level one at a time.
+  if (dl.didTimeout) {//是否过期
+    // 回调超时。 这意味着至少有一个更新已过期。
+    // 遍历根调度。 如果它们包含过期的工作，请设置
+    // 下一次渲染过期时间到当前时间。 这个有效果
+    // 在一个批次中刷新所有过期的工作，而不是刷新每个
+    // 一次一级。
     if (firstScheduledRoot !== null) {
-      recomputeCurrentRendererTime();
+      recomputeCurrentRendererTime();//计时操作
       let root: FiberRoot = firstScheduledRoot;
       do {
         didExpireAtExpirationTime(root, currentRendererTime);
-        // The root schedule is circular, so this is never null.
+        //root计划是循环的，因此它永远不会为空。
         root = (root.nextScheduledRoot: any);
       } while (root !== firstScheduledRoot);
     }
@@ -2116,18 +2123,21 @@ function performSyncWork() {
   performWork(Sync, null);
 }
 
+/*
+  调度结束之后回调 minExpirationTime为0，dl为空
+ */
 function performWork(minExpirationTime: ExpirationTime, dl: Deadline | null) {
   deadline = dl;
 
   // Keep working on roots until there's no more work, or until we reach
   // the deadline.
-  findHighestPriorityRoot();
+  findHighestPriorityRoot();//找到最高优先级root 和 expirationTime 下次要使用
 
-  if (deadline !== null) {
-    recomputeCurrentRendererTime();
+  if (deadline !== null) {//异步
+    recomputeCurrentRendererTime();//计算一个currentRendererTime
     currentSchedulerTime = currentRendererTime;
 
-    if (enableUserTimingAPI) {
+    if (enableUserTimingAPI) {//启用用户计时 API
       const didExpire = nextFlushedExpirationTime < currentRendererTime;
       const timeout = expirationTimeToMs(nextFlushedExpirationTime);
       stopRequestCallbackTimer(didExpire, timeout);
@@ -2138,6 +2148,7 @@ function performWork(minExpirationTime: ExpirationTime, dl: Deadline | null) {
       nextFlushedExpirationTime !== NoWork &&
       (minExpirationTime === NoWork ||
         minExpirationTime >= nextFlushedExpirationTime) &&
+      //deadlineDidExpire：用于记录是否时间片调度是否过期
       (!deadlineDidExpire || currentRendererTime >= nextFlushedExpirationTime)
     ) {
       performWorkOnRoot(
@@ -2145,19 +2156,24 @@ function performWork(minExpirationTime: ExpirationTime, dl: Deadline | null) {
         nextFlushedExpirationTime,
         currentRendererTime >= nextFlushedExpirationTime,
       );
-      findHighestPriorityRoot();
-      recomputeCurrentRendererTime();
+      findHighestPriorityRoot();//找到最高优先级root 和 expirationTime 下次要使用
+      recomputeCurrentRendererTime();//计算一个currentRendererTime
       currentSchedulerTime = currentRendererTime;
     }
-  } else {
+  } else {//同步
     while (
+      /*
+         findHighestPriorityRoot();中赋值的：
+         nextFlushedRoot：当前优先级最高的root，也就是下个要更新的root
+         nextFlushedExpirationTime：当前优先级最高的ExpirationTime，也就是下个要更新的ExpirationTime
+      */
       nextFlushedRoot !== null &&
       nextFlushedExpirationTime !== NoWork &&
       (minExpirationTime === NoWork ||
-        minExpirationTime >= nextFlushedExpirationTime)
+        minExpirationTime >= nextFlushedExpirationTime)//只有0 -1有这种情况
     ) {
       performWorkOnRoot(nextFlushedRoot, nextFlushedExpirationTime, true);
-      findHighestPriorityRoot();
+      findHighestPriorityRoot();//找到最高优先级root 和 expirationTime 下次要使用
     }
   }
 
@@ -2430,10 +2446,10 @@ function interactiveUpdates<A, B, R>(fn: (A, B) => R, a: A, b: B): R {
   if (isBatchingInteractiveUpdates) {
     return fn(a, b);
   }
-  // If there are any pending interactive updates, synchronously flush them.
-  // This needs to happen before we read any handlers, because the effect of
-  // the previous event may influence which handlers are called during
-  // this event.
+  // 如果有任何待处理的交互式更新，同步刷新它们。
+  // 这需要在我们读取任何处理程序之前发生，因为
+  // 前一个事件可能会影响在此期间调用哪些处理程序
+  // 这个事件。
   if (
     !isBatchingUpdates &&
     !isRendering &&

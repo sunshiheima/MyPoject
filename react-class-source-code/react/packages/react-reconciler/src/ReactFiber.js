@@ -7,19 +7,19 @@
  * @flow
  */
 
-import type {ReactElement, Source} from 'shared/ReactElementType';
-import type {ReactFragment, ReactPortal, RefObject} from 'shared/ReactTypes';
-import type {WorkTag} from 'shared/ReactWorkTags';
-import type {TypeOfMode} from './ReactTypeOfMode';
-import type {SideEffectTag} from 'shared/ReactSideEffectTags';
-import type {ExpirationTime} from './ReactFiberExpirationTime';
-import type {UpdateQueue} from './ReactUpdateQueue';
-import type {ContextDependency} from './ReactFiberNewContext';
+import type { ReactElement, Source } from 'shared/ReactElementType';
+import type { ReactFragment, ReactPortal, RefObject } from 'shared/ReactTypes';
+import type { WorkTag } from 'shared/ReactWorkTags';
+import type { TypeOfMode } from './ReactTypeOfMode';
+import type { SideEffectTag } from 'shared/ReactSideEffectTags';
+import type { ExpirationTime } from './ReactFiberExpirationTime';
+import type { UpdateQueue } from './ReactUpdateQueue';
+import type { ContextDependency } from './ReactFiberNewContext';
 
 import invariant from 'shared/invariant';
 import warningWithoutStack from 'shared/warningWithoutStack';
-import {enableProfilerTimer} from 'shared/ReactFeatureFlags';
-import {NoEffect} from 'shared/ReactSideEffectTags';
+import { enableProfilerTimer } from 'shared/ReactFeatureFlags';
+import { NoEffect } from 'shared/ReactSideEffectTags';
 import {
   IndeterminateComponent,
   ClassComponent,
@@ -40,8 +40,8 @@ import {
 } from 'shared/ReactWorkTags';
 import getComponentName from 'shared/getComponentName';
 
-import {isDevToolsPresent} from './ReactFiberDevToolsHook';
-import {NoWork} from './ReactFiberExpirationTime';
+import { isDevToolsPresent } from './ReactFiberDevToolsHook';
+import { NoWork } from './ReactFiberExpirationTime';
 import {
   NoContext,
   ConcurrentMode,
@@ -96,18 +96,18 @@ export type Fiber = {|
   // Tag identifying the type of fiber.
   tag: WorkTag,
 
-  // Unique identifier of this child.
-  key: null | string,
+    // Unique identifier of this child.
+    key: null | string,
 
-  // The value of element.type which is used to preserve the identity during
-  // reconciliation of this child.
-  elementType: any,
+      // The value of element.type which is used to preserve the identity during
+      // reconciliation of this child.
+      elementType: any,
 
-  // The resolved function/class/ associated with this fiber.
-  type: any,
+        // The resolved function/class/ associated with this fiber.
+        type: any,
 
-  // The local state associated with this fiber.
-  stateNode: any,
+          // The local state associated with this fiber.
+          stateNode: any,
 
   // Conceptual aliases
   // parent : Instance -> return The parent happens to be the same as the
@@ -123,87 +123,87 @@ export type Fiber = {|
 
   // Singly Linked List Tree Structure.
   child: Fiber | null,
-  sibling: Fiber | null,
-  index: number,
+    sibling: Fiber | null,
+      index: number,
 
-  // The ref last used to attach this node.
-  // I'll avoid adding an owner field for prod and model that as functions.
-  ref: null | (((handle: mixed) => void) & {_stringRef: ?string}) | RefObject,
+        // The ref last used to attach this node.
+        // I'll avoid adding an owner field for prod and model that as functions.
+        ref: null | (((handle: mixed) => void) & { _stringRef: ? string}) | RefObject,
 
-  // Input is the data coming into process this fiber. Arguments. Props.
-  pendingProps: any, // This type will be more specific once we overload the tag.
-  memoizedProps: any, // The props used to create the output.
+          // Input is the data coming into process this fiber. Arguments. Props.
+          pendingProps: any, // This type will be more specific once we overload the tag.
+            memoizedProps: any, // The props used to create the output.
 
-  // A queue of state updates and callbacks.
-  updateQueue: UpdateQueue<any> | null,
+              // A queue of state updates and callbacks.
+              updateQueue: UpdateQueue < any > | null,
 
-  // The state used to create the output
-  memoizedState: any,
+                // The state used to create the output
+                memoizedState: any,
 
-  // A linked-list of contexts that this fiber depends on
-  firstContextDependency: ContextDependency<mixed> | null,
+                  // A linked-list of contexts that this fiber depends on
+                  firstContextDependency: ContextDependency < mixed > | null,
 
-  // Bitfield that describes properties about the fiber and its subtree. E.g.
-  // the ConcurrentMode flag indicates whether the subtree should be async-by-
-  // default. When a fiber is created, it inherits the mode of its
-  // parent. Additional flags can be set at creation time, but after that the
-  // value should remain unchanged throughout the fiber's lifetime, particularly
-  // before its child fibers are created.
-  mode: TypeOfMode,
+                    // Bitfield that describes properties about the fiber and its subtree. E.g.
+                    // the ConcurrentMode flag indicates whether the subtree should be async-by-
+                    // default. When a fiber is created, it inherits the mode of its
+                    // parent. Additional flags can be set at creation time, but after that the
+                    // value should remain unchanged throughout the fiber's lifetime, particularly
+                    // before its child fibers are created.
+                    mode: TypeOfMode,
 
-  // Effect
-  effectTag: SideEffectTag,
+                      // Effect
+                      effectTag: SideEffectTag,
 
-  // Singly linked list fast path to the next fiber with side-effects.
-  nextEffect: Fiber | null,
+                        // Singly linked list fast path to the next fiber with side-effects.
+                        nextEffect: Fiber | null,
 
-  // The first and last fiber with side-effect within this subtree. This allows
-  // us to reuse a slice of the linked list when we reuse the work done within
-  // this fiber.
-  firstEffect: Fiber | null,
-  lastEffect: Fiber | null,
+                          // The first and last fiber with side-effect within this subtree. This allows
+                          // us to reuse a slice of the linked list when we reuse the work done within
+                          // this fiber.
+                          firstEffect: Fiber | null,
+                            lastEffect: Fiber | null,
 
-  // Represents a time in the future by which this work should be completed.
-  // Does not include work found in its subtree.
-  expirationTime: ExpirationTime,
+                              // Represents a time in the future by which this work should be completed.
+                              // Does not include work found in its subtree.
+                              expirationTime: ExpirationTime,
 
-  // This is used to quickly determine if a subtree has no pending changes.
-  childExpirationTime: ExpirationTime,
+                                // This is used to quickly determine if a subtree has no pending changes.
+                                childExpirationTime: ExpirationTime,
 
-  // This is a pooled version of a Fiber. Every fiber that gets updated will
-  // eventually have a pair. There are cases when we can clean up pairs to save
-  // memory if we need to.
-  alternate: Fiber | null,
+                                  // This is a pooled version of a Fiber. Every fiber that gets updated will
+                                  // eventually have a pair. There are cases when we can clean up pairs to save
+                                  // memory if we need to.
+                                  alternate: Fiber | null,
 
-  // Time spent rendering this Fiber and its descendants for the current update.
-  // This tells us how well the tree makes use of sCU for memoization.
-  // It is reset to 0 each time we render and only updated when we don't bailout.
-  // This field is only set when the enableProfilerTimer flag is enabled.
-  actualDuration?: number,
+                                    // Time spent rendering this Fiber and its descendants for the current update.
+                                    // This tells us how well the tree makes use of sCU for memoization.
+                                    // It is reset to 0 each time we render and only updated when we don't bailout.
+                                    // This field is only set when the enableProfilerTimer flag is enabled.
+                                    actualDuration ?: number,
 
-  // If the Fiber is currently active in the "render" phase,
-  // This marks the time at which the work began.
-  // This field is only set when the enableProfilerTimer flag is enabled.
-  actualStartTime?: number,
+                                    // If the Fiber is currently active in the "render" phase,
+                                    // This marks the time at which the work began.
+                                    // This field is only set when the enableProfilerTimer flag is enabled.
+                                    actualStartTime ?: number,
 
-  // Duration of the most recent render time for this Fiber.
-  // This value is not updated when we bailout for memoization purposes.
-  // This field is only set when the enableProfilerTimer flag is enabled.
-  selfBaseDuration?: number,
+                                    // Duration of the most recent render time for this Fiber.
+                                    // This value is not updated when we bailout for memoization purposes.
+                                    // This field is only set when the enableProfilerTimer flag is enabled.
+                                    selfBaseDuration ?: number,
 
-  // Sum of base times for all descedents of this Fiber.
-  // This value bubbles up during the "complete" phase.
-  // This field is only set when the enableProfilerTimer flag is enabled.
-  treeBaseDuration?: number,
+                                    // Sum of base times for all descedents of this Fiber.
+                                    // This value bubbles up during the "complete" phase.
+                                    // This field is only set when the enableProfilerTimer flag is enabled.
+                                    treeBaseDuration ?: number,
 
-  // Conceptual aliases
-  // workInProgress : Fiber ->  alternate The alternate used for reuse happens
-  // to be the same as work in progress.
-  // __DEV__ only
-  _debugID?: number,
-  _debugSource?: Source | null,
-  _debugOwner?: Fiber | null,
-  _debugIsCurrentlyTiming?: boolean,
+                                    // Conceptual aliases
+                                    // workInProgress : Fiber ->  alternate The alternate used for reuse happens
+                                    // to be the same as work in progress.
+                                    // __DEV__ only
+                                    _debugID ?: number,
+                                    _debugSource ?: Source | null,
+                                    _debugOwner ?: Fiber | null,
+                                    _debugIsCurrentlyTiming ?: boolean,
 |};
 
 let debugCounter;
@@ -284,7 +284,7 @@ function FiberNode(
 //    is faster.
 // 5) It should be easy to port this to a C struct and keep a C implementation
 //    compatible.
-const createFiber = function(
+const createFiber = function (
   tag: WorkTag,
   pendingProps: mixed,
   key: null | string,
@@ -403,9 +403,9 @@ export function createHostRootFiber(isConcurrent: boolean): Fiber {
   let mode = isConcurrent ? ConcurrentMode | StrictMode : NoContext;
 
   if (enableProfilerTimer && isDevToolsPresent) {
-    // Always collect profile timings when DevTools are present.
-    // This enables DevTools to start capturing timing at any point–
-    // Without some nodes in the tree having empty base times.
+    // 始终在 DevTools 存在时收集配置文件计时。
+    // 这使 DevTools 可以在任何时候开始捕获时间——
+    // 树中的某些节点没有空的基本时间。
     mode |= ProfileMode;
   }
   //HostRoot 为3
@@ -501,8 +501,8 @@ export function createFiberFromTypeAndProps(
         invariant(
           false,
           'Element type is invalid: expected a string (for built-in ' +
-            'components) or a class/function (for composite components) ' +
-            'but got: %s.%s',
+          'components) or a class/function (for composite components) ' +
+          'but got: %s.%s',
           type == null ? type : typeof type,
           info,
         );

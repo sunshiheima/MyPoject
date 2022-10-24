@@ -107,7 +107,7 @@ function getContextForSubtree(
 }
 
 function scheduleRootUpdate(
-  current: Fiber,//React.root.current
+  current: Fiber,//React.root.current rootFiber
   element: ReactNodeList,//app
   expirationTime: ExpirationTime,//超时更新时间
   callback: ?Function,
@@ -133,7 +133,7 @@ function scheduleRootUpdate(
   const update = createUpdate(expirationTime);
   // Caution: React DevTools currently depends on this property
   // being called "element".
-  update.payload = { element };
+  update.payload = { element };//rootFiber 产生的update对象 的payload为app
 
   callback = callback === undefined ? null : callback;
   if (callback !== null) {
@@ -271,7 +271,7 @@ export function createContainer(
 ): OpaqueRoot {
   return createFiberRoot(containerInfo, isConcurrent, hydrate);
 }
-
+//render调用 DOMRenderer.updateContainer(children, root, null, work._onCommit);
 export function updateContainer(
   element: ReactNodeList,//app
   container: OpaqueRoot,//reactRoot.root
@@ -279,7 +279,7 @@ export function updateContainer(
   callback: ?Function,
 ): ExpirationTime {
   const current = container.current;
-  const currentTime = requestCurrentTime();
+  const currentTime = requestCurrentTime();//js加载到现在的时间戳 忽略10ms的延迟
   const expirationTime = computeExpirationForFiber(currentTime, current);
   return updateContainerAtExpirationTime(
     element,
