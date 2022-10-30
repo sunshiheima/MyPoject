@@ -332,7 +332,7 @@ ReactWork.prototype._onCommit = function (): void {
 };
 
 function ReactRoot(
-  container: Container,//挂载的dom
+  container: Container,//挂载的真实dom
   isConcurrent: boolean,//是否并发模式
   hydrate: boolean,//服务器渲染false
 ) {
@@ -343,7 +343,7 @@ ReactRoot.prototype.render = function (
   children: ReactNodeList,//app
   callback: ?() => mixed,
 ): Work {
-  const root = this._internalRoot;//root
+  const root = this._internalRoot;
   const work = new ReactWork();
   callback = callback === undefined ? null : callback;
 
@@ -460,7 +460,7 @@ ReactGenericBatching.setBatchingImplementation(
 let warnedAboutHydrateAPI = false;
 
 function legacyCreateRootFromDOMContainer(
-  container: DOMContainer,//挂载dom
+  container: DOMContainer,//挂载的真实dom
   forceHydrate: boolean,//第一次加载为false
 ): Root {
   const shouldHydrate =
@@ -507,7 +507,7 @@ function legacyCreateRootFromDOMContainer(
 function legacyRenderSubtreeIntoContainer(
   parentComponent: ?React$Component<any, any>,//第一次调用挂载root是为null
   children: ReactNodeList,//app
-  container: DOMContainer,//挂载的dom
+  container: DOMContainer,//挂载的真实dom
   forceHydrate: boolean,//默认为false
   callback: ?Function,
 ) {
@@ -538,7 +538,7 @@ function legacyRenderSubtreeIntoContainer(
       };
     }
     // Initial mount should not be batched.
-    DOMRenderer.unbatchedUpdates(() => {//非批量处理 快速创建应用
+    DOMRenderer.unbatchedUpdates(() => {
       if (parentComponent != null) {
         root.legacy_renderSubtreeIntoContainer(
           parentComponent,

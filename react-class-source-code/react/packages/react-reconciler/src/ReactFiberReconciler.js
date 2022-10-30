@@ -153,13 +153,13 @@ function scheduleRootUpdate(
 
 export function updateContainerAtExpirationTime(
   element: ReactNodeList,//app
-  container: OpaqueRoot,//reactRoot.root
+  container: OpaqueRoot,//reactRoot
   parentComponent: ?React$Component<any, any>,//第一次null
   expirationTime: ExpirationTime,//超时时间
   callback: ?Function,
 ) {
-  // TODO: If this is a nested container, this won't be the root.
-  const current = container.current;
+  // TODO: 导致当前进程的主线程崩溃。如果这是一个嵌套容器，这将不是根。
+  const current = container.current;//rootFiber
 
   if (__DEV__) {
     if (ReactFiberInstrumentation.debugTool) {
@@ -265,7 +265,7 @@ function findHostInstanceWithWarning(
 }
 
 export function createContainer(
-  containerInfo: Container,//挂载的dom
+  containerInfo: Container,//挂载的真实dom
   isConcurrent: boolean,//是否并发 false
   hydrate: boolean,//服务器渲染false
 ): OpaqueRoot {

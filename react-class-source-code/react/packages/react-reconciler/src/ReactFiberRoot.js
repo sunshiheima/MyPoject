@@ -100,7 +100,7 @@ export type FiberRoot = {
 };
 
 export function createFiberRoot(
-  containerInfo: any,
+  containerInfo: any,//挂载的真实dom
   isConcurrent: boolean,
   hydrate: boolean,
 ): FiberRoot {

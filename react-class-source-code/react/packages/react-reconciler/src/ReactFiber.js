@@ -291,7 +291,6 @@ const createFiber = function (
   mode: TypeOfMode,
 ): Fiber {
   // $FlowFixMe: the shapes are exact here but Flow doesn't like constructors
-  //fiberRoot的创建 createFiber(HostRoot, null, null, mode)
   return new FiberNode(tag, pendingProps, key, mode);
 };
 
@@ -408,7 +407,7 @@ export function createHostRootFiber(isConcurrent: boolean): Fiber {
     // 树中的某些节点没有空的基本时间。
     mode |= ProfileMode;
   }
-  //HostRoot 为3
+
   return createFiber(HostRoot, null, null, mode);
 }
 
